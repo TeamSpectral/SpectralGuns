@@ -1,0 +1,16 @@
+[
+{
+  "modid": "spectralguns",
+  "name": "Spectral Guns",
+  "description": "Modular guns. 100% customizable.",
+  "version": "0.2.1",
+  "mcversion": "1.8",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["KH111, Beardielover99, NonExistingName, sigurd4, FortuneLessThan3, AstaZora"], #write your username here, guys
+  "credits": "",
+  "logoFile": "WIP",
+  "screenshots": [],
+  "dependencies": []
+}
+]

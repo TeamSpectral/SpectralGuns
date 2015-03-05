@@ -1,0 +1,17 @@
+[16:45:34] [Server thread/INFO]: Starting minecraft server version 1.8
+[16:45:40] [Server thread/INFO]: Loading properties
+[16:45:40] [Server thread/INFO]: Default game type: CREATIVE
+[16:45:40] [Server thread/INFO]: Generating keypair
+[16:45:40] [Server thread/INFO]: Starting Minecraft server on *:25565
+[16:45:41] [Server thread/INFO]: Preparing level "world"
+[16:45:42] [Server thread/INFO]: Preparing start region for level 0
+[16:45:43] [Server thread/INFO]: Preparing spawn area: 41%
+[16:45:43] [Server thread/INFO]: Done (1,930s)! For help, type "help" or "?"
+[20:18:05] [Server thread/INFO]: com.mojang.authlib.GameProfile@3673a0e7[id=<null>,name=Player249,properties={},legacy=false] (/127.0.0.1:17787) lost connection: Disconnected
+[21:52:03] [Server thread/INFO]: Stopping server
+[21:52:03] [Server thread/INFO]: Saving players
+[21:52:03] [Server thread/INFO]: Saving worlds
+[21:52:03] [Server thread/INFO]: Saving chunks for level 'world'/Overworld
+[21:52:03] [Server thread/INFO]: Saving chunks for level 'world'/Nether
+[21:52:03] [Server thread/INFO]: Saving chunks for level 'world'/The End
+ng on that port?

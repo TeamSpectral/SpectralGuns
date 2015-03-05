@@ -1,0 +1,13 @@
+[20:12:50] [Server thread/INFO]: Starting minecraft server version 1.8
+[20:12:55] [Server thread/INFO]: Loading properties
+[20:12:55] [Server thread/INFO]: Default game type: CREATIVE
+[20:12:55] [Server thread/INFO]: Generating keypair
+[20:12:55] [Server thread/INFO]: Starting Minecraft server on *:25565
+[20:12:56] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[20:12:56] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[20:12:56] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[20:12:56] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[20:12:56] [Server thread/INFO]: Preparing level "world"
+[20:12:57] [Server thread/INFO]: Preparing start region for level 0
+[20:12:58] [Server thread/INFO]: Preparing spawn area: 72%
+[20:12:58] [Server thread/INFO]: Done (1,792s)! For help, type "help" or "?"
