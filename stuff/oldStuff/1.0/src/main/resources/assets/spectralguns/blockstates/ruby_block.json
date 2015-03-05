@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "normal": [
+            { "model": "ruby_block" },
+            { "model": "ruby_block", "y": 90 },
+            { "model": "ruby_block", "y": 180 },
+            { "model": "ruby_block", "y": 270 }
+        ]
+    }
+}

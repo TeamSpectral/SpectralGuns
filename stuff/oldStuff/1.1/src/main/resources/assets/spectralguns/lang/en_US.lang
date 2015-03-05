@@ -1,0 +1,93 @@
+itemGroup.spectralGuns.core=Spectral Guns
+
+
+tile.blockRuby.name=Block of Ruby
+
+
+item.foodMush.name=Food Mush
+
+item.shuriken.name=Shuriken
+
+item.ironNugget.name=Iron Nugget
+item.container.name=Glass Container
+item.gear.wood.name=Wooden Gear
+item.gear.iron.name=Iron Gear
+item.gear.gold.name=Golden Gear
+item.gear.diamond.name=Diamond Gear
+item.lens.convex.name=Convex Lens
+item.lens.concave.name=Concave Lens
+item.prism.name=Glass Prism
+item.eyepiece.name=Eyepiece
+item.laserDiode.green.name=Green Laser Diode
+item.laserDiode.red.name=Red Laser Diode
+item.laserDiode.green.strong.name=Lethal Green Laser Diode
+item.laserDiode.red.strong.name=Lethal Red Laser Diode
+
+item.gun.name=Spectral Gun
+
+item.component.magazine.snowball.wood.name=Wooden Snowball Magazine (T1)
+item.component.magazine.snowball.iron.name=Iron Snowball Magazine (T2)
+item.component.magazine.snowball.gold.name=Golden Snowball Magazine (T3)
+item.component.magazine.snowball.diamond.name=Diamond Snowball Magazine (T4)
+
+item.component.magazine.fireballSmall.iron.name=Iron Fireball Magazine (T1)
+item.component.magazine.fireballSmall.gold.name=Golden Fireball Magazine (T2)
+item.component.magazine.fireballSmall.diamond.name=Diamond Fireball Magazine (T3)
+
+item.component.magazine.food.wood.name=Wooden Puker Magazine (T1)
+item.component.magazine.food.iron.name=Iron Puker Magazine (T2)
+item.component.magazine.food.gold.name=Golden Puker Magazine (T3)
+
+item.component.magazine.laser.iron.red.name=Red Iron Laser Magazine (T1)
+item.component.magazine.laser.gold.red.name=Red Golden Laser Magazine (T2)
+item.component.magazine.laser.diamond.red.name=Red Diamond Laser Magazine (T3)
+item.component.magazine.laser.iron.green.name=Green Iron Laser Magazine (T1)
+item.component.magazine.laser.gold.green.name=Green Golden Laser Magazine (T2)
+item.component.magazine.laser.diamond.green.name=Green Diamond Laser Magazine (T3)
+
+item.component.trigger.wood.name=Wooden Trigger Mechanism (T1)
+item.component.trigger.iron.name=Iron Trigger Mechanism (T2)
+item.component.trigger.gold.name=Golden Trigger Mechanism (T3)
+
+item.component.trigger.wood.boosted.name=Boosted Wooden Trigger Mechanism (T1)
+item.component.trigger.iron.boosted.name=Boosted Iron Trigger Mechanism (T2)
+item.component.trigger.gold.boosted.name=Boosted Golden Trigger Mechanism (T3)
+
+item.component.trigger.wood.automatic.name=Automatic Wooden Trigger Mechanism (T1)
+item.component.trigger.iron.automatic.name=Automatic Iron Trigger Mechanism (T2)
+item.component.trigger.gold.automatic.name=Automatic Golden Trigger Mechanism (T3)
+
+item.component.barrel.thin.wood.name=Wooden Thin Barrel (T1)
+item.component.barrel.normal.wood.name=Wooden Normal Barrel (T1)
+item.component.barrel.wide.wood.name=Wooden Wide Barrel (T1)
+item.component.barrel.musket.wood.name=Wooden Scatter Barrel (T1)
+
+item.component.barrel.thin.iron.name=Iron Thin Barrel (T2)
+item.component.barrel.normal.iron.name=Iron Normal Barrel (T2)
+item.component.barrel.wide.iron.name=Iron Wide Barrel (T2)
+item.component.barrel.musket.iron.name=Iron Scatter Barrel (T2)
+
+item.component.barrel.thin.gold.name=Golden Thin Barrel (T3)
+item.component.barrel.normal.gold.name=Golden Normal Barrel (T3)
+item.component.barrel.wide.gold.name=Golden Wide Barrel (T3)
+item.component.barrel.musket.gold.name=Golden Scatter Barrel (T3)
+
+item.component.barrel.thin.diamond.name=Diamond Thin Barrel (T4)
+item.component.barrel.normal.diamond.name=Diamond Normal Barrel (T4)
+item.component.barrel.wide.diamond.name=Diamond Wide Barrel (T4)
+item.component.barrel.musket.diamond.name=Diamond Scatter Barrel (T4)
+
+item.component.scope.wood.name=Wooden Scope (T1)
+item.component.scope.iron.name=Iron Scope (T2)
+item.component.scope.gold.name=Golden Scope (T3)
+item.component.scope.diamond.name=Diamond Scope (T4)
+
+item.component.scope.wood.laser.red.name=Red Wooden Laser Scope (T1)
+item.component.scope.iron.laser.red.name=Red Iron Laser Scope (T2)
+item.component.scope.gold.laser.red.name=Red Golden Laser Scope (T3)
+item.component.scope.diamond.laser.red.name=Red Diamond Laser Scope (T4)
+
+item.component.scope.wood.laser.green.name=Green Wooden Laser Scope (T1)
+item.component.scope.iron.laser.green.name=Green Iron Laser Scope (T2)
+item.component.scope.gold.laser.green.name=Green Golden Laser Scope (T3)
+item.component.scope.diamond.laser.green.name=Green Diamond Laser Scope (T4)
