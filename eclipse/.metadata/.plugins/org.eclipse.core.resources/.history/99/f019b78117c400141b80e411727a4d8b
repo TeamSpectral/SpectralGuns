@@ -5,12 +5,11 @@ import com.spectral.spectral_guns.proxy.ProxyCommon;
 public class References extends ProxyCommon
 {
 	public static final String MODID = "spectralguns";
-	public static final String VERSION = "1.1.1";
+	public static final String VERSION = "1.1";
 	public static final String Client = "com.spectral.spectral_guns.proxy.ProxyClient";
 	public static final String Server = "com.spectral.spectral_guns.proxy.ProxyServer";
 	
 /*
-
 CHANGELOG:
 0.2 - sigurd4:
 *changed loads of stuff with the components. cleared stuff up. now uses material enum and more cool stuff.
@@ -55,7 +54,6 @@ CHANGELOG:
 1.1.1 - sigurd4
 *fixed some issues with the laser guns
 *fixed blocks rendering with double (more or less) size when held in hand in third person
-+added ore dictionary entries for some items and a mechanic for easily doing this for more items in the future
-
+*added some items to ore dictionary
 */
 }
