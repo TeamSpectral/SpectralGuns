@@ -110,24 +110,7 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazine
 			magazine = M.magazine_small_fireball_gold.item;
 			break;
 		}
-		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-			{
-					"iBb",
-					"MCF",
-					"iBB",
-					'B',
-					block,
-					'i',
-					bar,
-					'M',
-					magazine,
-					'C',
-					Items.fire_charge,
-					'F',
-					Item.getItemFromBlock(Blocks.furnace),
-					'b',
-					Items.lava_bucket
-			});
+		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"iBb", "MCF", "iBB", 'B', block, 'i', bar, 'M', magazine, 'C', Items.fire_charge, 'F', Item.getItemFromBlock(Blocks.furnace), 'b', Items.lava_bucket});
 	}
 	
 	@Override

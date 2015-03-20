@@ -39,15 +39,7 @@ public class GuiSpectralGunsHud extends Gui
 	protected int remainingHighlightTicks;
 	/** The ItemStack that is currently being highlighted */
 	protected ItemStack highlightingItemStack;
-	protected ResourceLocation[] snowOverlay =
-		{
-				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_0.png"),
-				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_1.png"),
-				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_2.png"),
-				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_3.png"),
-				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_4.png"),
-				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_5.png")
-		};
+	protected ResourceLocation[] snowOverlay = {new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_0.png"), new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_1.png"), new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_2.png"), new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_3.png"), new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_4.png"), new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_5.png")};
 	
 	public GuiSpectralGunsHud(Minecraft mc)
 	{

@@ -54,10 +54,7 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 		for(int i = 0; i < 32 && world.isRemote; ++i)
 		{
 			Vec3 m = Coordinates3D.stabilize(new Vec3((float)projectile.motionX + Randomization.r(spread), (float)projectile.motionY + Randomization.r(spread), (float)projectile.motionZ + Randomization.r(spread)), ItemGun.speed(stack, player) / 4 * (world.rand.nextFloat() * 0.9F + 0.1F));
-			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[]
-				{
-					Item.getIdFromItem(Items.snowball)
-				});
+			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[] {Item.getIdFromItem(Items.snowball)});
 		}
 		
 		world.playSoundAtEntity(player, "random.bow", 0.3F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
@@ -115,23 +112,6 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 			magazine = M.magazine_snowball_gold.item;
 			break;
 		}
-		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-			{
-					"BbC",
-					"SMP",
-					"Bb ",
-					'B',
-					block,
-					'b',
-					bar,
-					'M',
-					magazine,
-					'S',
-					Item.getItemFromBlock(Blocks.snow),
-					'P',
-					Items.gunpowder,
-					'C',
-					M.container
-			});
+		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"BbC", "SMP", "Bb ", 'B', block, 'b', bar, 'M', magazine, 'S', Item.getItemFromBlock(Blocks.snow), 'P', Items.gunpowder, 'C', M.container});
 	}
 }

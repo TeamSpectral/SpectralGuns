@@ -292,58 +292,13 @@ public class ComponentMagazineLaser extends ComponentGeneric
 		switch(material)
 		{
 		case IRON:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"iir",
-						"lbd",
-						"iir",
-						'i',
-						Items.iron_ingot,
-						'r',
-						Items.redstone,
-						'l',
-						M.eyepiece,
-						'b',
-						M.barrel_thin_diamond.item,
-						'd',
-						diode
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"iir", "lbd", "iir", 'i', Items.iron_ingot, 'r', Items.redstone, 'l', M.eyepiece, 'b', M.barrel_thin_diamond.item, 'd', diode});
 			break;
 		case GOLD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"iir",
-						"lbd",
-						"iir",
-						'i',
-						Items.gold_ingot,
-						'r',
-						Items.redstone,
-						'l',
-						M.eyepiece,
-						'b',
-						M.barrel_thin_diamond.item,
-						'd',
-						diode
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"iir", "lbd", "iir", 'i', Items.gold_ingot, 'r', Items.redstone, 'l', M.eyepiece, 'b', M.barrel_thin_diamond.item, 'd', diode});
 			break;
 		case DIAMOND:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"iir",
-						"lbd",
-						"iir",
-						'i',
-						Items.diamond,
-						'r',
-						Items.redstone,
-						'l',
-						M.eyepiece,
-						'b',
-						M.barrel_thin_diamond.item,
-						'd',
-						diode
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"iir", "lbd", "iir", 'i', Items.diamond, 'r', Items.redstone, 'l', M.eyepiece, 'b', M.barrel_thin_diamond.item, 'd', diode});
 			break;
 		}
 	}

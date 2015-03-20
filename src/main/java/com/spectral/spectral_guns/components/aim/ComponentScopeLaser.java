@@ -63,28 +63,16 @@ public class ComponentScopeLaser extends ComponentScope
 		switch(material)
 		{
 		case WOOD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"D", "S", 'D', diode, 'S', M.scope_wood.item
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"D", "S", 'D', diode, 'S', M.scope_wood.item});
 			break;
 		case IRON:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"D", "S", 'D', diode, 'S', M.scope_iron.item
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"D", "S", 'D', diode, 'S', M.scope_iron.item});
 			break;
 		case GOLD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"D", "S", 'D', diode, 'S', M.scope_gold.item
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"D", "S", 'D', diode, 'S', M.scope_gold.item});
 			break;
 		case DIAMOND:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"D", "S", 'D', diode, 'S', M.scope_diamond.item
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"D", "S", 'D', diode, 'S', M.scope_diamond.item});
 			break;
 		}
 	}

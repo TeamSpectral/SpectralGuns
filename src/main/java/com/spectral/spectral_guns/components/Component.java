@@ -169,35 +169,7 @@ public abstract class Component
 	
 	public enum ComponentMaterial
 	{
-		WOOD(40, new Type[]
-			{
-					Type.MISC,
-					Type.BARREL,
-					Type.MAGAZINE,
-					Type.TRIGGER,
-					Type.GRIP,
-					Type.STOCK,
-					Type.AIM
-			}), IRON(167, new Type[]
-			{
-					Type.MISC,
-					Type.BARREL,
-					Type.MAGAZINE,
-					Type.TRIGGER,
-					Type.GRIP,
-					Type.STOCK,
-					Type.AIM
-			}), GOLD(22, new Type[]
-			{
-					Type.MISC,
-					Type.BARREL,
-					Type.MAGAZINE,
-					Type.TRIGGER,
-					Type.AIM
-			}), DIAMOND(520, new Type[]
-			{
-					Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM
-			});
+		WOOD(40, new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), IRON(167, new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), GOLD(22, new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.AIM}), DIAMOND(520, new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});
 		
 		public final Type[] types;
 		public final int durability;

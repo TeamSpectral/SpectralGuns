@@ -70,10 +70,7 @@ public final class ComponentMagazineFood extends ComponentMagazine
 		for(int i = 0; i < 64 && world.isRemote; ++i)
 		{
 			Vec3 m = Coordinates3D.stabilize(new Vec3((float)projectile.motionX + Randomization.r(spread), (float)projectile.motionY + Randomization.r(spread), (float)projectile.motionZ + Randomization.r(spread)), ItemGun.speed(stack, player) / 4 * world.rand.nextFloat());
-			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[]
-				{
-					Item.getIdFromItem(ammoItem())
-				});
+			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[] {Item.getIdFromItem(ammoItem())});
 		}
 		
 		world.playSoundAtEntity(player, "mob.slime.big", 2.0F, 1 + world.rand.nextFloat());
@@ -89,64 +86,13 @@ public final class ComponentMagazineFood extends ComponentMagazine
 		switch(material)
 		{
 		case WOOD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"PGb",
-						"DHC",
-						"PPb",
-						'P',
-						Item.getItemFromBlock(Blocks.wooden_pressure_plate),
-						'G',
-						M.gear_wood,
-						'b',
-						Item.getItemFromBlock(Blocks.planks),
-						'D',
-						Item.getItemFromBlock(Blocks.dispenser),
-						'H',
-						Item.getItemFromBlock(Blocks.hopper),
-						'C',
-						M.container
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"PGb", "DHC", "PPb", 'P', Item.getItemFromBlock(Blocks.wooden_pressure_plate), 'G', M.gear_wood, 'b', Item.getItemFromBlock(Blocks.planks), 'D', Item.getItemFromBlock(Blocks.dispenser), 'H', Item.getItemFromBlock(Blocks.hopper), 'C', M.container});
 			break;
 		case IRON:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"PGb",
-						"MHC",
-						"PPb",
-						'P',
-						Item.getItemFromBlock(Blocks.heavy_weighted_pressure_plate),
-						'G',
-						M.gear_iron,
-						'b',
-						Items.iron_ingot,
-						'M',
-						M.magazine_food_wood.item,
-						'H',
-						Item.getItemFromBlock(Blocks.hopper),
-						'C',
-						M.container
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"PGb", "MHC", "PPb", 'P', Item.getItemFromBlock(Blocks.heavy_weighted_pressure_plate), 'G', M.gear_iron, 'b', Items.iron_ingot, 'M', M.magazine_food_wood.item, 'H', Item.getItemFromBlock(Blocks.hopper), 'C', M.container});
 			break;
 		case GOLD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						"PGb",
-						"MHC",
-						"PPb",
-						'P',
-						Item.getItemFromBlock(Blocks.light_weighted_pressure_plate),
-						'G',
-						M.gear_gold,
-						'b',
-						Items.gold_ingot,
-						'M',
-						M.magazine_food_iron.item,
-						'H',
-						Item.getItemFromBlock(Blocks.hopper),
-						'C',
-						M.container
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"PGb", "MHC", "PPb", 'P', Item.getItemFromBlock(Blocks.light_weighted_pressure_plate), 'G', M.gear_gold, 'b', Items.gold_ingot, 'M', M.magazine_food_iron.item, 'H', Item.getItemFromBlock(Blocks.hopper), 'C', M.container});
 			break;
 		}
 	}

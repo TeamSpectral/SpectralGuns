@@ -43,10 +43,7 @@ public class ParticleHandler
 				}
 				else
 				{
-					par = new int[]
-						{
-							100
-						};
+					par = new int[] {100};
 				}
 				if(scale > 4)
 				{

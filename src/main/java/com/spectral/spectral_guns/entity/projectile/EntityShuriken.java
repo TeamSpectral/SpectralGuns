@@ -461,10 +461,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 				this.inTile.onEntityCollidedWithBlock(this.worldObj, blockpos1, iblockstate, this);
 			}
 		}
-		return new float[]
-			{
-					f2, f3, f4
-			};
+		return new float[] {f2, f3, f4};
 	}
 	
 	public void writeEntityToNBT(NBTTagCompound tagCompound)

@@ -312,10 +312,7 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 							if(bs.getBlock().getMaterial() != Material.air)
 							{
 								if(!bs.getBlock().addDestroyEffects(worldObj, pos.getBlockPos(), Minecraft.getMinecraft().effectRenderer))
-									worldObj.spawnParticle(EnumParticleTypes.BLOCK_DUST, true, pos.hitVec.xCoord + v.xCoord, pos.hitVec.yCoord + v.yCoord, pos.hitVec.zCoord + v.zCoord, rand.nextDouble() * m * 2 - m, rand.nextDouble() * m * 2 - m, rand.nextDouble() * m * 2 - m, new int[]
-										{
-											Block.getStateId(bs)
-										});
+									worldObj.spawnParticle(EnumParticleTypes.BLOCK_DUST, true, pos.hitVec.xCoord + v.xCoord, pos.hitVec.yCoord + v.yCoord, pos.hitVec.zCoord + v.zCoord, rand.nextDouble() * m * 2 - m, rand.nextDouble() * m * 2 - m, rand.nextDouble() * m * 2 - m, new int[] {Block.getStateId(bs)});
 							}
 						}
 					}
@@ -347,8 +344,7 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 						if(worldObj.isRemote && rand.nextFloat() > 0.9)
 						{
 							IBlockState bs = worldObj.getBlockState(pos.getBlockPos());
-							worldObj.spawnParticle(rand.nextBoolean() ? particle : EnumParticleTypes.SMOKE_NORMAL, true, pos.hitVec.xCoord + v.xCoord, pos.hitVec.yCoord + v.yCoord + rand.nextFloat() * rand.nextFloat() / 3 + 0.1, pos.hitVec.zCoord + v.zCoord, 0, 0, 0, new int[]
-								{});
+							worldObj.spawnParticle(rand.nextBoolean() ? particle : EnumParticleTypes.SMOKE_NORMAL, true, pos.hitVec.xCoord + v.xCoord, pos.hitVec.yCoord + v.yCoord + rand.nextFloat() * rand.nextFloat() / 3 + 0.1, pos.hitVec.zCoord + v.zCoord, 0, 0, 0, new int[] {});
 						}
 					}
 				}
@@ -424,10 +420,7 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 			float g = color.g;
 			float b = color.b;
 			scale *= 100;
-			com.spectral.spectral_guns.particles.ParticleHandler.particle(com.spectral.spectral_guns.particles.ParticleHandler.EnumParticleTypes2.REDSTONE2, this.worldObj, true, x, y, z, r * 3 - 1, g * 3, b * 3, new int[]
-				{
-					(int)(scale)
-				});
+			com.spectral.spectral_guns.particles.ParticleHandler.particle(com.spectral.spectral_guns.particles.ParticleHandler.EnumParticleTypes2.REDSTONE2, this.worldObj, true, x, y, z, r * 3 - 1, g * 3, b * 3, new int[] {(int)(scale)});
 		}
 	}
 	

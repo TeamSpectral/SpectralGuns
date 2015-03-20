@@ -68,10 +68,7 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 		Item item = stack.getItem();
 		for(int i = 0; i < 1 && worldObj.isRemote; ++i)
 		{
-			this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, -this.motionX / 15 + Randomization.r(0.1), -this.motionY / 15 + Randomization.r(0.1), -this.motionZ / 15 + Randomization.r(0.1), new int[]
-				{
-					Item.getIdFromItem(item)
-				});
+			this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, -this.motionX / 15 + Randomization.r(0.1), -this.motionY / 15 + Randomization.r(0.1), -this.motionZ / 15 + Randomization.r(0.1), new int[] {Item.getIdFromItem(item)});
 		}
 	}
 	
@@ -124,24 +121,15 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 		{
 			for(int i = 0; i < p * 2; ++i)
 			{
-				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, m.xCoord / 10 + Randomization.r(0.3), m.yCoord / 10 + Randomization.r(0.3), m.zCoord / 10 + Randomization.r(0.3), new int[]
-					{
-						Item.getIdFromItem(item)
-					});
+				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, m.xCoord / 10 + Randomization.r(0.3), m.yCoord / 10 + Randomization.r(0.3), m.zCoord / 10 + Randomization.r(0.3), new int[] {Item.getIdFromItem(item)});
 			}
 			for(int i = 0; i < p / 2; ++i)
 			{
-				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, m.xCoord / 10 + Randomization.r(0.2), m.yCoord / 10 + Randomization.r(0.2), m.zCoord / 10 + Randomization.r(0.2), new int[]
-					{
-						Item.getIdFromItem(item)
-					});
+				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, m.xCoord / 10 + Randomization.r(0.2), m.yCoord / 10 + Randomization.r(0.2), m.zCoord / 10 + Randomization.r(0.2), new int[] {Item.getIdFromItem(item)});
 			}
 			for(int i = 0; i < p; ++i)
 			{
-				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, Randomization.r(0.3), Randomization.r(0.3), Randomization.r(0.3), new int[]
-					{
-						Item.getIdFromItem(item)
-					});
+				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, Randomization.r(0.3), Randomization.r(0.3), Randomization.r(0.3), new int[] {Item.getIdFromItem(item)});
 			}
 		}
 	}

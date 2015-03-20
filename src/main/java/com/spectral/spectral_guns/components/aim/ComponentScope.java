@@ -43,76 +43,16 @@ public class ComponentScope extends ComponentGeneric
 		switch(material)
 		{
 		case WOOD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						" PE",
-						"LPB",
-						" G ",
-						'P',
-						M.prism,
-						'E',
-						M.eyepiece,
-						'L',
-						M.lens_convex,
-						'B',
-						M.barrel_thin_wood.item,
-						'G',
-						M.gear_wood
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {" PE", "LPB", " G ", 'P', M.prism, 'E', M.eyepiece, 'L', M.lens_convex, 'B', M.barrel_thin_wood.item, 'G', M.gear_wood});
 			break;
 		case IRON:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						" PE",
-						"LPB",
-						" G ",
-						'P',
-						M.prism,
-						'E',
-						M.eyepiece,
-						'L',
-						M.scope_wood.item,
-						'B',
-						M.barrel_thin_iron.item,
-						'G',
-						M.gear_iron
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {" PE", "LPB", " G ", 'P', M.prism, 'E', M.eyepiece, 'L', M.scope_wood.item, 'B', M.barrel_thin_iron.item, 'G', M.gear_iron});
 			break;
 		case GOLD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						" PE",
-						"LPB",
-						" G ",
-						'P',
-						M.prism,
-						'E',
-						M.eyepiece,
-						'L',
-						M.scope_iron.item,
-						'B',
-						M.barrel_thin_gold.item,
-						'G',
-						M.gear_gold
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {" PE", "LPB", " G ", 'P', M.prism, 'E', M.eyepiece, 'L', M.scope_iron.item, 'B', M.barrel_thin_gold.item, 'G', M.gear_gold});
 			break;
 		case DIAMOND:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						" PE",
-						"LPB",
-						" G ",
-						'P',
-						M.prism,
-						'E',
-						M.eyepiece,
-						'L',
-						M.scope_gold.item,
-						'B',
-						M.barrel_thin_diamond.item,
-						'G',
-						M.gear_diamond
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {" PE", "LPB", " G ", 'P', M.prism, 'E', M.eyepiece, 'L', M.scope_gold.item, 'B', M.barrel_thin_diamond.item, 'G', M.gear_diamond});
 			break;
 		}
 	}

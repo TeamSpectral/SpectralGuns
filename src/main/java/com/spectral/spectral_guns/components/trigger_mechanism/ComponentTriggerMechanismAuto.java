@@ -57,46 +57,13 @@ public class ComponentTriggerMechanismAuto extends ComponentTriggerMechanism
 		switch(material)
 		{
 		case WOOD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						" G ",
-						" TR",
-						" G ",
-						'G',
-						M.gear_wood,
-						'T',
-						M.trigger_wood.item,
-						'R',
-						Items.redstone
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {" G ", " TR", " G ", 'G', M.gear_wood, 'T', M.trigger_wood.item, 'R', Items.redstone});
 			break;
 		case IRON:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						" G ",
-						" TR",
-						" G ",
-						'G',
-						M.gear_iron,
-						'T',
-						M.trigger_iron.item,
-						'R',
-						Items.redstone
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {" G ", " TR", " G ", 'G', M.gear_iron, 'T', M.trigger_iron.item, 'R', Items.redstone});
 			break;
 		case GOLD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-				{
-						" G ",
-						" TR",
-						" G ",
-						'G',
-						M.gear_gold,
-						'T',
-						M.trigger_gold.item,
-						'R',
-						Items.redstone
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {" G ", " TR", " G ", 'G', M.gear_gold, 'T', M.trigger_gold.item, 'R', Items.redstone});
 			break;
 		// case DIAMOND: GameRegistry.addShapedRecipe(new ItemStack(this.item),
 		// new Object[]{" G ", " TR", " G ", 'G', M.gear_diamond, 'T',

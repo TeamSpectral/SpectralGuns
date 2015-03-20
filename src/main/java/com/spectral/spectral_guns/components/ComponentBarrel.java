@@ -116,10 +116,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 				barrel = M.barrel_normal_diamond.item;
 				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[]
-				{
-						"##", '#', barrel
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[] {"##", '#', barrel});
 		}
 	}
 	
@@ -155,10 +152,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 				resource = Items.diamond;
 				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 1), new Object[]
-				{
-						"###", "   ", "###", '#', resource
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 1), new Object[] {"###", "   ", "###", '#', resource});
 		}
 	}
 	
@@ -194,10 +188,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 				barrel = M.barrel_normal_diamond.item;
 				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[]
-				{
-						"#", "#", '#', barrel
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[] {"#", "#", '#', barrel});
 		}
 	}
 	
@@ -249,10 +240,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 				barrel2 = M.barrel_wide_diamond.item;
 				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[]
-				{
-						"@#", '#', barrel1, '@', barrel2
-				});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[] {"@#", '#', barrel1, '@', barrel2});
 		}
 	}
 }

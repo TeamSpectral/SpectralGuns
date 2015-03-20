@@ -85,22 +85,7 @@ public class ComponentTriggerMechanism extends ComponentGeneric
 			bar = M.gear_diamond;
 			break;
 		}
-		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
-			{
-					"NNB",
-					"LGB",
-					" HB",
-					'N',
-					nugget,
-					'B',
-					bar,
-					'L',
-					Item.getItemFromBlock(Blocks.lever),
-					'G',
-					gear,
-					'H',
-					Item.getItemFromBlock(Blocks.tripwire_hook)
-			});
+		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"NNB", "LGB", " HB", 'N', nugget, 'B', bar, 'L', Item.getItemFromBlock(Blocks.lever), 'G', gear, 'H', Item.getItemFromBlock(Blocks.tripwire_hook)});
 	}
 	
 	@Override

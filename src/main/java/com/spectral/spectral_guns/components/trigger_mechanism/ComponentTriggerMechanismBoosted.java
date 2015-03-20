@@ -67,9 +67,6 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 			trigger = M.trigger_gold.item;
 			break;
 		}
-		GameRegistry.addShapelessRecipe(new ItemStack(this.item), new Object[]
-			{
-					Items.redstone, trigger
-			});
+		GameRegistry.addShapelessRecipe(new ItemStack(this.item), new Object[] {Items.redstone, trigger});
 	}
 }
