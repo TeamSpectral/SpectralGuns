@@ -22,7 +22,7 @@ public class BlockOre2 extends BlockOre
 	protected final int amountRandom;
 	protected final int xp;
 	protected final int xpRandom;
-
+	
 	public BlockOre2(Item drop, int xp, int xpRandom, int amount, int amountRandom)
 	{
 		super();
@@ -32,22 +32,22 @@ public class BlockOre2 extends BlockOre
 		this.xp = xp;
 		this.xpRandom = xpRandom;
 	}
-
+	
 	public BlockOre2(Item drop, int xp, int xpRandom, int amount)
 	{
 		this(drop, xp, xpRandom, amount, 0);
 	}
-
+	
 	public BlockOre2(Item drop, int xp, int xpRandom)
 	{
 		this(drop, xp, xpRandom, 1);
 	}
-
+	
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return drop;
 	}
-
+	
 	public int quantityDropped(Random random)
 	{
 		if(amountRandom > 0)
@@ -59,22 +59,23 @@ public class BlockOre2 extends BlockOre
 			return amount;
 		}
 	}
-    @Override
-    public int getExpDrop(IBlockAccess world, BlockPos pos, int fortune)
-    {
-        IBlockState state = world.getBlockState(pos);
-        Random rand = world instanceof World ? ((World)world).rand : new Random();
-        if(this.getItemDropped(state, rand, fortune) != Item.getItemFromBlock(this))
-        {
-    		if(amountRandom > 0)
-    		{
-    			return amount + rand.nextInt(amountRandom);
-    		}
-    		else
-    		{
-    			return amount;
-    		}
-        }
-        return 0;
-    }
+	
+	@Override
+	public int getExpDrop(IBlockAccess world, BlockPos pos, int fortune)
+	{
+		IBlockState state = world.getBlockState(pos);
+		Random rand = world instanceof World ? ((World)world).rand : new Random();
+		if(this.getItemDropped(state, rand, fortune) != Item.getItemFromBlock(this))
+		{
+			if(amountRandom > 0)
+			{
+				return amount + rand.nextInt(amountRandom);
+			}
+			else
+			{
+				return amount;
+			}
+		}
+		return 0;
+	}
 }

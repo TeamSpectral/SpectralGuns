@@ -20,20 +20,15 @@ public class PacketKey implements IMessage
 {
 	public static enum Key
 	{
-		RIGHTCLICK(0),
-		NOTRIGHTCLICK(1),
-		RELOAD(2),
-		EJECT(3),
-		ZOOM(4),
-		NOTZOOM(5);
-
+		RIGHTCLICK(0), NOTRIGHTCLICK(1), RELOAD(2), EJECT(3), ZOOM(4), NOTZOOM(5);
+		
 		public final int id;
-
+		
 		private Key(int id)
 		{
 			this.id = id;
 		}
-
+		
 		public static Key get(int id)
 		{
 			for(int i = 0; i < Key.values().length; ++i)
@@ -46,39 +41,43 @@ public class PacketKey implements IMessage
 			return null;
 		}
 	}
-
+	
 	private int i;
-
-	public PacketKey() {}
-
+	
+	public PacketKey()
+	{
+	}
+	
 	public PacketKey(Key k)
 	{
 		this.i = k.id;
 	}
-
+	
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
 		i = ByteBufUtils.readVarInt(buf, 3);
 	}
-
+	
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
 		ByteBufUtils.writeVarInt(buf, i, 3);
 	}
-
+	
 	public static class Handler implements IMessageHandler<PacketKey, IMessage>
 	{
-		public Handler(){}
-
+		public Handler()
+		{
+		}
+		
 		@Override
 		public IMessage onMessage(PacketKey message, MessageContext context)
 		{
 			EntityPlayer player = context.getServerHandler().playerEntity;
 			return onMessage(message, player);
 		}
-
+		
 		public static IMessage onMessage(PacketKey message, EntityPlayer player)
 		{
 			if(player == null)
@@ -114,7 +113,7 @@ public class PacketKey implements IMessage
 						ItemStack stack = player.getHeldItem();
 						ComponentEvents.reload(stack, player, ItemGun.getComponents(stack));
 					}
-					props.reloadDelay = props.maxReloadDelay-1;
+					props.reloadDelay = props.maxReloadDelay - 1;
 				}
 				break;
 			}
@@ -127,7 +126,7 @@ public class PacketKey implements IMessage
 						ItemStack stack = player.getHeldItem();
 						ComponentEvents.eject(stack, player, ItemGun.getComponents(stack));
 					}
-					props.reloadDelay = props.maxReloadDelay-1;
+					props.reloadDelay = props.maxReloadDelay - 1;
 				}
 				break;
 			}

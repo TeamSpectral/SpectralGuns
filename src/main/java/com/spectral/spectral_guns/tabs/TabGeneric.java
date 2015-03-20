@@ -13,7 +13,7 @@ public abstract class TabGeneric extends CreativeTabs
 	{
 		super("spectralGuns." + tabLabel);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public abstract Item getTabIconItem();

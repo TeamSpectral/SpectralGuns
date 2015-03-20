@@ -38,25 +38,25 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @SideOnly(Side.CLIENT)
 public class HandlerClientFML extends HandlerCommonFML
 {
-	//fml events for client only here!
-
+	// fml events for client only here!
+	
 	public static KeyBinding WeaponReload;
 	public static KeyBinding WeaponZoom;
 	public static KeyBinding WeaponEject;
-
+	
 	public static void init()
 	{
 		WeaponReload = new KeyBinding("key.WeaponReload", Keyboard.KEY_R, "key.categories.spectral.guns");
 		WeaponZoom = new KeyBinding("key.WeaponZoom", Keyboard.KEY_Z, "key.categories.spectral.guns");
 		WeaponEject = new KeyBinding("key.WeaponEject", Keyboard.KEY_B, "key.categories.spectral.guns");
-
+		
 		ClientRegistry.registerKeyBinding(WeaponReload);
 		ClientRegistry.registerKeyBinding(WeaponZoom);
 		ClientRegistry.registerKeyBinding(WeaponEject);
 	}
-
+	
 	HashMap<KeyBinding, Integer> keyPressed = new HashMap<KeyBinding, Integer>();
-
+	
 	public boolean keypress(KeyBinding k)
 	{
 		if(!keyPressed.containsKey(k))
@@ -68,10 +68,10 @@ public class HandlerClientFML extends HandlerCommonFML
 		{
 			b = false;
 		}
-		keyPressed.put(k, k.isKeyDown() ? keyPressed.get(k)+1 : 0);
+		keyPressed.put(k, k.isKeyDown() ? keyPressed.get(k) + 1 : 0);
 		return b;
 	}
-
+	
 	public boolean keyhold(KeyBinding k, int rate)
 	{
 		if(!keyPressed.containsKey(k) || !k.isKeyDown())
@@ -84,14 +84,14 @@ public class HandlerClientFML extends HandlerCommonFML
 			keyPressed.put(k, 0);
 			return true;
 		}
-		keyPressed.put(k, k.isKeyDown() ? keyPressed.get(k)+1 : 0);
+		keyPressed.put(k, k.isKeyDown() ? keyPressed.get(k) + 1 : 0);
 		return false;
 	}
-
+	
 	@SubscribeEvent
 	public void onKeyInput(InputEvent.KeyInputEvent event)
 	{
-		//use for keys to hit once
+		// use for keys to hit once
 		if(keypress(WeaponReload) && !WeaponEject.isKeyDown())
 		{
 			M.network.sendToServer(new PacketKey(Key.RELOAD));
@@ -101,11 +101,11 @@ public class HandlerClientFML extends HandlerCommonFML
 			M.network.sendToServer(new PacketKey(Key.EJECT));
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void clientTickEvent(ClientTickEvent event)
 	{
-		//use for keys to hold down
+		// use for keys to hold down
 		if(Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown())
 		{
 			sendKey(Key.RIGHTCLICK);
@@ -141,7 +141,7 @@ public class HandlerClientFML extends HandlerCommonFML
 		
 		ParticleHandler.update();
 	}
-
+	
 	protected void sendKey(Key k)
 	{
 		PacketKey m = new PacketKey(k);

@@ -41,49 +41,48 @@ public class GuiSpectralGunsHud extends Gui
 	protected ItemStack highlightingItemStack;
 	protected ResourceLocation[] snowOverlay =
 		{
-			new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_0.png"),
-			new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_1.png"),
-			new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_2.png"),
-			new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_3.png"),
-			new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_4.png"),
-			new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_5.png")
+				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_0.png"),
+				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_1.png"),
+				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_2.png"),
+				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_3.png"),
+				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_4.png"),
+				new ResourceLocation(References.MODID + ":" + "textures/misc/overlay_snow_5.png")
 		};
-
+	
 	public GuiSpectralGunsHud(Minecraft mc)
 	{
 		this.mc = mc;
 	}
-
+	
 	public static enum RenderOrder
 	{
-		PRE,
-		POST
+		PRE, POST
 	}
-
+	
 	/**
 	 * Render ingame hud
 	 */
 	public void renderGameOverlay(EntityPlayer player, RenderOrder order, ElementType type)
 	{
 		GL11.glPushMatrix();
-
+		
 		ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
 		int w = scaledresolution.getScaledWidth();
 		int h = scaledresolution.getScaledHeight();
 		FontRenderer fontrenderer = this.mc.fontRendererObj;
-
+		
 		mc.mcProfiler.startSection("snowOverlay");
-
+		
 		this.mc.entityRenderer.setupOverlayRendering();
-
+		
 		if(this.mc.gameSettings.thirdPersonView == 0 && order == RenderOrder.PRE)
 		{
 			GL11.glEnable(GL11.GL_BLEND);
 			renderSnow(scaledresolution, player);
 		}
-
+		
 		mc.mcProfiler.endSection();
-
+		
 		if(mc.inGameHasFocus && order == RenderOrder.POST)
 		{
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() == M.gun)
@@ -111,30 +110,30 @@ public class GuiSpectralGunsHud extends Gui
 							s += " (hit reload key to reload)";
 						}
 					}
-					fontrenderer.drawStringWithShadow(s, 2, h-10*line, 0xAF8A33);
+					fontrenderer.drawStringWithShadow(s, 2, h - 10 * line, 0xAF8A33);
 					++line;
 				}
 				mc.mcProfiler.endSection();
-
+				
 				mc.mcProfiler.startSection("fireRateStats");
 				if(stack.getTagCompound().getInteger(ItemGun.FIRERATETIMER) > 0)
 				{
-					String s = "" + (float)stack.getTagCompound().getInteger(ItemGun.FIRERATETIMER)/20;
-
-					fontrenderer.drawStringWithShadow(s, 2, h-10*line, 0xAF8A33);
+					String s = "" + (float)stack.getTagCompound().getInteger(ItemGun.FIRERATETIMER) / 20;
+					
+					fontrenderer.drawStringWithShadow(s, 2, h - 10 * line, 0xAF8A33);
 					++line;
 				}
 				mc.mcProfiler.endSection();
 			}
 		}
-
+		
 		int line = 0;
-
+		
 		GL11.glColor4f(1, 1, 1, 1);
-
+		
 		GL11.glPopMatrix();
 	}
-
+	
 	private void renderSnow(ScaledResolution sr, EntityPlayer player)
 	{
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
@@ -171,7 +170,7 @@ public class GuiSpectralGunsHud extends Gui
 		GlStateManager.disableAlpha();
 		if(i > 0)
 		{
-			this.mc.getTextureManager().bindTexture(snowOverlay[i-1]);
+			this.mc.getTextureManager().bindTexture(snowOverlay[i - 1]);
 			Tessellator tessellator = Tessellator.getInstance();
 			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 			worldrenderer.startDrawingQuads();
@@ -186,13 +185,13 @@ public class GuiSpectralGunsHud extends Gui
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 	}
-
+	
 	private int getInventoryItem(InventoryPlayer inventory, Item item)
 	{
 		int j = 0;
 		int k;
 		ItemStack itemstack;
-
+		
 		for(k = 0; k < inventory.mainInventory.length; ++k)
 		{
 			itemstack = inventory.mainInventory[k];

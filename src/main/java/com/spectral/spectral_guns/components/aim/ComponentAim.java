@@ -18,19 +18,19 @@ public class ComponentAim extends ComponentGeneric
 	{
 		super(new String2("aim", ""), new String2("aim", ""), required, incapatible, Type.AIM, material);
 	}
-
+	
 	@Override
 	public float zoom(float zoom, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
 		return zoom;
 	}
-
+	
 	@Override
 	public void registerRecipe()
 	{
 		
 	}
-
+	
 	@Override
 	public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 	{

@@ -21,8 +21,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemBase extends Item implements IDAble
 {
 	public final boolean hasCompound = false;
-	private final String id; public final String getId(){return id;}
-
+	private final String id;
+	
+	public final String getId()
+	{
+		return id;
+	}
+	
 	/**
 	 * Base for all items
 	 */
@@ -32,7 +37,7 @@ public class ItemBase extends Item implements IDAble
 		this.setMaxStackSize(64);
 		this.id = id;
 	}
-
+	
 	/**
 	 * Base for all items
 	 */
@@ -41,7 +46,7 @@ public class ItemBase extends Item implements IDAble
 		this(id);
 		this.setCreativeTabs(tabs);
 	}
-
+	
 	@Override
 	public CreativeTabs[] getCreativeTabs()
 	{
@@ -54,18 +59,18 @@ public class ItemBase extends Item implements IDAble
 			return super.getCreativeTabs();
 		}
 	}
-
+	
 	public ItemBase setCreativeTabs(CreativeTabs[] tabs)
 	{
 		M.creativeTabs.put(this, tabs);
 		return this;
 	}
-
-    public String getUnlocalizedName(ItemStack stack)
-    {
-    	return getUnlocalizedName();
-    }
-
+	
+	public String getUnlocalizedName(ItemStack stack)
+	{
+		return getUnlocalizedName();
+	}
+	
 	protected static ItemStack compound(ItemStack stack)
 	{
 		if(!stack.hasTagCompound())

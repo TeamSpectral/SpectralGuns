@@ -25,19 +25,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemFood2 extends ItemFood implements IDAble
 {
-    public final int itemUseDuration;
-    public final EnumAction action;
-	private final String id; public final String getId(){return id;}
+	public final int itemUseDuration;
+	public final EnumAction action;
+	private final String id;
+	
+	public final String getId()
+	{
+		return id;
+	}
+	
 	/**
 	 * Food extending ItemBase
 	 */
 	public ItemFood2(String id, int amount, float saturation, boolean isWolfFood, int duration, EnumAction action)
 	{
 		super(amount, saturation, isWolfFood);
-        this.itemUseDuration = duration;
-        this.action = action;
-        this.id = id;
+		this.itemUseDuration = duration;
+		this.action = action;
+		this.id = id;
 	}
+	
 	/**
 	 * Food extending ItemBase
 	 */
@@ -45,7 +52,7 @@ public class ItemFood2 extends ItemFood implements IDAble
 	{
 		this(id, amount, saturation, isWolfFood, duration, EnumAction.EAT);
 	}
-
+	
 	/**
 	 * Food extending ItemBase
 	 */
@@ -54,27 +61,27 @@ public class ItemFood2 extends ItemFood implements IDAble
 		this(id, amount, saturation, isWolfFood, duration);
 		this.setCreativeTabs(tabs);
 	}
-
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
-    {
-        --stack.stackSize;
-        playerIn.getFoodStats().addStats(this.getHealAmount(stack), this.getSaturationModifier(stack));
-        worldIn.playSoundAtEntity(playerIn, "random.burp", 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-        this.onFoodEaten(stack, worldIn, playerIn);
-        playerIn.triggerAchievement(StatList.objectUseStats[Item.getIdFromItem(this)]);
-        return stack;
-    }
-
-    public int getMaxItemUseDuration(ItemStack stack)
-    {
-        return itemUseDuration;
-    }
-
-    public EnumAction getItemUseAction(ItemStack stack)
-    {
-        return action;
-    }
-    
+	
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
+	{
+		--stack.stackSize;
+		playerIn.getFoodStats().addStats(this.getHealAmount(stack), this.getSaturationModifier(stack));
+		worldIn.playSoundAtEntity(playerIn, "random.burp", 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+		this.onFoodEaten(stack, worldIn, playerIn);
+		playerIn.triggerAchievement(StatList.objectUseStats[Item.getIdFromItem(this)]);
+		return stack;
+	}
+	
+	public int getMaxItemUseDuration(ItemStack stack)
+	{
+		return itemUseDuration;
+	}
+	
+	public EnumAction getItemUseAction(ItemStack stack)
+	{
+		return action;
+	}
+	
 	@Override
 	public CreativeTabs[] getCreativeTabs()
 	{
@@ -87,7 +94,7 @@ public class ItemFood2 extends ItemFood implements IDAble
 			return super.getCreativeTabs();
 		}
 	}
-
+	
 	public ItemFood2 setCreativeTabs(CreativeTabs[] tabs)
 	{
 		M.creativeTabs.put(this, tabs);

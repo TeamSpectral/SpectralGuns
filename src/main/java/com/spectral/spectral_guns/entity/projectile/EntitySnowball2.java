@@ -32,22 +32,22 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 public class EntitySnowball2 extends EntitySnowball implements IEntityAdditionalSpawnData
 {
 	public int damage = 1;
-
+	
 	public EntitySnowball2(World world)
 	{
 		super(world);
 	}
-
+	
 	public EntitySnowball2(World world, EntityLivingBase source)
 	{
 		super(world, source);
 	}
-
+	
 	public EntitySnowball2(World world, double x, double y, double z)
 	{
 		super(world, x, y, z);
 	}
-
+	
 	public void onUpdate()
 	{
 		super.onUpdate();
@@ -65,19 +65,19 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 			if(rand.nextBoolean())
 			{
 				this.setDead();
-				a.get(rand.nextInt(a.size()-1)).damage += this.damage*2/3;
+				a.get(rand.nextInt(a.size() - 1)).damage += this.damage * 2 / 3;
 			}
 			else
 			{
-				a.get(rand.nextInt(a.size()-1)).setDead();
+				a.get(rand.nextInt(a.size() - 1)).setDead();
 			}
 		}
 	}
-
+	
 	protected void onImpact(MovingObjectPosition pos)
 	{
 		float damage = 0.5F;
-
+		
 		if(pos.entityHit != null)
 		{
 			if(pos.entityHit instanceof EntityBlaze)
@@ -85,48 +85,47 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 				damage += 3;
 			}
 		}
-
+		
 		double m = Coordinates3D.distance(new Vec3(motionX, motionY, motionZ));
-		damage *= m-0.3;
-
-
+		damage *= m - 0.3;
+		
 		if(pos.entityHit != null)
 		{
-			if (pos.entityHit instanceof EntityBlaze)
+			if(pos.entityHit instanceof EntityBlaze)
 			{
 				damage *= 3;
 				damage -= 3;
-
+				
 				if(damage < 3)
 				{
 					damage = 3;
 				}
 			}
 		}
-
+		
 		damage *= this.damage;
 		damage -= 0.5F;
-
+		
 		if(damage < 0)
 		{
 			damage = 0;
 		}
-
+		
 		if(pos.entityHit != null)
 		{
 			pos.entityHit.velocityChanged = false;
 			pos.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), damage);
 			if(pos.entityHit instanceof EntityLivingBase)
 			{
-				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.digSlowdown.id, (int)(rand.nextFloat()*(2/3*20)+20/3), (int)(rand.nextFloat()), false, false));
-				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, (int)(rand.nextFloat()*(2/3*20)+20/3), (int)(rand.nextFloat()), false, false));
+				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.digSlowdown.id, (int)(rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)(rand.nextFloat()), false, false));
+				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, (int)(rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)(rand.nextFloat()), false, false));
 			}
 			pos.entityHit.extinguish();
 			float f = 0.01F;
-			pos.entityHit.addVelocity(motionX*f, motionY*f, motionZ*f);
+			pos.entityHit.addVelocity(motionX * f, motionY * f, motionZ * f);
 		}
-
-		int h = (int)Math.ceil(16*damage);
+		
+		int h = (int)Math.ceil(16 * damage);
 		if(h > 16)
 		{
 			h = 32;
@@ -135,18 +134,19 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 		{
 			this.worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, true, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
 		}
-
+		
 		if(!this.worldObj.isRemote)
 		{
 			this.setDead();
 		}
 	}
-
+	
 	/**
 	 * Called by the server when constructing the spawn packet.
 	 * Data should be added to the provided stream.
 	 *
-	 * @param buffer The packet data stream
+	 * @param buffer
+	 *            The packet data stream
 	 */
 	@Override
 	public void writeSpawnData(ByteBuf buf)
@@ -155,12 +155,13 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 		this.writeEntityToNBT(compound);
 		ByteBufUtils.writeTag(buf, compound);
 	}
-
+	
 	/**
 	 * Called by the client when it receives a Entity spawn packet.
 	 * Data should be read out of the stream in the same way as it was written.
 	 *
-	 * @param data The packet data stream
+	 * @param data
+	 *            The packet data stream
 	 */
 	@Override
 	public void readSpawnData(ByteBuf buf)

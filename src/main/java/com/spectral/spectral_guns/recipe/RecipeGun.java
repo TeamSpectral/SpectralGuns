@@ -41,17 +41,17 @@ public class RecipeGun implements IRecipe
 		}
 		return null;
 	}
-
+	
 	public ItemStack getRecipeOutput()
 	{
 		return new ItemStack(M.gun);
 	}
-
+	
 	public int getRecipeSize()
 	{
 		return 1;
 	}
-
+	
 	public boolean matches(InventoryCrafting inv, World world)
 	{
 		ItemStack gun = new ItemStack(M.gun);
@@ -72,17 +72,17 @@ public class RecipeGun implements IRecipe
 		}
 		return ComponentEvents.isGunValid(gun) && ItemGun.getComponents(gun).size() > 0;
 	}
-
+	
 	public ItemStack[] getRemainingItems(InventoryCrafting inv)
 	{
 		ItemStack[] aitemstack = new ItemStack[inv.getSizeInventory()];
-
+		
 		for(int i = 0; i < aitemstack.length; ++i)
 		{
 			ItemStack itemstack = inv.getStackInSlot(i);
 			aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
 		}
-
+		
 		return aitemstack;
 	}
 }

@@ -27,8 +27,8 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 @SideOnly(Side.CLIENT)
 public class HandlerClient extends HandlerCommon
 {
-	//minecraftforge events for client only here!
-
+	// minecraftforge events for client only here!
+	
 	@SubscribeEvent
 	public void RenderGameOverlayEvent(RenderGameOverlayEvent event)
 	{
@@ -47,7 +47,7 @@ public class HandlerClient extends HandlerCommon
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void ItemTooltipEvent(ItemTooltipEvent event)
 	{

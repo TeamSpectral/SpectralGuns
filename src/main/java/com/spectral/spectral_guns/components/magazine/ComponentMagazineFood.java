@@ -28,27 +28,27 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public final class ComponentMagazineFood extends ComponentMagazine
 {
 	protected ItemStack lastUsedStack = null;
-
-	//nbt
+	
+	// nbt
 	public static final String ITEMS = "Items";
-
+	
 	public ComponentMagazineFood(Component[] required, Component[] incapatible, ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount)
 	{
 		super("food", "food", required, incapatible, material, capacity, kickback, 90, fireRate, projectileCount);
 	}
-
+	
 	@Override
 	protected Entity projectile(ItemStack stack, World world, EntityPlayer player)
 	{
 		return new EntityFood(world, player, getLastItem(stack));
 	}
-
+	
 	@Override
 	public Item ammoItem()
 	{
 		return M.food_mush;
 	}
-
+	
 	@Override
 	public boolean isAmmoItem(ItemStack stack, World world, EntityPlayer player)
 	{
@@ -61,36 +61,96 @@ public final class ComponentMagazineFood extends ComponentMagazine
 			return false;
 		}
 	}
-
+	
 	@Override
 	protected void fireSound(Entity projectile, ItemStack stack, World world, EntityPlayer player)
 	{
-		float spread = ItemGun.spread(stack, player)+0.03F;
-
+		float spread = ItemGun.spread(stack, player) + 0.03F;
+		
 		for(int i = 0; i < 64 && world.isRemote; ++i)
 		{
-			Vec3 m = Coordinates3D.stabilize(new Vec3((float)projectile.motionX+Randomization.r(spread), (float)projectile.motionY+Randomization.r(spread), (float)projectile.motionZ+Randomization.r(spread)), ItemGun.speed(stack, player)/4*world.rand.nextFloat());
-			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[] {Item.getIdFromItem(ammoItem())});
+			Vec3 m = Coordinates3D.stabilize(new Vec3((float)projectile.motionX + Randomization.r(spread), (float)projectile.motionY + Randomization.r(spread), (float)projectile.motionZ + Randomization.r(spread)), ItemGun.speed(stack, player) / 4 * world.rand.nextFloat());
+			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[]
+				{
+					Item.getIdFromItem(ammoItem())
+				});
 		}
-
-		world.playSoundAtEntity(player, "mob.slime.big", 2.0F, 1+world.rand.nextFloat());
-		world.playSoundAtEntity(player, "mob.slime.small", 2.0F, 1+world.rand.nextFloat());
+		
+		world.playSoundAtEntity(player, "mob.slime.big", 2.0F, 1 + world.rand.nextFloat());
+		world.playSoundAtEntity(player, "mob.slime.small", 2.0F, 1 + world.rand.nextFloat());
 		world.playSoundAtEntity(player, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
-
+		
 	}
-
+	
 	@Override
 	@SuppressWarnings("incomplete-switch")
 	public void registerRecipe()
 	{
 		switch(material)
 		{
-		case WOOD: GameRegistry.addShapedRecipe(new ItemStack(this.item),  new Object[]{"PGb", "DHC", "PPb", 'P', Item.getItemFromBlock(Blocks.wooden_pressure_plate), 'G', M.gear_wood, 'b', Item.getItemFromBlock(Blocks.planks), 'D', Item.getItemFromBlock(Blocks.dispenser), 'H', Item.getItemFromBlock(Blocks.hopper), 'C', M.container}); break;
-		case IRON: GameRegistry.addShapedRecipe(new ItemStack(this.item),  new Object[]{"PGb", "MHC", "PPb", 'P', Item.getItemFromBlock(Blocks.heavy_weighted_pressure_plate), 'G', M.gear_iron, 'b', Items.iron_ingot, 'M', M.magazine_food_wood.item, 'H', Item.getItemFromBlock(Blocks.hopper), 'C', M.container}); break;
-		case GOLD: GameRegistry.addShapedRecipe(new ItemStack(this.item),  new Object[]{"PGb", "MHC", "PPb", 'P', Item.getItemFromBlock(Blocks.light_weighted_pressure_plate), 'G', M.gear_gold, 'b', Items.gold_ingot, 'M', M.magazine_food_iron.item, 'H', Item.getItemFromBlock(Blocks.hopper), 'C', M.container}); break;
+		case WOOD:
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
+				{
+						"PGb",
+						"DHC",
+						"PPb",
+						'P',
+						Item.getItemFromBlock(Blocks.wooden_pressure_plate),
+						'G',
+						M.gear_wood,
+						'b',
+						Item.getItemFromBlock(Blocks.planks),
+						'D',
+						Item.getItemFromBlock(Blocks.dispenser),
+						'H',
+						Item.getItemFromBlock(Blocks.hopper),
+						'C',
+						M.container
+				});
+			break;
+		case IRON:
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
+				{
+						"PGb",
+						"MHC",
+						"PPb",
+						'P',
+						Item.getItemFromBlock(Blocks.heavy_weighted_pressure_plate),
+						'G',
+						M.gear_iron,
+						'b',
+						Items.iron_ingot,
+						'M',
+						M.magazine_food_wood.item,
+						'H',
+						Item.getItemFromBlock(Blocks.hopper),
+						'C',
+						M.container
+				});
+			break;
+		case GOLD:
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
+				{
+						"PGb",
+						"MHC",
+						"PPb",
+						'P',
+						Item.getItemFromBlock(Blocks.light_weighted_pressure_plate),
+						'G',
+						M.gear_gold,
+						'b',
+						Items.gold_ingot,
+						'M',
+						M.magazine_food_iron.item,
+						'H',
+						Item.getItemFromBlock(Blocks.hopper),
+						'C',
+						M.container
+				});
+			break;
 		}
 	}
-
+	
 	@Override
 	public boolean isValid(ArrayList<Component> ecs)
 	{
@@ -103,25 +163,25 @@ public final class ComponentMagazineFood extends ComponentMagazine
 		}
 		return super.isValid(ecs);
 	}
-
+	
 	@Override
 	public int setAmmo(int ammo, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		int result =  super.setAmmo(ammo, stack, world, player, components);
+		int result = super.setAmmo(ammo, stack, world, player, components);
 		sortItems(stack);
 		return result;
 	}
-
+	
 	@Override
-	public float delay(float delay, ItemStack stack, World world,EntityPlayer player, ArrayList<Component> components)
+	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return delay + capacity/32 + 4;
+		return delay + capacity / 32 + 4;
 	}
-
+	
 	protected NBTTagList getItemsNBT(ItemStack gun)
 	{
 		NBTTagCompound compound = this.getTagCompound(gun);
-
+		
 		NBTTagList items = compound.getTagList(ITEMS, new NBTTagCompound().getId());
 		if(items == null)
 		{
@@ -151,12 +211,12 @@ public final class ComponentMagazineFood extends ComponentMagazine
 		this.getTagCompound(gun).setTag(ITEMS, items);
 		return items;
 	}
-
+	
 	protected ArrayList<ItemStack> getItems(ItemStack gun)
 	{
 		ArrayList<ItemStack> a = new ArrayList<ItemStack>();
 		NBTTagList items = getItemsNBT(gun);
-
+		
 		for(int i = 0; i < items.tagCount(); ++i)
 		{
 			NBTTagCompound stackCompound = items.getCompoundTagAt(i);
@@ -180,22 +240,22 @@ public final class ComponentMagazineFood extends ComponentMagazine
 			}
 		}
 		this.getTagCompound(gun).setTag(ITEMS, items);
-
+		
 		return a;
 	}
-
+	
 	protected ItemStack getLastItem(ItemStack gun)
 	{
 		NBTTagList items = getItemsNBT(gun);
 		if(items.tagCount() > 0)
 		{
-			ItemStack stack = ItemStack.loadItemStackFromNBT(items.getCompoundTagAt(items.tagCount()-1));
+			ItemStack stack = ItemStack.loadItemStackFromNBT(items.getCompoundTagAt(items.tagCount() - 1));
 			removeLastItem(gun);
 			return stack;
 		}
 		return new ItemStack(ammoItem());
 	}
-
+	
 	protected void removeFirstItem(ItemStack gun)
 	{
 		NBTTagList items = getItemsNBT(gun);
@@ -205,17 +265,17 @@ public final class ComponentMagazineFood extends ComponentMagazine
 		}
 		this.getTagCompound(gun).setTag(ITEMS, items);
 	}
-
+	
 	protected void removeLastItem(ItemStack gun)
 	{
 		NBTTagList items = getItemsNBT(gun);
 		if(items.tagCount() > 0)
 		{
-			items.removeTag(items.tagCount()-1);
+			items.removeTag(items.tagCount() - 1);
 		}
 		this.getTagCompound(gun).setTag(ITEMS, items);
 	}
-
+	
 	protected void addItem(ItemStack gun)
 	{
 		if(lastUsedStack == null)
@@ -233,10 +293,10 @@ public final class ComponentMagazineFood extends ComponentMagazine
 			}
 			this.getTagCompound(gun).setTag(ITEMS, items);
 		}
-
+		
 		lastUsedStack = null;
 	}
-
+	
 	protected void sortItems(ItemStack gun)
 	{
 		int ammo = this.getTagCompound(gun).getInteger(AMMO);
@@ -249,7 +309,7 @@ public final class ComponentMagazineFood extends ComponentMagazine
 			addItem(gun);
 		}
 	}
-
+	
 	public boolean isItemValid(ItemStack stack, boolean flag)
 	{
 		if(stack.getItem() == ammoItem())

@@ -28,39 +28,40 @@ public class EntityLargeFireball2 extends EntityLargeFireball implements IEntity
 	{
 		super(world);
 	}
-
+	
 	public EntityLargeFireball2(World world, EntityLivingBase shooter, double accelX, double accelY, double accelZ)
 	{
 		super(world, shooter, accelX, accelY, accelZ);
 	}
-
+	
 	public EntityLargeFireball2(World world, double x, double y, double z, double accelX, double accelY, double accelZ)
 	{
 		super(world, x, y, z, accelX, accelY, accelZ);
 	}
-
+	
 	@Override
 	protected void onImpact(MovingObjectPosition pos)
 	{
-        if(!this.worldObj.isRemote)
-        {
-            if(pos.entityHit != null)
-            {
-                pos.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 6.0F);
-                this.func_174815_a(this.shootingEntity, pos.entityHit);
-            }
-
-            boolean flag = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
-            this.worldObj.newExplosion(this.shootingEntity, this.posX, this.posY, this.posZ, (float)this.explosionPower, flag, flag);
-            this.setDead();
-        }
+		if(!this.worldObj.isRemote)
+		{
+			if(pos.entityHit != null)
+			{
+				pos.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 6.0F);
+				this.func_174815_a(this.shootingEntity, pos.entityHit);
+			}
+			
+			boolean flag = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
+			this.worldObj.newExplosion(this.shootingEntity, this.posX, this.posY, this.posZ, (float)this.explosionPower, flag, flag);
+			this.setDead();
+		}
 	}
-
+	
 	/**
 	 * Called by the server when constructing the spawn packet.
 	 * Data should be added to the provided stream.
 	 *
-	 * @param buffer The packet data stream
+	 * @param buffer
+	 *            The packet data stream
 	 */
 	@Override
 	public void writeSpawnData(ByteBuf buf)
@@ -69,12 +70,13 @@ public class EntityLargeFireball2 extends EntityLargeFireball implements IEntity
 		this.writeEntityToNBT(compound);
 		ByteBufUtils.writeTag(buf, compound);
 	}
-
+	
 	/**
 	 * Called by the client when it receives a Entity spawn packet.
 	 * Data should be read out of the stream in the same way as it was written.
 	 *
-	 * @param data The packet data stream
+	 * @param data
+	 *            The packet data stream
 	 */
 	@Override
 	public void readSpawnData(ByteBuf buf)

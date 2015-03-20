@@ -16,9 +16,9 @@ import com.spectral.spectral_guns.items.ItemBase;
 
 public class HandlerCommonFML extends HandlerBase
 {
-	//fml events for both sides here!
+	// fml events for both sides here!
 	
-	//currently unused, but is needed to fix an annoying error in the log
+	// currently unused, but is needed to fix an annoying error in the log
 	@SubscribeEvent
 	public void playerUpdateEvent(PlayerTickEvent event)
 	{

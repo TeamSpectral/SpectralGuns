@@ -23,18 +23,19 @@ public class RenderNull extends Render
 {
 	/**
 	 * just to get rid of the annoying white boxes
+	 * 
 	 * @param rm
 	 */
 	public RenderNull(RenderManager rm)
 	{
 		super(rm);
 	}
-
+	
 	public void doRender(Entity entity, double x, double y, double z, float f, float partialTicks)
 	{
 		
 	}
-
+	
 	protected ResourceLocation getEntityTexture(Entity entity)
 	{
 		return TextureMap.locationBlocksTexture;

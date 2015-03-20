@@ -14,8 +14,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.SERVER)
 public class HandlerServer extends HandlerCommon
 {
-	//minecraftforge events for server only here!
-
+	// minecraftforge events for server only here!
+	
 	@SubscribeEvent
 	public void livingUpdateEvent(LivingUpdateEvent event)
 	{
@@ -24,7 +24,8 @@ public class HandlerServer extends HandlerCommon
 			EntityExtendedPlayer propsP = EntityExtendedPlayer.get((EntityPlayerMP)event.entity);
 			NBTTagCompound compound = new NBTTagCompound();
 			propsP.loadNBTData(compound);
-			//M.network.sendTo(new PacketPlayerData(compound), (EntityPlayerMP)event.entity);
+			// M.network.sendTo(new PacketPlayerData(compound),
+			// (EntityPlayerMP)event.entity);
 		}
 	}
 }

@@ -32,10 +32,10 @@ public abstract class ComponentMagazine extends ComponentGeneric
 	public final float spread;
 	public final int projectileCount;
 	public final float fireRate;
-
-	//nbt
+	
+	// nbt
 	public static final String AMMO = "Ammo";
-
+	
 	public ComponentMagazine(String id, String name, Component[] required, Component[] incapatible, ComponentMaterial material, int capacity, float kickback, float spread, float fireRate, int projectileCount)
 	{
 		super(new String2("magazine_" + id, ""), new String2("magazine." + name, ""), required, incapatible, Type.MAGAZINE, material);
@@ -45,7 +45,7 @@ public abstract class ComponentMagazine extends ComponentGeneric
 		this.projectileCount = projectileCount;
 		this.fireRate = fireRate;
 	}
-
+	
 	@Override
 	public int setAmmo(int ammo, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
@@ -56,21 +56,21 @@ public abstract class ComponentMagazine extends ComponentGeneric
 		}
 		while(ammo > 0 && compound.getInteger(AMMO) < capacity)
 		{
-			compound.setInteger(AMMO, compound.getInteger(AMMO)+1);
+			compound.setInteger(AMMO, compound.getInteger(AMMO) + 1);
 			--ammo;
 		}
 		while(ammo < 0 && compound.getInteger(AMMO) > 0)
 		{
-			compound.setInteger(AMMO, compound.getInteger(AMMO)-1);
+			compound.setInteger(AMMO, compound.getInteger(AMMO) - 1);
 			++ammo;
 		}
-
+		
 		capAmmo(compound);
 		return ammo;
 	}
-
+	
 	protected abstract Entity projectile(ItemStack stack, World world, EntityPlayer player);
-
+	
 	@Override
 	public ArrayList<Entity> fire(ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
@@ -80,42 +80,42 @@ public abstract class ComponentMagazine extends ComponentGeneric
 		}
 		return e;
 	}
-
+	
 	@Override
 	public float spread(float spread, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
 		return this.spread;
 	}
-
+	
 	@Override
 	public float kickback(float kickback, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return kickback + this.kickback*0.63F;
+		return kickback + this.kickback * 0.63F;
 	}
-
+	
 	@Override
 	public float recoil(float recoil, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return recoil + this.kickback*5.6F;
+		return recoil + this.kickback * 5.6F;
 	}
-
+	
 	@Override
 	public float speed(float speed, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return speed + 1.8F + this.kickback*3;
+		return speed + 1.8F + this.kickback * 3;
 	}
-
+	
 	public float fireRate(float rate, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
 		return rate + this.fireRate;
 	}
-
+	
 	@Override
 	public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 	{
-
+		
 	}
-
+	
 	public boolean isValid(ArrayList<Component> ecs)
 	{
 		int count = 0;
@@ -132,7 +132,7 @@ public abstract class ComponentMagazine extends ComponentGeneric
 		}
 		return super.isValid(ecs);
 	}
-
+	
 	@Override
 	public int ammo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
@@ -140,21 +140,21 @@ public abstract class ComponentMagazine extends ComponentGeneric
 		capAmmo(compound);
 		return compound.getInteger(AMMO);
 	}
-
+	
 	@Override
 	public boolean isAmmoItem(ItemStack stack, World world, EntityPlayer player)
 	{
 		return stack.getItem() == ammoItem();
 	}
-
+	
 	@Override
 	public Item ejectableAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
 		return ammoItem();
 	}
-
+	
 	public abstract Item ammoItem();
-
+	
 	protected void capAmmo(NBTTagCompound c)
 	{
 		int a = c.getInteger(AMMO);
@@ -167,16 +167,16 @@ public abstract class ComponentMagazine extends ComponentGeneric
 			c.setInteger(AMMO, 0);
 		}
 	}
-
+	
 	@Override
 	public int capacity(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
 		return capacity;
 	}
-
+	
 	@Override
-	public float delay(float delay, ItemStack stack, World world,EntityPlayer player, ArrayList<Component> components)
+	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return delay + capacity/32;
+		return delay + capacity / 32;
 	}
 }

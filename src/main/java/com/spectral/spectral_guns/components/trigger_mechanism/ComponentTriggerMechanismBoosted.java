@@ -21,33 +21,33 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 	{
 		super(new String2("", "_boosted"), new String2("", ".boosted"), required, incapatible, material, delay);
 	}
-
+	
 	public ComponentTriggerMechanismBoosted(Component[] required, Component[] incapatible, ComponentTriggerMechanism c)
 	{
-		this(required, incapatible, c.material, c.delay/2);
+		this(required, incapatible, c.material, c.delay / 2);
 	}
-
+	
 	@Override
 	public float recoil(float recoil, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return recoil*4;
+		return recoil * 4;
 	}
-
+	
 	@Override
-	public float delay(float delay, ItemStack stack, World world,EntityPlayer player, ArrayList<Component> components)
+	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return delay/2 + this.delay;
+		return delay / 2 + this.delay;
 	}
-
+	
 	@Override
 	public float fireRate(float rate, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return rate/3;
+		return rate / 3;
 	}
-
+	
 	public float speed(float speed, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return speed*2;
+		return speed * 2;
 	}
 	
 	@SuppressWarnings("incomplete-switch")
@@ -57,10 +57,19 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 		Item trigger = M.trigger_iron.item;
 		switch(material)
 		{
-		case WOOD: trigger = M.trigger_wood.item; break;
-		case IRON: trigger = M.trigger_iron.item; break;
-		case GOLD: trigger = M.trigger_gold.item; break;
+		case WOOD:
+			trigger = M.trigger_wood.item;
+			break;
+		case IRON:
+			trigger = M.trigger_iron.item;
+			break;
+		case GOLD:
+			trigger = M.trigger_gold.item;
+			break;
 		}
-		GameRegistry.addShapelessRecipe(new ItemStack(this.item),  new Object[]{Items.redstone, trigger});
+		GameRegistry.addShapelessRecipe(new ItemStack(this.item), new Object[]
+			{
+					Items.redstone, trigger
+			});
 	}
 }

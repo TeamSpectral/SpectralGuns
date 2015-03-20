@@ -31,13 +31,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemGun extends ItemBase implements IDAble
 {
-	//nbt
+	// nbt
 	public static final String COMPONENTS = "Components";
 	public static final String NAME = "Name";
 	public static final String DELAYTIMER = "DelayTimer";
 	public static final String RECOIL = "RecoilLast";
 	public static final String FIRERATETIMER = "FireRateTimer";
-
+	
 	public ItemGun()
 	{
 		super("gun");
@@ -46,20 +46,21 @@ public class ItemGun extends ItemBase implements IDAble
 		this.setMaxDamage(200);
 		this.maxStackSize = 1;
 	}
-
+	
 	@Override
 	public int getMaxDamage(ItemStack stack)
 	{
 		return durabilityMax(stack);
 	}
-
+	
 	@Override
 	public int getDamage(ItemStack stack)
 	{
 		return durabilityDamage(stack);
 	}
-
+	
 	public static float fov = 0;
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced)
@@ -82,12 +83,12 @@ public class ItemGun extends ItemBase implements IDAble
 			}
 			tooltip.add(s);
 		}
-		tooltip.add("Recoil: " + Math.floor(recoil(stack, player)*100)/100 + "°");
-		tooltip.add("Kickback: " + Math.floor(kickback(stack, player)*100)/100 + " m/tick");
-		tooltip.add("Spread: " + Math.floor(spread(stack, player)*36000)/100 + "°");
+		tooltip.add("Recoil: " + Math.floor(recoil(stack, player) * 100) / 100 + "°");
+		tooltip.add("Kickback: " + Math.floor(kickback(stack, player) * 100) / 100 + " m/tick");
+		tooltip.add("Spread: " + Math.floor(spread(stack, player) * 36000) / 100 + "°");
 		tooltip.add("Response Time: " + delay(stack, player) + " ticks");
 		tooltip.add("Fire Rate: " + fireRate(stack, player) + " ticks");
-		int zoom = (int)Math.floor((zoom(stack, player, 1))*100);
+		int zoom = (int)Math.floor((zoom(stack, player, 1)) * 100);
 		if(zoom > 100)
 		{
 			tooltip.add("Zoom: " + zoom + "%");
@@ -103,7 +104,7 @@ public class ItemGun extends ItemBase implements IDAble
 			}
 		}
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List subItems)
@@ -120,28 +121,28 @@ public class ItemGun extends ItemBase implements IDAble
 			subItems.add(a.get(i));
 		}
 	}
-
+	
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
-
+		
 		if(M.gun.canShoot(stack, player))
 		{
 			M.gun.setDelay(stack, player);
 		}
-
+		
 		return stack;
 	}
-
+	
 	public void resetDelay(ItemStack stack)
 	{
 		compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
 		compound.setInteger(DELAYTIMER, -1);
 	}
-
+	
 	public void setDelay(ItemStack stack, EntityPlayer player)
 	{
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
@@ -160,7 +161,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		compound.setInteger(DELAYTIMER, i);
 	}
-
+	
 	public boolean canShoot(ItemStack stack, EntityPlayer player)
 	{
 		compound(stack);
@@ -175,16 +176,16 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return true;
 	}
-
+	
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected)
 	{
 		super.onUpdate(stack, world, entity, slot, isSelected);
 		NBTTagCompound compound = stack.getTagCompound();
 		ArrayList<Component> components = getComponents(stack);
-
+		
 		components = ComponentEvents.updateComponents(stack, entity, slot, isSelected, components);
-
+		
 		if(compound.getFloat(RECOIL) > 0.01)
 		{
 			if(entity instanceof EntityPlayer)
@@ -194,9 +195,9 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		if(compound.getInteger(FIRERATETIMER) > 0)
 		{
-			compound.setInteger(FIRERATETIMER, compound.getInteger(FIRERATETIMER)-1);
+			compound.setInteger(FIRERATETIMER, compound.getInteger(FIRERATETIMER) - 1);
 		}
-
+		
 		if(entity instanceof EntityPlayer)
 		{
 			if(compound.getInteger(DELAYTIMER) == 0)
@@ -208,13 +209,13 @@ public class ItemGun extends ItemBase implements IDAble
 		{
 			resetDelay(stack);
 		}
-
+		
 		if(compound.getInteger(DELAYTIMER) > 0)
 		{
-			compound.setInteger(DELAYTIMER, compound.getInteger(DELAYTIMER)-1);
+			compound.setInteger(DELAYTIMER, compound.getInteger(DELAYTIMER) - 1);
 		}
 	}
-
+	
 	public void fire(ItemStack stack, World world, EntityPlayer player)
 	{
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
@@ -224,12 +225,12 @@ public class ItemGun extends ItemBase implements IDAble
 		compound(stack);
 		ArrayList<Component> components = getComponents(stack);
 		NBTTagCompound compound = stack.getTagCompound();
-
+		
 		ArrayList<Entity> e = ComponentEvents.fireComponents(stack, player, components);
-
+		
 		if(e == null || e.size() <= 0)
 		{
-			//click sound
+			// click sound
 		}
 		else
 		{
@@ -245,10 +246,10 @@ public class ItemGun extends ItemBase implements IDAble
 			compound.setInteger(FIRERATETIMER, fireRate(stack, player));
 		}
 		resetDelay(stack);
-
+		
 		setComponents(stack, components);
 	}
-
+	
 	public void kickBack(ItemStack stack, EntityPlayer player, ArrayList<Entity> e)
 	{
 		double x = -Math.sin((player.rotationYaw / 180.0F - 180.0F) * Math.PI) * MathHelper.cos(player.rotationPitch / 180.0F * (float)Math.PI);
@@ -272,25 +273,25 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		else
 		{
-			float f = -(float)player.motionY*3;
+			float f = -(float)player.motionY * 3;
 			if(f < player.fallDistance)
 			{
 				player.fallDistance = f;
 			}
 		}
 	}
-
+	
 	public void recoilPerTick(ItemStack stack, Entity player)
 	{
 		compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
 		float r = compound.getFloat(RECOIL);
 		int i = 3;
-		player.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch + r - r*(i-1)/i);
-
-		compound.setFloat(RECOIL, r*(i-1)/i);
+		player.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch + r - r * (i - 1) / i);
+		
+		compound.setFloat(RECOIL, r * (i - 1) / i);
 	}
-
+	
 	public void applyRecoil(ItemStack stack, EntityPlayer player)
 	{
 		compound(stack);
@@ -298,14 +299,14 @@ public class ItemGun extends ItemBase implements IDAble
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
 		NBTTagCompound compound = stack.getTagCompound();
 		compound.setFloat(RECOIL, compound.getFloat(RECOIL) + r);
-		player.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw + Randomization.r(r/8), player.rotationPitch - r);
+		player.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw + Randomization.r(r / 8), player.rotationPitch - r);
 	}
-
+	
 	public static void setComponents(ItemStack stack, Component[] cs)
 	{
 		setComponents(stack, ArraysAndSuch.arrayToArrayList(cs));
 	}
-
+	
 	public static void addComponent(ItemStack stack, Component c)
 	{
 		ArrayList<Component> cs = getComponents(stack);
@@ -315,11 +316,11 @@ public class ItemGun extends ItemBase implements IDAble
 			setComponents(stack, cs);
 		}
 	}
-
+	
 	public static void setComponents(ItemStack stack, ArrayList<Component> cs)
 	{
 		ArrayList<String> ids = new ArrayList<String>();
-
+		
 		for(int i = 0; i < cs.size(); ++i)
 		{
 			Component c = cs.get(i);
@@ -339,7 +340,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		setComponentIDs(stack, ids);
 	}
-
+	
 	public static void setComponentIDs(ItemStack stack, ArrayList<String> components)
 	{
 		compound(stack);
@@ -359,7 +360,7 @@ public class ItemGun extends ItemBase implements IDAble
 		stack.getTagCompound().removeTag(COMPONENTS);
 		stack.getTagCompound().setTag(COMPONENTS, cs);
 	}
-
+	
 	public static ArrayList<Component> getComponents(ItemStack stack)
 	{
 		ArrayList<String> ids = getComponentIDs(stack);
@@ -383,7 +384,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return cs;
 	}
-
+	
 	public static ArrayList<String> getComponentIDs(ItemStack stack)
 	{
 		compound(stack);
@@ -394,12 +395,12 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return new ArrayList<String>();
 	}
-
+	
 	protected static ArrayList<String> getStringsFromNBTList(NBTTagCompound c)
 	{
 		ArrayList<String> s = new ArrayList<String>();
 		ArrayList<String> ids = ComponentRegister.getIDs();
-
+		
 		for(int i = 0; i < ids.size(); ++i)
 		{
 			if(c.hasKey(ids.get(i)))
@@ -409,7 +410,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return s;
 	}
-
+	
 	public static int delay(ItemStack stack, EntityPlayer player)
 	{
 		float delay = 0;
@@ -429,7 +430,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return (int)Math.ceil(delay);
 	}
-
+	
 	public static float recoil(ItemStack stack, EntityPlayer player)
 	{
 		float recoil = 0;
@@ -449,7 +450,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return recoil;
 	}
-
+	
 	public static float spread(ItemStack stack, EntityPlayer player)
 	{
 		float spread = 180;
@@ -470,9 +471,9 @@ public class ItemGun extends ItemBase implements IDAble
 		{
 			spread = 180;
 		}
-		return spread/360;
+		return spread / 360;
 	}
-
+	
 	public static float speed(ItemStack stack, EntityPlayer player)
 	{
 		float speed = 0;
@@ -497,7 +498,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return speed;
 	}
-
+	
 	public static float kickback(ItemStack stack, EntityPlayer player)
 	{
 		float kickback = 0;
@@ -515,9 +516,9 @@ public class ItemGun extends ItemBase implements IDAble
 			f -= a.get(i);
 			kickback = f;
 		}
-		return kickback/3;
+		return kickback / 3;
 	}
-
+	
 	public static float zoom(ItemStack stack, EntityPlayer player, float zoom)
 	{
 		ArrayList<Component> components = getComponents(stack);
@@ -536,7 +537,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return zoom;
 	}
-
+	
 	public static int fireRate(ItemStack stack, EntityPlayer player)
 	{
 		float fireRate = 0;
@@ -556,7 +557,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return (int)Math.ceil(fireRate);
 	}
-
+	
 	public static boolean automatic(ItemStack stack, EntityPlayer player)
 	{
 		boolean b = false;
@@ -570,7 +571,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return b;
 	}
-
+	
 	public static int ammo(ItemStack stack, EntityPlayer player)
 	{
 		int ammo = 0;
@@ -581,7 +582,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return ammo;
 	}
-
+	
 	public static Item ejectableAmmo(ItemStack gun, ItemStack stack, EntityPlayer player)
 	{
 		ArrayList<Component> components = getComponents(gun);
@@ -595,7 +596,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return null;
 	}
-
+	
 	public static boolean ammoItem(ItemStack gun, ItemStack stack, EntityPlayer player)
 	{
 		ArrayList<Component> components = getComponents(gun);
@@ -608,7 +609,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return false;
 	}
-
+	
 	public static int capacity(ItemStack stack, EntityPlayer player)
 	{
 		int capacity = 0;
@@ -619,12 +620,12 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return capacity;
 	}
-
+	
 	public static int durability(ItemStack stack)
 	{
-		return durabilityMax(stack)-durabilityDamage(stack);
+		return durabilityMax(stack) - durabilityDamage(stack);
 	}
-
+	
 	public static int durabilityDamage(ItemStack stack)
 	{
 		int capacity = 0;
@@ -635,7 +636,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return capacity;
 	}
-
+	
 	public static int durabilityMax(ItemStack stack)
 	{
 		int capacity = 0;
@@ -646,7 +647,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return capacity;
 	}
-
+	
 	public static ArrayList<Component> getRandomComponents(Random rand)
 	{
 		ArrayList<Component> cs = new ArrayList<Component>();
@@ -669,6 +670,7 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 		return cs;
 	}
+	
 	public boolean isFull3D()
 	{
 		return true;

@@ -19,14 +19,14 @@ public abstract class ComponentBarrel extends ComponentGeneric
 {
 	public final float spread;
 	public final float velocity;
-
+	
 	public ComponentBarrel(String id, String name, Component[] required, Component[] incapatible, ComponentMaterial material, float spread, float velocity)
 	{
 		super(new String2("barrel_" + id, ""), new String2("barrel." + name, ""), required, incapatible, Type.BARREL, material);
 		this.spread = spread;
 		this.velocity = velocity;
 	}
-
+	
 	@Override
 	public float spread(float spread, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
@@ -39,26 +39,26 @@ public abstract class ComponentBarrel extends ComponentGeneric
 			return spread;
 		}
 	}
-
+	
 	@Override
 	protected void fireSound(Entity e, ItemStack stack, World world, EntityPlayer player)
 	{
 		for(int i = 0; i < 3; ++i)
 		{
-			float v = (spread+world.rand.nextFloat()*20-16)/30;
+			float v = (spread + world.rand.nextFloat() * 20 - 16) / 30;
 			if(v < 0)
 			{
 				v = 0;
 			}
-			float p = 30-v;
+			float p = 30 - v;
 			if(p < 0)
 			{
 				p = 0;
 			}
-			e.playSound("mob.blaze.hit", v/16+0.15F, p*4-world.rand.nextFloat()*0.1F-p*2);
+			e.playSound("mob.blaze.hit", v / 16 + 0.15F, p * 4 - world.rand.nextFloat() * 0.1F - p * 2);
 		}
 	}
-
+	
 	@Override
 	public ArrayList<Entity> fire(ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
@@ -77,10 +77,10 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		}
 		return projectiles;
 	}
-
+	
 	@Override
 	public abstract void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags);
-
+	
 	@Override
 	public abstract void registerRecipe();
 	
@@ -90,25 +90,36 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		{
 			super("thin", "thin", required, incapatible, material, 0.3F, velocity);
 		}
-
+		
 		@Override
 		public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 		{
-
+			
 		}
-
+		
 		@Override
 		public void registerRecipe()
 		{
 			Item barrel = M.barrel_normal_iron.item;
 			switch(material)
 			{
-			case WOOD: barrel = M.barrel_normal_wood.item; break;
-			case IRON: barrel = M.barrel_normal_iron.item; break;
-			case GOLD: barrel = M.barrel_normal_gold.item; break;
-			case DIAMOND: barrel = M.barrel_normal_diamond.item; break;
+			case WOOD:
+				barrel = M.barrel_normal_wood.item;
+				break;
+			case IRON:
+				barrel = M.barrel_normal_iron.item;
+				break;
+			case GOLD:
+				barrel = M.barrel_normal_gold.item;
+				break;
+			case DIAMOND:
+				barrel = M.barrel_normal_diamond.item;
+				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2),  new Object[]{"##", '#', barrel});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[]
+				{
+						"##", '#', barrel
+				});
 		}
 	}
 	
@@ -118,25 +129,36 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		{
 			super("normal", "normal", required, incapatible, material, 8.5F, velocity);
 		}
-
+		
 		@Override
 		public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 		{
-
+			
 		}
-
+		
 		@Override
 		public void registerRecipe()
 		{
 			Item resource = Items.iron_ingot;
 			switch(material)
 			{
-			case WOOD: resource = Item.getItemFromBlock(Blocks.planks); break;
-			case IRON: resource = Items.iron_ingot; break;
-			case GOLD: resource = Items.gold_ingot; break;
-			case DIAMOND: resource = Items.diamond; break;
+			case WOOD:
+				resource = Item.getItemFromBlock(Blocks.planks);
+				break;
+			case IRON:
+				resource = Items.iron_ingot;
+				break;
+			case GOLD:
+				resource = Items.gold_ingot;
+				break;
+			case DIAMOND:
+				resource = Items.diamond;
+				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 1),  new Object[]{"###", "   ", "###", '#', resource});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 1), new Object[]
+				{
+						"###", "   ", "###", '#', resource
+				});
 		}
 	}
 	
@@ -146,25 +168,36 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		{
 			super("wide", "wide", required, incapatible, material, 38.0F, velocity);
 		}
-
+		
 		@Override
 		public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 		{
-
+			
 		}
-
+		
 		@Override
 		public void registerRecipe()
 		{
 			Item barrel = M.barrel_normal_iron.item;
 			switch(material)
 			{
-			case WOOD: barrel = M.barrel_normal_wood.item; break;
-			case IRON: barrel = M.barrel_normal_iron.item; break;
-			case GOLD: barrel = M.barrel_normal_gold.item; break;
-			case DIAMOND: barrel = M.barrel_normal_diamond.item; break;
+			case WOOD:
+				barrel = M.barrel_normal_wood.item;
+				break;
+			case IRON:
+				barrel = M.barrel_normal_iron.item;
+				break;
+			case GOLD:
+				barrel = M.barrel_normal_gold.item;
+				break;
+			case DIAMOND:
+				barrel = M.barrel_normal_diamond.item;
+				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2),  new Object[]{"#", "#", '#', barrel});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[]
+				{
+						"#", "#", '#', barrel
+				});
 		}
 	}
 	
@@ -174,33 +207,52 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		{
 			super("musket", "musket", required, incapatible, material, 70.0F, velocity);
 		}
-
+		
 		@Override
 		public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 		{
 			
 		}
-
+		
 		@Override
 		public void registerRecipe()
 		{
 			Item barrel1 = M.barrel_normal_iron.item;
 			switch(material)
 			{
-			case WOOD: barrel1 = M.barrel_normal_wood.item; break;
-			case IRON: barrel1 = M.barrel_normal_iron.item; break;
-			case GOLD: barrel1 = M.barrel_normal_gold.item; break;
-			case DIAMOND: barrel1 = M.barrel_normal_diamond.item; break;
+			case WOOD:
+				barrel1 = M.barrel_normal_wood.item;
+				break;
+			case IRON:
+				barrel1 = M.barrel_normal_iron.item;
+				break;
+			case GOLD:
+				barrel1 = M.barrel_normal_gold.item;
+				break;
+			case DIAMOND:
+				barrel1 = M.barrel_normal_diamond.item;
+				break;
 			}
 			Item barrel2 = M.barrel_wide_iron.item;
 			switch(material)
 			{
-			case WOOD: barrel2 = M.barrel_wide_wood.item; break;
-			case IRON: barrel2 = M.barrel_wide_iron.item; break;
-			case GOLD: barrel2 = M.barrel_wide_gold.item; break;
-			case DIAMOND: barrel2 = M.barrel_wide_diamond.item; break;
+			case WOOD:
+				barrel2 = M.barrel_wide_wood.item;
+				break;
+			case IRON:
+				barrel2 = M.barrel_wide_iron.item;
+				break;
+			case GOLD:
+				barrel2 = M.barrel_wide_gold.item;
+				break;
+			case DIAMOND:
+				barrel2 = M.barrel_wide_diamond.item;
+				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2),  new Object[]{"@#", '#', barrel1, '@', barrel2});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[]
+				{
+						"@#", '#', barrel1, '@', barrel2
+				});
 		}
 	}
 }

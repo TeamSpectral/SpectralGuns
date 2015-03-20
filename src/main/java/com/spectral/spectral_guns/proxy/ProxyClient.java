@@ -37,23 +37,23 @@ public class ProxyClient extends ProxyCommon
 	public void preInit()
 	{
 		super.preInit();
-
+		
 		MinecraftForge.EVENT_BUS.register(new HandlerClient());
 		FMLCommonHandler.instance().bus().register(new HandlerClientFML());
 		HandlerClientFML.init();
 	}
-
+	
 	@Override
 	public void init()
 	{
 		super.init();
-
+		
 		RenderItem ri = Minecraft.getMinecraft().getRenderItem();
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
 		registerItemModels(ri);
 		entityRender(rm, ri);
 	}
-
+	
 	private void entityRender(RenderManager rm, RenderItem ri)
 	{
 		RenderingRegistry.registerEntityRenderingHandler(EntitySmallFireball2.class, new RenderFireball(rm, 1.3F));
@@ -61,7 +61,7 @@ public class ProxyClient extends ProxyCommon
 		RenderingRegistry.registerEntityRenderingHandler(EntityShuriken.class, new RenderShuriken(rm, ri));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLaser.class, new RenderNull(rm));
 	}
-
+	
 	private void registerItemModels(RenderItem ri)
 	{
 		Iterator<Id> ids = M.getIds();

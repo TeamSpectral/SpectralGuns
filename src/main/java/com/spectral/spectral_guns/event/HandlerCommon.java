@@ -26,22 +26,22 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class HandlerCommon extends HandlerBase
 {
-	//minecraftforge events for both sides here!
-
+	// minecraftforge events for both sides here!
+	
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{
-		if(event.entity instanceof EntityPlayer && EntityExtendedPlayer.get((EntityPlayer) event.entity) == null)
+		if(event.entity instanceof EntityPlayer && EntityExtendedPlayer.get((EntityPlayer)event.entity) == null)
 		{
 			EntityExtendedPlayer.register((EntityPlayer)event.entity);
 		}
-
-		if (event.entity instanceof EntityPlayer && event.entity.getExtendedProperties(EntityExtendedPlayer.PROP) == null)
+		
+		if(event.entity instanceof EntityPlayer && event.entity.getExtendedProperties(EntityExtendedPlayer.PROP) == null)
 		{
-			event.entity.registerExtendedProperties(EntityExtendedPlayer.PROP, new EntityExtendedPlayer((EntityPlayer) event.entity));
+			event.entity.registerExtendedProperties(EntityExtendedPlayer.PROP, new EntityExtendedPlayer((EntityPlayer)event.entity));
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void livingUpdateEvent(LivingUpdateEvent event)
 	{
@@ -51,7 +51,7 @@ public class HandlerCommon extends HandlerBase
 			propsP.update();
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void livingHurtEvent(LivingHurtEvent event)
 	{
@@ -73,7 +73,7 @@ public class HandlerCommon extends HandlerBase
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void FOVUpdateEvent(FOVUpdateEvent event)
 	{
@@ -86,7 +86,7 @@ public class HandlerCommon extends HandlerBase
 				EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
 				if(itemstack.getItem() instanceof ItemGun && props.isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1))
 				{
-					event.newfov -= (ItemGun.zoom(itemstack, player, 1)-1)/3+0.05;
+					event.newfov -= (ItemGun.zoom(itemstack, player, 1) - 1) / 3 + 0.05;
 				}
 			}
 		}

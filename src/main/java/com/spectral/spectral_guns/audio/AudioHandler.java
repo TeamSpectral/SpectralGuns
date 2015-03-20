@@ -22,7 +22,7 @@ public class AudioHandler
 {
 	@SideOnly(Side.CLIENT)
 	public static HashMap<Entity, HashMap<String, ArrayList<ISound>>> sounds = new HashMap<Entity, HashMap<String, ArrayList<ISound>>>();
-
+	
 	public static ISound getSound(Entity entity, String string)
 	{
 		if(sounds.containsKey(entity) && sounds.get(entity) != null)
@@ -41,15 +41,15 @@ public class AudioHandler
 		}
 		return null;
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void createMovingEntitySound(Entity entity, String string, float volume, float pitch, boolean repeat)
 	{
 		ISound sound = new MovingSoundEntityGeneric(entity, string, volume, pitch, repeat);
-
+		
 		createSound(entity, sound);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void createSound(Entity entity, ISound sound)
 	{
@@ -65,7 +65,7 @@ public class AudioHandler
 		sounds.get(entity).get(string).add(sound);
 		Minecraft.getMinecraft().getSoundHandler().playSound(sound);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void stopSound(Entity entity, String string)
 	{
@@ -79,7 +79,7 @@ public class AudioHandler
 			}
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static boolean isPlaying(Entity entity, String string)
 	{
@@ -94,7 +94,7 @@ public class AudioHandler
 		}
 		return true;
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void onUpdate()
 	{

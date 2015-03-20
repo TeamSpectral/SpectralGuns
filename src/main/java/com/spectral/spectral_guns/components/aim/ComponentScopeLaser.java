@@ -26,14 +26,15 @@ public class ComponentScopeLaser extends ComponentScope
 		super(new String2("", "_laser_" + color.toString().toLowerCase()), new String2("", ".laser." + color.toString().toLowerCase()), required, incapatible, c.material, c.zoom);
 		this.color = color;
 	}
-
+	
 	@Override
 	public void update(ItemStack gun, World world, Entity entity, int slot, boolean isSelected, ArrayList<Component> components)
 	{
 		boolean b = true;
 		if(entity instanceof EntityPlayer)
 		{
-			//b = EntityExtendedPlayer.get((EntityPlayer)entity).isZoomHeldDown;
+			// b =
+			// EntityExtendedPlayer.get((EntityPlayer)entity).isZoomHeldDown;
 		}
 		if(entity instanceof EntityLivingBase && isSelected && b)
 		{
@@ -41,7 +42,7 @@ public class ComponentScopeLaser extends ComponentScope
 			world.spawnEntityInWorld(e);
 		}
 	}
-
+	
 	@Override
 	public void registerRecipe()
 	{
@@ -50,19 +51,41 @@ public class ComponentScopeLaser extends ComponentScope
 		{
 		case CYAN:
 			break;
-		case GREEN: diode = M.laser_diode_green;
+		case GREEN:
+			diode = M.laser_diode_green;
 			break;
-		case RED: diode = M.laser_diode_red;
+		case RED:
+			diode = M.laser_diode_red;
 			break;
 		case VIOLET:
 			break;
 		}
 		switch(material)
 		{
-		case WOOD: GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]{"D", "S", 'D', diode, 'S', M.scope_wood.item}); break;
-		case IRON: GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]{"D", "S", 'D', diode, 'S', M.scope_iron.item}); break;
-		case GOLD: GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]{"D", "S", 'D', diode, 'S', M.scope_gold.item}); break;
-		case DIAMOND: GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]{"D", "S", 'D', diode, 'S', M.scope_diamond.item}); break;
+		case WOOD:
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
+				{
+						"D", "S", 'D', diode, 'S', M.scope_wood.item
+				});
+			break;
+		case IRON:
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
+				{
+						"D", "S", 'D', diode, 'S', M.scope_iron.item
+				});
+			break;
+		case GOLD:
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
+				{
+						"D", "S", 'D', diode, 'S', M.scope_gold.item
+				});
+			break;
+		case DIAMOND:
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]
+				{
+						"D", "S", 'D', diode, 'S', M.scope_diamond.item
+				});
+			break;
 		}
 	}
 }

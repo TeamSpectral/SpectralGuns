@@ -10,26 +10,26 @@ public abstract class MovingSoundPublic extends MovingSound
 	{
 		super(resource);
 	}
-
+	
 	public Entity entity;
-    
-    public void setVolume(float volume)
-    {
-    	this.volume = volume;
-    }
-    
-    public void setPitch(float pitch)
-    {
-    	this.pitch = pitch;
-    }
-    
-    public void setRepeat(boolean repeat)
-    {
-    	this.repeat = repeat;
-    }
-    
-    public void done()
-    {
-    	this.donePlaying = true;
-    }
+	
+	public void setVolume(float volume)
+	{
+		this.volume = volume;
+	}
+	
+	public void setPitch(float pitch)
+	{
+		this.pitch = pitch;
+	}
+	
+	public void setRepeat(boolean repeat)
+	{
+		this.repeat = repeat;
+	}
+	
+	public void done()
+	{
+		this.donePlaying = true;
+	}
 }

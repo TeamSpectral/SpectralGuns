@@ -16,16 +16,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.SERVER)
 public class HandlerServerFML extends HandlerCommonFML
 {
-	//fml events for server only here!
-
+	// fml events for server only here!
+	
 	public static HashMap<EntityPlayer, NBTTagCompound> playerDeathData = new HashMap<EntityPlayer, NBTTagCompound>();
-
+	
 	@SubscribeEvent
 	public void playerUpdateEvent(PlayerTickEvent event)
 	{
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(event.player);
-
-		/**makes it so that players keep certain data upon death**/
+		
+		/** makes it so that players keep certain data upon death **/
 		if(playerDeathData.get(event.player) != null && event.player.getHealth() > 0)
 		{
 			props.loadNBTData(playerDeathData.get(event.player), false);
@@ -38,12 +38,13 @@ public class HandlerServerFML extends HandlerCommonFML
 			playerDeathData.put(event.player, playerData);
 		}
 		
-		/**give data to client**/
+		/** give data to client **/
 		if(event.player instanceof EntityPlayerMP)
 		{
 			NBTTagCompound compound = new NBTTagCompound();
 			props.saveNBTData(compound);
-			//M.network.sendTo(new PacketPlayerData(compound), (EntityPlayerMP)event.player);
+			// M.network.sendTo(new PacketPlayerData(compound),
+			// (EntityPlayerMP)event.player);
 		}
 	}
 }
