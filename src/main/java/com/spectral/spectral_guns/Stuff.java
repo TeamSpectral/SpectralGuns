@@ -6,19 +6,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import com.sun.javafx.geom.Vec3f;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.ChunkProviderSettings;
 
 public class Stuff
 {
@@ -35,12 +32,12 @@ public class Stuff
 		
 		public static double r(double i, Random rand)
 		{
-			return (rand.nextDouble() * i * 2) - i;
+			return rand.nextDouble() * i * 2 - i;
 		}
 		
 		public static float r(float i, Random rand)
 		{
-			return (rand.nextFloat() * i * 2) - i;
+			return rand.nextFloat() * i * 2 - i;
 		}
 		
 		public static float r(float i)
@@ -116,16 +113,16 @@ public class Stuff
 		
 		public static void throwThing(Entity source, Entity object, double f)
 		{
-			object.setLocationAndAngles(source.posX, source.posY + (double)source.getEyeHeight(), source.posZ, source.rotationYaw, source.rotationPitch);
-			object.posX -= (double)(MathHelper.cos(object.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+			object.setLocationAndAngles(source.posX, source.posY + source.getEyeHeight(), source.posZ, source.rotationYaw, source.rotationPitch);
+			object.posX -= MathHelper.cos(object.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
 			object.posY -= 0.10000000149011612D;
-			object.posZ -= (double)(MathHelper.sin(object.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+			object.posZ -= MathHelper.sin(object.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
 			object.setPosition(object.posX, object.posY, object.posZ);
 			
-			object.motionX = (double)(-MathHelper.sin(object.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(object.rotationPitch / 180.0F * (float)Math.PI) * f);
-			object.motionZ = (double)(MathHelper.cos(object.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(object.rotationPitch / 180.0F * (float)Math.PI) * f);
+			object.motionX = -MathHelper.sin(object.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(object.rotationPitch / 180.0F * (float)Math.PI) * f;
+			object.motionZ = MathHelper.cos(object.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(object.rotationPitch / 180.0F * (float)Math.PI) * f;
 			
-			object.motionY = (double)(-MathHelper.sin((object.rotationPitch) / 180.0F * (float)Math.PI) * f);
+			object.motionY = -MathHelper.sin(object.rotationPitch / 180.0F * (float)Math.PI) * f;
 		}
 		
 		public static Vec3 velocity(Entity entity)
@@ -388,14 +385,14 @@ public class Stuff
 		public static Entity getRandomEntityWithinRadius(Entity e, double r, Random rand)
 		{
 			List<Entity> es = getEntitiesWithinRadius(e, r);
-			Entity e2 = (Entity)Randomization.getRandom(es);
+			Entity e2 = Randomization.getRandom(es);
 			return e2;
 		}
 		
 		public static Entity getRandomEntityWithinCube(Entity e, double m, Random rand)
 		{
 			List<Entity> es = getEntitiesWithinCube(e, m);
-			Entity e2 = (Entity)Randomization.getRandom(es);
+			Entity e2 = Randomization.getRandom(es);
 			return e2;
 		}
 		
@@ -478,7 +475,9 @@ public class Stuff
 			for(int i = 0; i < es.size(); ++i)
 			{
 				if(e == null || e.getDistance(pos.xCoord, pos.yCoord, pos.zCoord) > es.get(i).getDistance(pos.xCoord, pos.yCoord, pos.zCoord))
+				{
 					;
+				}
 				{
 					e = es.get(i);
 				}
@@ -527,6 +526,25 @@ public class Stuff
 				}
 			}
 			return null;
+		}
+	}
+	
+	/** get various stuff **/
+	// - sigurd4
+	public static class Reflection
+	{
+		public static ChunkProviderSettings chunkProviderSettings(World world)
+		{
+			String s = world.getWorldInfo().getGeneratorOptions();
+			
+			if(s != null)
+			{
+				return ChunkProviderSettings.Factory.func_177865_a(s).func_177864_b();
+			}
+			else
+			{
+				return ChunkProviderSettings.Factory.func_177865_a("").func_177864_b();
+			}
 		}
 	}
 }

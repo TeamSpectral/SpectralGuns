@@ -48,7 +48,10 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 {
 	public enum LaserColor
 	{
-		RED(1, 0, 0, EnumDyeColor.RED), GREEN(0, 1, 0, EnumDyeColor.GREEN), CYAN(0, 1, 1, EnumDyeColor.CYAN), VIOLET(85 / 255, 0, 1, EnumDyeColor.PURPLE);
+		RED(1, 0, 0, EnumDyeColor.RED),
+		GREEN(0, 1, 0, EnumDyeColor.GREEN),
+		CYAN(0, 1, 1, EnumDyeColor.CYAN),
+		VIOLET(85 / 255, 0, 1, EnumDyeColor.PURPLE);
 		
 		public final float r;
 		public final float g;

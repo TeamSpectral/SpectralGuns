@@ -20,7 +20,8 @@ public class PacketKey implements IMessage
 {
 	public static enum Key
 	{
-		RIGHTCLICK(0), NOTRIGHTCLICK(1), RELOAD(2), EJECT(3), ZOOM(4), NOTZOOM(5);
+		RIGHTCLICK(0), NOTRIGHTCLICK(1), RELOAD(2), EJECT(3), ZOOM(4), NOTZOOM(
+				5);
 		
 		public final int id;
 		

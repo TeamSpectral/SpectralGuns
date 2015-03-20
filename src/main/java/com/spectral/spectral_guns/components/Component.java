@@ -5,11 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
-import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.items.ItemComponent;
-import com.spectral.spectral_guns.items.ItemGun;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -19,13 +14,24 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.items.ItemComponent;
+import com.spectral.spectral_guns.items.ItemGun;
+
 public abstract class Component
 {
 	public static abstract class ComponentRegister
 	{
 		public static enum Type
 		{
-			MISC(false), BARREL(true), MAGAZINE(true), TRIGGER(true), GRIP(true), STOCK(false), AIM(false);
+			MISC(false),
+			BARREL(true),
+			MAGAZINE(true),
+			TRIGGER(true),
+			GRIP(true),
+			STOCK(false),
+			AIM(false);
 			
 			final public boolean isRequired;
 			
@@ -169,7 +175,18 @@ public abstract class Component
 	
 	public enum ComponentMaterial
 	{
-		WOOD(40, new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), IRON(167, new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), GOLD(22, new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.AIM}), DIAMOND(520, new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});
+		WOOD(
+				40,
+				new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
+				IRON(
+						167,
+						new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
+						GOLD(
+								22,
+								new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.AIM}),
+								DIAMOND(
+										520,
+										new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});
 		
 		public final Type[] types;
 		public final int durability;
@@ -182,12 +199,12 @@ public abstract class Component
 		
 		public String getDisplayName(Type type, Component c)
 		{
-			return getName(type, c);
+			return this.getName(type, c);
 		}
 		
 		public String getIDName(Type type, Component c)
 		{
-			return getName(type, c);
+			return this.getName(type, c);
 		}
 		
 		private String getName(Type type, Component c)
@@ -204,7 +221,7 @@ public abstract class Component
 	{
 		String Id = id.s1 + "_" + material.getIDName(type, this) + id.s2;
 		ComponentRegister.components.put(Id, this);
-		item = new ItemComponent(this);
+		this.item = new ItemComponent(this);
 		this.type = type;
 		if(!ArraysAndSuch.has(material.types, type))
 		{
@@ -272,7 +289,7 @@ public abstract class Component
 		int count = 0;
 		for(int i = 0; i < ecs.size(); ++i)
 		{
-			if(ecs.get(i).type == type)
+			if(ecs.get(i).type == this.type)
 			{
 				++count;
 			}
@@ -281,8 +298,8 @@ public abstract class Component
 		{
 			return false;
 		}
-		ArrayList<Component> rcs = getRequired();
-		ArrayList<Component> ics = getIncapatible();
+		ArrayList<Component> rcs = this.getRequired();
+		ArrayList<Component> ics = this.getIncapatible();
 		ArrayList<Component> a = new ArrayList<Component>();
 		for(int i = 0; i < ecs.size(); ++i)
 		{
@@ -325,7 +342,7 @@ public abstract class Component
 	
 	public final NBTTagCompound getTagCompound(ItemStack stack)
 	{
-		return getTagCompound(stack.getTagCompound());
+		return this.getTagCompound(stack.getTagCompound());
 	}
 	
 	public NBTTagCompound getTagCompound(NBTTagCompound compound)
@@ -335,12 +352,12 @@ public abstract class Component
 			compound.setTag(ItemGun.COMPONENTS, new NBTTagCompound());
 		}
 		NBTTagCompound components = compound.getCompoundTag(ItemGun.COMPONENTS);
-		if(!components.hasKey(getID()))
+		if(!components.hasKey(this.getID()))
 		{
 			return new NBTTagCompound();
 		}
 		
-		return components.getCompoundTag(getID());
+		return components.getCompoundTag(this.getID());
 	}
 	
 	public static class String2
@@ -362,8 +379,8 @@ public abstract class Component
 		
 		public String2 add(String2 s)
 		{
-			s1 += s.s1;
-			s2 += s.s2;
+			this.s1 += s.s1;
+			this.s2 += s.s2;
 			return this;
 		}
 	}
