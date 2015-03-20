@@ -1,27 +1,32 @@
 package com.spectral.spectral_guns.packet;
 
-import com.spectral.spectral_guns.components.ComponentEvents;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
-import com.spectral.spectral_guns.items.ItemBase;
-import com.spectral.spectral_guns.items.ItemGun;
-import com.spectral.spectral_guns.M;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import com.spectral.spectral_guns.components.ComponentEvents;
+import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.items.ItemGun;
+
 public class PacketKey implements IMessage
 {
 	public static enum Key
 	{
-		RIGHTCLICK(0), NOTRIGHTCLICK(1), RELOAD(2), EJECT(3), ZOOM(4), NOTZOOM(
-				5);
+		RIGHTCLICK(0),
+		
+		NOTRIGHTCLICK(1),
+		
+		RELOAD(2),
+		
+		EJECT(3),
+		
+		ZOOM(4),
+		
+		NOTZOOM(5);
 		
 		public final int id;
 		
@@ -57,13 +62,13 @@ public class PacketKey implements IMessage
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		i = ByteBufUtils.readVarInt(buf, 3);
+		this.i = ByteBufUtils.readVarInt(buf, 3);
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		ByteBufUtils.writeVarInt(buf, i, 3);
+		ByteBufUtils.writeVarInt(buf, this.i, 3);
 	}
 	
 	public static class Handler implements IMessageHandler<PacketKey, IMessage>
