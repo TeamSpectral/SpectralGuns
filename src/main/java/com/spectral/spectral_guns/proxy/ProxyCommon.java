@@ -8,8 +8,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,6 +20,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
 import com.spectral.spectral_guns.References;
+import com.spectral.spectral_guns.blocks.BlockOre2;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
@@ -27,7 +30,7 @@ import com.spectral.spectral_guns.event.HandlerCommonFML;
 import com.spectral.spectral_guns.packet.PacketKey;
 import com.spectral.spectral_guns.recipe.RecipeGun;
 
-public class ProxyCommon
+public abstract class ProxyCommon
 {
 	public void preInit()
 	{
@@ -38,6 +41,7 @@ public class ProxyCommon
 		this.oreDictionary();
 		this.packets();
 		this.entities();
+		this.worldGen();
 		M.idsToBeRegistered.clear();
 	}
 	
@@ -50,6 +54,8 @@ public class ProxyCommon
 	{
 		
 	}
+	
+	public abstract World world(int dimension);
 	
 	private void packets()
 	{
@@ -169,6 +175,30 @@ public class ProxyCommon
 				else
 				{
 					id.visible = true;
+				}
+			}
+		}
+	}
+	
+	private void worldGen()
+	{
+		Iterator<Id> ids = M.idsToBeRegistered.iterator();
+		while(ids.hasNext())
+		{
+			Id id = ids.next();
+			if(id != null)
+			{
+				Object item = M.getItem(id);
+				for(int i = 0; i < id.oreDictNames.length; ++i)
+				{
+					if(item != null && item instanceof BlockOre2)
+					{
+						IWorldGenerator worldGen = ((BlockOre2)item).worldGen();
+						if(worldGen != null)
+						{
+							GameRegistry.registerWorldGenerator(worldGen, 0);
+						}
+					}
 				}
 			}
 		}

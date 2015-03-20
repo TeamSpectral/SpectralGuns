@@ -3,44 +3,15 @@ package com.spectral.spectral_guns;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-
-import com.spectral.spectral_guns.Stuff.HashMapStuff;
-import com.spectral.spectral_guns.blocks.BlockOre2;
-import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.components.Component.ComponentMaterial;
-import com.spectral.spectral_guns.components.ComponentBarrel;
-import com.spectral.spectral_guns.components.aim.ComponentScope;
-import com.spectral.spectral_guns.components.aim.ComponentScopeLaser;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazine;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineSnowball;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineSmallFireball;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
-import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanism;
-import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismAuto;
-import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismBoosted;
-import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
-import com.spectral.spectral_guns.items.ItemBase;
-import com.spectral.spectral_guns.items.ItemComponent;
-import com.spectral.spectral_guns.items.ItemFood2;
-import com.spectral.spectral_guns.items.ItemGun;
-import com.spectral.spectral_guns.items.ItemShuriken;
-import com.spectral.spectral_guns.proxy.ProxyClient;
-import com.spectral.spectral_guns.proxy.ProxyCommon;
-import com.spectral.spectral_guns.proxy.ProxyServer;
-import com.spectral.spectral_guns.tabs.TabGeneric;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCompressed;
-import net.minecraft.block.BlockPressurePlate;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -50,7 +21,31 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import com.spectral.spectral_guns.Stuff.HashMapStuff;
+import com.spectral.spectral_guns.blocks.BlockOre2;
+import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.components.Component.ComponentMaterial;
+import com.spectral.spectral_guns.components.ComponentBarrel;
+import com.spectral.spectral_guns.components.aim.ComponentScope;
+import com.spectral.spectral_guns.components.aim.ComponentScopeLaser;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineSmallFireball;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineSnowball;
+import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanism;
+import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismAuto;
+import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismBoosted;
+import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
+import com.spectral.spectral_guns.items.ItemBase;
+import com.spectral.spectral_guns.items.ItemComponent;
+import com.spectral.spectral_guns.items.ItemFood2;
+import com.spectral.spectral_guns.items.ItemGun;
+import com.spectral.spectral_guns.items.ItemShuriken;
+import com.spectral.spectral_guns.items.ItemWrench;
+import com.spectral.spectral_guns.proxy.ProxyCommon;
+import com.spectral.spectral_guns.tabs.TabGeneric;
+import com.spectral.spectral_guns.worldgen.WorldGenGem;
 
 @Mod(modid = References.MODID, version = References.VERSION)
 public class M
@@ -144,7 +139,7 @@ public class M
 		
 		public boolean shouldBeReplaced()
 		{
-			return oreDictNames.length <= 0 || !replacedIfAlreadyAnOreDict;
+			return this.oreDictNames.length <= 0 || !this.replacedIfAlreadyAnOreDict;
 		};
 		
 		public boolean visible;
@@ -232,7 +227,7 @@ public class M
 	
 	// //ITEMS:
 	// the gun
-	public static ItemGun gun = registerItem((ItemGun)new ItemGun(), false, new String[] {});
+	public static ItemGun gun = registerItem(new ItemGun(), false, new String[] {});
 	
 	// other stuff
 	public static final ItemBase iron_nugget = registerItem((ItemBase)new ItemBase("iron_nugget").setUnlocalizedName("ironNugget").setCreativeTab(CreativeTabs.tabMaterials), false, new String[] {"nuggetIron"});
@@ -252,6 +247,7 @@ public class M
 	public static final ItemBase laser_diode_green_strong = registerItem((ItemBase)new ItemBase("laser_diode_green_strong").setUnlocalizedName("laserDiode.green.strong").setCreativeTab(CreativeTabs.tabMaterials), false, new String[] {});
 	public static final ItemBase laser_diode_red_strong = registerItem((ItemBase)new ItemBase("laser_diode_red_strong").setUnlocalizedName("laserDiode.red.strong").setCreativeTab(CreativeTabs.tabMaterials), false, new String[] {});
 	public static final ItemShuriken shuriken = registerItem((ItemShuriken)new ItemShuriken("shuriken").setUnlocalizedName("shuriken").setCreativeTab(CreativeTabs.tabCombat), false, new String[] {});
+	public static final ItemWrench wrench = registerItem("wrench", (ItemWrench)new ItemWrench().setUnlocalizedName("wrench").setCreativeTab(CreativeTabs.tabTools), false, new String[] {"toolWrench"});
 	
 	// components
 	public static ItemComponent componentItem(Component c)
@@ -328,7 +324,14 @@ public class M
 	
 	// //BLOCKS:
 	// ores
-	public static final BlockOre2 ruby_ore = registerBlock("ruby_ore", (BlockOre2)new BlockOre2(ruby, 3, 4).setHardness(3.0F).setResistance(5.0F).setStepSound(Block.soundTypePiston).setUnlocalizedName("oreRuby"), true, new String[] {"oreRuby"});
+	public static final BlockOre2 ruby_ore = registerBlock("ruby_ore", (BlockOre2)new BlockOre2(ruby, 3, 4)
+	{
+		@Override
+		public IWorldGenerator worldGen()
+		{
+			return new WorldGenGem(this);
+		}
+	}.setHardness(3.0F).setResistance(5.0F).setStepSound(Block.soundTypePiston).setUnlocalizedName("oreRuby"), true, new String[] {"oreRuby"});
 	
 	// compact blocks
 	public static final BlockCompressed ruby_block = registerBlock("ruby_block", (BlockCompressed)new BlockCompressed(MapColor.redColor).setHardness(3.0F).setResistance(5.0F).setStepSound(Block.soundTypePiston).setUnlocalizedName("blockRuby").setCreativeTab(CreativeTabs.tabBlock), true, new String[] {"blockRuby"});

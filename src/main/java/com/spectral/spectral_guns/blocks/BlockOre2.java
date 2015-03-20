@@ -2,18 +2,15 @@ package com.spectral.spectral_guns.blocks;
 
 import java.util.Random;
 
-import com.spectral.spectral_guns.M;
-
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.IWorldGenerator;
+
+import com.spectral.spectral_guns.worldgen.WorldGenMinable2;
 
 public class BlockOre2 extends BlockOre
 {
@@ -43,20 +40,22 @@ public class BlockOre2 extends BlockOre
 		this(drop, xp, xpRandom, 1);
 	}
 	
+	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return drop;
+		return this.drop;
 	}
 	
+	@Override
 	public int quantityDropped(Random random)
 	{
-		if(amountRandom > 0)
+		if(this.amountRandom > 0)
 		{
-			return amount + random.nextInt(amountRandom);
+			return this.amount + random.nextInt(this.amountRandom);
 		}
 		else
 		{
-			return amount;
+			return this.amount;
 		}
 	}
 	
@@ -67,15 +66,20 @@ public class BlockOre2 extends BlockOre
 		Random rand = world instanceof World ? ((World)world).rand : new Random();
 		if(this.getItemDropped(state, rand, fortune) != Item.getItemFromBlock(this))
 		{
-			if(amountRandom > 0)
+			if(this.amountRandom > 0)
 			{
-				return amount + rand.nextInt(amountRandom);
+				return this.amount + rand.nextInt(this.amountRandom);
 			}
 			else
 			{
-				return amount;
+				return this.amount;
 			}
 		}
 		return 0;
+	}
+	
+	public IWorldGenerator worldGen()
+	{
+		return new WorldGenMinable2(this.getDefaultState(), 11);
 	}
 }

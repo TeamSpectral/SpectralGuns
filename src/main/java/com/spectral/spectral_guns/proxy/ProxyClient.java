@@ -4,17 +4,13 @@ import java.util.Iterator;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.entity.RenderEntity;
 import net.minecraft.client.renderer.entity.RenderFireball;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -29,7 +25,6 @@ import com.spectral.spectral_guns.event.HandlerClientFML;
 import com.spectral.spectral_guns.render.entity.RenderFood;
 import com.spectral.spectral_guns.render.entity.RenderNull;
 import com.spectral.spectral_guns.render.entity.RenderShuriken;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 
 public class ProxyClient extends ProxyCommon
 {
@@ -50,8 +45,14 @@ public class ProxyClient extends ProxyCommon
 		
 		RenderItem ri = Minecraft.getMinecraft().getRenderItem();
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
-		registerItemModels(ri);
-		entityRender(rm, ri);
+		this.registerItemModels(ri);
+		this.entityRender(rm, ri);
+	}
+	
+	@Override
+	public World world(int dimension)
+	{
+		return Minecraft.getMinecraft().theWorld;
 	}
 	
 	private void entityRender(RenderManager rm, RenderItem ri)
