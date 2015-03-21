@@ -3,7 +3,6 @@ package com.spectral.spectral_guns.packet;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -62,13 +61,13 @@ public class PacketKey implements IMessage
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		this.i = ByteBufUtils.readVarInt(buf, 3);
+		this.i = buf.readInt();
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		ByteBufUtils.writeVarInt(buf, this.i, 3);
+		buf.writeInt(this.i);
 	}
 	
 	public static class Handler implements IMessageHandler<PacketKey, IMessage>
