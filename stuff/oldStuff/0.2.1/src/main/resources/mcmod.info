@@ -1,0 +1,16 @@
+[
+{
+  "modid": "spectralguns",
+  "name": "Spectral Guns",
+  "description": "Loads of random shooty things and stuff.",
+  "version": "1.1.1",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["KH111, Beardielover99, NonExistingName, sigurd4"], #write your username here, guys
+  "credits": "us >:)",
+  "logoFile": "WIP",
+  "screenshots": [],
+  "dependencies": []
+}
+]

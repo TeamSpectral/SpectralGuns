@@ -5,19 +5,10 @@ import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.spectral.spectral_guns.Stuff;
-import com.spectral.spectral_guns.Stuff.Coordinates3D;
-import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.Stuff.EntitiesInArea;
-import com.spectral.spectral_guns.items.ItemGun;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntitySnowball;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -28,6 +19,9 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+
+import com.spectral.spectral_guns.Stuff.Coordinates3D;
+import com.spectral.spectral_guns.Stuff.EntitiesInArea;
 
 public class EntitySnowball2 extends EntitySnowball implements IEntityAdditionalSpawnData
 {
@@ -48,6 +42,7 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 		super(world, x, y, z);
 	}
 	
+	@Override
 	public void onUpdate()
 	{
 		super.onUpdate();
@@ -57,23 +52,24 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 		{
 			if(es.get(i) instanceof EntitySnowball2)
 			{
-				a.add(((EntitySnowball2)es.get(i)));
+				a.add((EntitySnowball2)es.get(i));
 			}
 		}
 		if(a.size() > 3)
 		{
-			if(rand.nextBoolean())
+			if(this.rand.nextBoolean())
 			{
 				this.setDead();
-				a.get(rand.nextInt(a.size() - 1)).damage += this.damage * 2 / 3;
+				a.get(this.rand.nextInt(a.size() - 1)).damage += this.damage * 2 / 3;
 			}
 			else
 			{
-				a.get(rand.nextInt(a.size() - 1)).setDead();
+				a.get(this.rand.nextInt(a.size() - 1)).setDead();
 			}
 		}
 	}
 	
+	@Override
 	protected void onImpact(MovingObjectPosition pos)
 	{
 		float damage = 0.5F;
@@ -86,7 +82,7 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 			}
 		}
 		
-		double m = Coordinates3D.distance(new Vec3(motionX, motionY, motionZ));
+		double m = Coordinates3D.distance(new Vec3(this.motionX, this.motionY, this.motionZ)) * 3;
 		damage *= m - 0.3;
 		
 		if(pos.entityHit != null)
@@ -117,12 +113,12 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 			pos.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), damage);
 			if(pos.entityHit instanceof EntityLivingBase)
 			{
-				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.digSlowdown.id, (int)(rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)(rand.nextFloat()), false, false));
-				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, (int)(rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)(rand.nextFloat()), false, false));
+				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.digSlowdown.id, (int)(this.rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)this.rand.nextFloat(), false, false));
+				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, (int)(this.rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)this.rand.nextFloat(), false, false));
 			}
 			pos.entityHit.extinguish();
 			float f = 0.01F;
-			pos.entityHit.addVelocity(motionX * f, motionY * f, motionZ * f);
+			pos.entityHit.addVelocity(this.motionX * f, this.motionY * f, this.motionZ * f);
 		}
 		
 		int h = (int)Math.ceil(16 * damage);
@@ -130,7 +126,7 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 		{
 			h = 32;
 		}
-		for(int i = 0; i < h && worldObj.isRemote; ++i)
+		for(int i = 0; i < h && this.worldObj.isRemote; ++i)
 		{
 			this.worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, true, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
 		}

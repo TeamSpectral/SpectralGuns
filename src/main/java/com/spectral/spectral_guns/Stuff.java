@@ -1,5 +1,6 @@
 package com.spectral.spectral_guns;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,6 +8,9 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -544,6 +548,57 @@ public class Stuff
 			else
 			{
 				return ChunkProviderSettings.Factory.func_177865_a("").func_177864_b();
+			}
+		}
+		
+		public static Method getAddSlotToContainer()
+		{
+			try
+			{
+				Method method = Container.class.getDeclaredMethod("addSlotToContainer", Slot.class);
+				method.setAccessible(true);
+				return method;
+			}
+			catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
+	/** guis **/
+	// - sigurd4
+	public static class GuiStuff
+	{
+		public static void addPlayerInventorySlots(Container container, InventoryPlayer playerInventory, int x, int y)
+		{
+			Method addSlotToContainer = Reflection.getAddSlotToContainer();
+			for(int a = 0; a < 3; ++a)
+			{
+				for(int b = 0; b < 9; ++b)
+				{
+					try
+					{
+						addSlotToContainer.invoke(container, new Slot(playerInventory, b + a * 9 + 9, 8 + b * 18 + x, 84 + a * 18 + y));
+					}
+					catch(Throwable e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			for(int a = 0; a < 9; ++a)
+			{
+				try
+				{
+					addSlotToContainer.invoke(container, new Slot(playerInventory, a, 8 + a * 18 + x, 142 + y));
+				}
+				catch(Throwable e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}

@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
@@ -27,8 +28,8 @@ import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
 import com.spectral.spectral_guns.event.HandlerCommon;
 import com.spectral.spectral_guns.event.HandlerCommonFML;
+import com.spectral.spectral_guns.gui.GuiHandler;
 import com.spectral.spectral_guns.packet.PacketKey;
-import com.spectral.spectral_guns.packet.PacketTileEntityData;
 import com.spectral.spectral_guns.recipe.RecipeGun;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
@@ -38,6 +39,8 @@ public abstract class ProxyCommon
 	{
 		MinecraftForge.EVENT_BUS.register(new HandlerCommon());
 		FMLCommonHandler.instance().bus().register(new HandlerCommonFML());
+		
+		NetworkRegistry.INSTANCE.registerGuiHandler(M.instance, new GuiHandler());
 		
 		this.registerItems();
 		this.oreDictionary();
@@ -64,7 +67,6 @@ public abstract class ProxyCommon
 	{
 		M.network = NetworkRegistry.INSTANCE.newSimpleChannel(References.MODID + "Packets");
 		M.network.registerMessage(PacketKey.Handler.class, PacketKey.class, 0, Side.SERVER);
-		M.network.registerMessage(PacketTileEntityData.Handler.class, PacketTileEntityData.class, 1, Side.CLIENT);
 		// M.network.registerMessage(PacketEntityData.Handler.class,
 		// PacketEntityData.class, 1, Side.CLIENT);
 		// M.network.registerMessage(PacketPlayerData.Handler.class,
@@ -77,20 +79,20 @@ public abstract class ProxyCommon
 		ComponentEvents.registerRecipes();
 		this.registerNugget(M.iron_nugget, Items.iron_ingot);
 		this.registerNugget(M.ruby, Item.getItemFromBlock(M.ruby_block));
-		this.registerGear(M.gear_wood, Item.getItemFromBlock(Blocks.planks));
-		this.registerGear(M.gear_iron, Items.iron_ingot);
-		this.registerGear(M.gear_gold, Items.gold_ingot);
-		this.registerGear(M.gear_diamond, Items.diamond);
-		GameRegistry.addShapedRecipe(new ItemStack(M.container, 4), new Object[]{"OTO", "G G", "OOO", 'O', Item.getItemFromBlock(Blocks.obsidian), 'T', Item.getItemFromBlock(Blocks.iron_trapdoor), 'G', Item.getItemFromBlock(Blocks.glass_pane)});
-		GameRegistry.addShapedRecipe(new ItemStack(M.lens_convex, 5), new Object[]{" G ", "GGG", " G ", 'G', Item.getItemFromBlock(Blocks.glass_pane)});
-		GameRegistry.addShapedRecipe(new ItemStack(M.lens_concave, 7), new Object[]{"GGG", " G ", "GGG", 'G', Item.getItemFromBlock(Blocks.glass_pane)});
-		GameRegistry.addShapedRecipe(new ItemStack(M.prism), new Object[]{" G ", "GGG", 'G', Item.getItemFromBlock(Blocks.glass_pane)});
-		GameRegistry.addShapedRecipe(new ItemStack(M.eyepiece), new Object[]{" I ", "lLl", " I ", 'l', M.lens_concave, 'L', M.lens_convex, 'I', Items.iron_ingot});
-		GameRegistry.addShapedRecipe(new ItemStack(M.laser_diode_green), new Object[]{"IGr", "leg", "IGc", 'I', Items.iron_ingot, 'G', Item.getItemFromBlock(Blocks.heavy_weighted_pressure_plate), 'r', Items.redstone, 'l', M.eyepiece, 'e', Items.emerald, 'g', Items.glowstone_dust, 'c', Items.comparator});
-		GameRegistry.addShapedRecipe(new ItemStack(M.laser_diode_red), new Object[]{"IGr", "leg", "IGc", 'I', Items.iron_ingot, 'G', Item.getItemFromBlock(Blocks.heavy_weighted_pressure_plate), 'r', Items.redstone, 'l', M.eyepiece, 'e', M.ruby, 'g', Items.glowstone_dust, 'c', Items.comparator});
-		GameRegistry.addShapedRecipe(new ItemStack(M.laser_diode_green_strong), new Object[]{"IGr", "leg", "IGc", 'I', Items.iron_ingot, 'G', Item.getItemFromBlock(Blocks.light_weighted_pressure_plate), 'r', Item.getItemFromBlock(Blocks.redstone_block), 'l', M.eyepiece, 'e', Items.emerald, 'g', Item.getItemFromBlock(Blocks.glowstone), 'c', Items.comparator});
-		GameRegistry.addShapedRecipe(new ItemStack(M.laser_diode_red_strong), new Object[]{"IGr", "leg", "IGc", 'I', Items.iron_ingot, 'G', Item.getItemFromBlock(Blocks.light_weighted_pressure_plate), 'r', Item.getItemFromBlock(Blocks.redstone_block), 'l', M.eyepiece, 'e', M.ruby, 'g', Item.getItemFromBlock(Blocks.glowstone), 'c', Items.comparator});
-		GameRegistry.addShapedRecipe(new ItemStack(M.shuriken, 8), new Object[]{"I I", " i ", "I I", 'I', Items.iron_ingot, 'i', M.iron_nugget});
+		this.registerGear(M.gear_wood, "plankWood");
+		this.registerGear(M.gear_iron, "ingotIron");
+		this.registerGear(M.gear_gold, "ingotGold");
+		this.registerGear(M.gear_diamond, "gemDiamond");
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.container, 4), new Object[]{"OTO", "G G", "OOO", 'O', Item.getItemFromBlock(Blocks.obsidian), 'T', Item.getItemFromBlock(Blocks.iron_trapdoor), 'G', "paneGlassColorless"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.lens_convex, 5), new Object[]{" G ", "GGG", " G ", 'G', "paneGlassColorless"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.lens_concave, 7), new Object[]{"GGG", " G ", "GGG", 'G', "paneGlassColorless"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.prism), new Object[]{" G ", "GGG", 'G', "paneGlassColorless"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.eyepiece), new Object[]{" I ", "lLl", " I ", 'l', M.lens_concave, 'L', M.lens_convex, 'I', "ingotIron"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.laser_diode_green), new Object[]{"IGr", "leg", "IGc", 'I', "ingotIron", 'G', Item.getItemFromBlock(Blocks.heavy_weighted_pressure_plate), 'r', "dustRedstone", 'l', M.eyepiece, 'e', "gemEmerald", 'g', "dustGlowstone", 'c', Items.comparator}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.laser_diode_red), new Object[]{"IGr", "leg", "IGc", 'I', "ingotIron", 'G', Item.getItemFromBlock(Blocks.heavy_weighted_pressure_plate), 'r', "dustRedstone", 'l', M.eyepiece, 'e', "gemRuby", 'g', "dustGlowstone", 'c', Items.comparator}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.laser_diode_green_strong), new Object[]{"IGr", "leg", "IGc", 'I', "ingotIron", 'G', Item.getItemFromBlock(Blocks.light_weighted_pressure_plate), 'r', "blockRedstone", 'l', M.eyepiece, 'e', "gemEmerald", 'g', "glowstone", 'c', Items.comparator}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.laser_diode_red_strong), new Object[]{"IGr", "leg", "IGc", 'I', "ingotIron", 'G', Item.getItemFromBlock(Blocks.light_weighted_pressure_plate), 'r', "blockRedstone", 'l', M.eyepiece, 'e', "gemRuby", 'g', "glowstone", 'c', Items.comparator}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.shuriken, 8), new Object[]{"I I", " i ", "I I", 'I', "ingotIron", 'i', "nuggetIron"}));
 	}
 	
 	private void registerNugget(Item nugget, Item bar)
@@ -99,9 +101,9 @@ public abstract class ProxyCommon
 		GameRegistry.addShapedRecipe(new ItemStack(nugget, 9), new Object[]{"B", 'B', bar});
 	}
 	
-	private void registerGear(Item gear, Item bar)
+	private void registerGear(Item gear, String bar)
 	{
-		GameRegistry.addShapedRecipe(new ItemStack(gear, 6), new Object[]{" B ", "BbB", " B ", 'B', bar, 'b', Item.getItemFromBlock(Blocks.stone_button)});
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(gear, 6), new Object[]{" B ", "BbB", " B ", 'B', bar, 'b', Item.getItemFromBlock(Blocks.stone_button)}));
 	}
 	
 	private void oreDictionary()

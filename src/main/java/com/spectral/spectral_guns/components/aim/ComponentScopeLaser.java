@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.components.Component.String2;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
@@ -33,13 +32,15 @@ public class ComponentScopeLaser extends ComponentScope
 		boolean b = true;
 		if(entity instanceof EntityPlayer)
 		{
-			// b =
-			// EntityExtendedPlayer.get((EntityPlayer)entity).isZoomHeldDown;
+			b = EntityExtendedPlayer.get((EntityPlayer)entity).isZoomHeldDown;
 		}
 		if(entity instanceof EntityLivingBase && isSelected && b)
 		{
-			EntityLaser e = new EntityLaser(world, (EntityLivingBase)entity, 0.1, color, 0.1);
-			world.spawnEntityInWorld(e);
+			EntityLaser e = new EntityLaser(world, (EntityLivingBase)entity, 0.1, this.color, 0.1);
+			if(!world.isRemote || true) //this needs to be spawned clientside as well, but only for laser entities
+			{
+				world.spawnEntityInWorld(e);
+			}
 		}
 	}
 	
@@ -47,7 +48,7 @@ public class ComponentScopeLaser extends ComponentScope
 	public void registerRecipe()
 	{
 		Item diode = M.laser_diode_green;
-		switch(color)
+		switch(this.color)
 		{
 		case CYAN:
 			break;
@@ -60,19 +61,19 @@ public class ComponentScopeLaser extends ComponentScope
 		case VIOLET:
 			break;
 		}
-		switch(material)
+		switch(this.material)
 		{
 		case WOOD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"D", "S", 'D', diode, 'S', M.scope_wood.item});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]{"D", "S", 'D', diode, 'S', M.scope_wood.item});
 			break;
 		case IRON:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"D", "S", 'D', diode, 'S', M.scope_iron.item});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]{"D", "S", 'D', diode, 'S', M.scope_iron.item});
 			break;
 		case GOLD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"D", "S", 'D', diode, 'S', M.scope_gold.item});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]{"D", "S", 'D', diode, 'S', M.scope_gold.item});
 			break;
 		case DIAMOND:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"D", "S", 'D', diode, 'S', M.scope_diamond.item});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]{"D", "S", 'D', diode, 'S', M.scope_diamond.item});
 			break;
 		}
 	}

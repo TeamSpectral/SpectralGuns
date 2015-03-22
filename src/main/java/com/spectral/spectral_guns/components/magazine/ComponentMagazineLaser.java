@@ -3,26 +3,22 @@ package com.spectral.spectral_guns.components.magazine;
 import java.util.ArrayList;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.audio.MovingSoundPublic;
 import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.components.ComponentBarrel;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentBarrel.ComponentBarrelThin;
 import com.spectral.spectral_guns.components.ComponentGeneric;
-import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.components.Component.ComponentMaterial;
-import com.spectral.spectral_guns.components.Component.String2;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
@@ -56,7 +52,7 @@ public class ComponentMagazineLaser extends ComponentGeneric
 	@Override
 	public void update(ItemStack gun, World world, Entity entity, int slot, boolean isSelected, ArrayList<Component> components)
 	{
-		NBTTagCompound compound = getTagCompound(gun);
+		NBTTagCompound compound = this.getTagCompound(gun);
 		if(entity instanceof EntityPlayer && isSelected)
 		{
 			EntityExtendedPlayer props = EntityExtendedPlayer.get((EntityPlayer)entity);
@@ -83,13 +79,17 @@ public class ComponentMagazineLaser extends ComponentGeneric
 		compound.setFloat(CHARGE, Math.max(0, Math.min(12, compound.getFloat(CHARGE))));
 		if(compound.getFloat(CHARGE) > 0.5 && entity instanceof EntityPlayer)
 		{
-			EntityLaser e = new EntityLaser(world, (EntityPlayer)entity, compound.getFloat(CHARGE), color, 0);
-			world.spawnEntityInWorld(e);
+			EntityLaser e = new EntityLaser(world, (EntityPlayer)entity, compound.getFloat(CHARGE), this.color, 0);
+			
+			if(!world.isRemote || true) //this needs to be spawned clientside as well, but only for laser entities
+			{
+				world.spawnEntityInWorld(e);
+			}
 			
 			int t = (int)(12 / compound.getFloat(CHARGE));
 			if(t <= 0 || compound.getInteger(TIMER) % t == t - 1)
 			{
-				setAmmo(-1, gun, world, (EntityPlayer)entity, components);
+				this.setAmmo(-1, gun, world, (EntityPlayer)entity, components);
 			}
 		}
 		if(world.isRemote)
@@ -110,7 +110,7 @@ public class ComponentMagazineLaser extends ComponentGeneric
 				((MovingSoundPublic)AudioHandler.getSound(entity, "fire.fire")).setVolume(compound.getFloat(CHARGE) / 2);
 			}
 		}
-		capAmmo(compound);
+		this.capAmmo(compound);
 	}
 	
 	@Override
@@ -121,7 +121,7 @@ public class ComponentMagazineLaser extends ComponentGeneric
 		{
 			compound.setInteger(AMMO, 0);
 		}
-		while(ammo > 0 && compound.getInteger(AMMO) + 1 <= capacity * ammoMultiplier)
+		while(ammo > 0 && compound.getInteger(AMMO) + 1 <= this.capacity * ammoMultiplier)
 		{
 			compound.setInteger(AMMO, compound.getInteger(AMMO) + 1);
 			--ammo;
@@ -132,22 +132,23 @@ public class ComponentMagazineLaser extends ComponentGeneric
 			++ammo;
 		}
 		
-		capAmmo(compound);
+		this.capAmmo(compound);
 		return ammo;
 	}
 	
 	@Override
 	public int capacity(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return capacity * ammoMultiplier;
+		return this.capacity * ammoMultiplier;
 	}
 	
 	@Override
 	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return delay + battery() / 2 + capacity / 32;
+		return delay + this.battery() / 2 + this.capacity / 32;
 	}
 	
+	@Override
 	public boolean isValid(ArrayList<Component> ecs)
 	{
 		int count = 0;
@@ -176,7 +177,7 @@ public class ComponentMagazineLaser extends ComponentGeneric
 	public int ammo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
 		NBTTagCompound compound = this.getTagCompound(stack);
-		capAmmo(compound);
+		this.capAmmo(compound);
 		return compound.getInteger(AMMO);
 	}
 	
@@ -216,6 +217,7 @@ public class ComponentMagazineLaser extends ComponentGeneric
 		return 299792458 / 20;
 	}
 	
+	@Override
 	public float fireRate(float rate, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
 		return 0;
@@ -235,11 +237,11 @@ public class ComponentMagazineLaser extends ComponentGeneric
 	public void registerRecipe()
 	{
 		Item diode = M.laser_diode_green_strong;
-		switch(material)
+		switch(this.material)
 		{
 		case IRON:
 		{
-			switch(color)
+			switch(this.color)
 			{
 			case CYAN:
 				break;
@@ -256,7 +258,7 @@ public class ComponentMagazineLaser extends ComponentGeneric
 		}
 		case GOLD:
 		{
-			switch(color)
+			switch(this.color)
 			{
 			case CYAN:
 				break;
@@ -273,7 +275,7 @@ public class ComponentMagazineLaser extends ComponentGeneric
 		}
 		case DIAMOND:
 		{
-			switch(color)
+			switch(this.color)
 			{
 			case CYAN:
 				break;
@@ -289,16 +291,16 @@ public class ComponentMagazineLaser extends ComponentGeneric
 			break;
 		}
 		}
-		switch(material)
+		switch(this.material)
 		{
 		case IRON:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"iir", "lbd", "iir", 'i', Items.iron_ingot, 'r', Items.redstone, 'l', M.eyepiece, 'b', M.barrel_thin_diamond.item, 'd', diode});
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item), new Object[]{"iir", "lbd", "iir", 'i', "ingotIron", 'r', "dustRedstone", 'l', M.eyepiece, 'b', M.barrel_thin_diamond.item, 'd', diode}));
 			break;
 		case GOLD:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"iir", "lbd", "iir", 'i', Items.gold_ingot, 'r', Items.redstone, 'l', M.eyepiece, 'b', M.barrel_thin_diamond.item, 'd', diode});
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item), new Object[]{"iir", "lbd", "iir", 'i', "ingotGold", 'r', "dustRedstone", 'l', M.eyepiece, 'b', M.barrel_thin_diamond.item, 'd', diode}));
 			break;
 		case DIAMOND:
-			GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"iir", "lbd", "iir", 'i', Items.diamond, 'r', Items.redstone, 'l', M.eyepiece, 'b', M.barrel_thin_diamond.item, 'd', diode});
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item), new Object[]{"iir", "lbd", "iir", 'i', "gemDiamond", 'r', "dustRedstone", 'l', M.eyepiece, 'b', M.barrel_thin_diamond.item, 'd', diode}));
 			break;
 		}
 	}
@@ -312,9 +314,9 @@ public class ComponentMagazineLaser extends ComponentGeneric
 	protected void capAmmo(NBTTagCompound c)
 	{
 		int a = c.getInteger(AMMO);
-		if(c.getInteger(AMMO) > capacity * ammoMultiplier)
+		if(c.getInteger(AMMO) > this.capacity * ammoMultiplier)
 		{
-			c.setInteger(AMMO, capacity * ammoMultiplier);
+			c.setInteger(AMMO, this.capacity * ammoMultiplier);
 		}
 		if(c.getInteger(AMMO) < 0)
 		{

@@ -2,18 +2,17 @@ package com.spectral.spectral_guns.components;
 
 import java.util.ArrayList;
 
-import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.items.ItemComponent;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 
 public abstract class ComponentBarrel extends ComponentGeneric
 {
@@ -45,7 +44,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	{
 		for(int i = 0; i < 3; ++i)
 		{
-			float v = (spread + world.rand.nextFloat() * 20 - 16) / 30;
+			float v = (this.spread + world.rand.nextFloat() * 20 - 16) / 30;
 			if(v < 0)
 			{
 				v = 0;
@@ -62,16 +61,16 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	@Override
 	public ArrayList<Entity> fire(ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		if(velocity <= 1 && velocity > 0)
+		if(this.velocity <= 1 && this.velocity > 0)
 		{
 			for(int i = 0; i < projectiles.size(); ++i)
 			{
 				Entity e = projectiles.get(i);
 				if(e != null)
 				{
-					e.motionX *= velocity;
-					e.motionY *= velocity;
-					e.motionZ *= velocity;
+					e.motionX *= this.velocity;
+					e.motionY *= this.velocity;
+					e.motionZ *= this.velocity;
 				}
 			}
 		}
@@ -101,7 +100,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		public void registerRecipe()
 		{
 			Item barrel = M.barrel_normal_iron.item;
-			switch(material)
+			switch(this.material)
 			{
 			case WOOD:
 				barrel = M.barrel_normal_wood.item;
@@ -116,7 +115,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 				barrel = M.barrel_normal_diamond.item;
 				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[] {"##", '#', barrel});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[]{"##", '#', barrel});
 		}
 	}
 	
@@ -136,23 +135,23 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		@Override
 		public void registerRecipe()
 		{
-			Item resource = Items.iron_ingot;
-			switch(material)
+			Object resource = Items.iron_ingot;
+			switch(this.material)
 			{
 			case WOOD:
-				resource = Item.getItemFromBlock(Blocks.planks);
+				resource = "plankWood";
 				break;
 			case IRON:
-				resource = Items.iron_ingot;
+				resource = "ingotIron";
 				break;
 			case GOLD:
-				resource = Items.gold_ingot;
+				resource = "ingotGold";
 				break;
 			case DIAMOND:
-				resource = Items.diamond;
+				resource = "gemDiamond";
 				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 1), new Object[] {"###", "   ", "###", '#', resource});
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item, 1), new Object[]{"###", "   ", "###", '#', resource}));
 		}
 	}
 	
@@ -173,7 +172,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		public void registerRecipe()
 		{
 			Item barrel = M.barrel_normal_iron.item;
-			switch(material)
+			switch(this.material)
 			{
 			case WOOD:
 				barrel = M.barrel_normal_wood.item;
@@ -188,7 +187,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 				barrel = M.barrel_normal_diamond.item;
 				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[] {"#", "#", '#', barrel});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[]{"#", "#", '#', barrel});
 		}
 	}
 	
@@ -209,7 +208,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		public void registerRecipe()
 		{
 			Item barrel1 = M.barrel_normal_iron.item;
-			switch(material)
+			switch(this.material)
 			{
 			case WOOD:
 				barrel1 = M.barrel_normal_wood.item;
@@ -225,7 +224,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 				break;
 			}
 			Item barrel2 = M.barrel_wide_iron.item;
-			switch(material)
+			switch(this.material)
 			{
 			case WOOD:
 				barrel2 = M.barrel_wide_wood.item;
@@ -240,7 +239,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 				barrel2 = M.barrel_wide_diamond.item;
 				break;
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[] {"@#", '#', barrel1, '@', barrel2});
+			GameRegistry.addShapedRecipe(new ItemStack(this.item, 2), new Object[]{"@#", '#', barrel1, '@', barrel2});
 		}
 	}
 }

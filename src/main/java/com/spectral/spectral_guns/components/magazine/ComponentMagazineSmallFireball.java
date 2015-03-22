@@ -12,6 +12,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
@@ -71,34 +72,34 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazine
 	@SuppressWarnings("incomplete-switch")
 	public void registerRecipe()
 	{
-		Item bar = Items.iron_ingot;
-		switch(material)
+		Object bar = Items.iron_ingot;
+		switch(this.material)
 		{
 		case IRON:
-			bar = Items.iron_ingot;
+			bar = "ingotIron";
 			break;
 		case GOLD:
-			bar = Items.gold_ingot;
+			bar = "ingotGold";
 			break;
 		case DIAMOND:
-			bar = Items.diamond;
+			bar = "gemDiamond";
 			break;
 		}
-		Item block = Item.getItemFromBlock(Blocks.iron_block);
-		switch(material)
+		Object block = Item.getItemFromBlock(Blocks.iron_block);
+		switch(this.material)
 		{
 		case IRON:
-			block = Item.getItemFromBlock(Blocks.iron_block);
+			block = "blockIron";
 			break;
 		case GOLD:
-			block = Item.getItemFromBlock(Blocks.gold_block);
+			block = "blockGold";
 			break;
 		case DIAMOND:
-			block = Item.getItemFromBlock(Blocks.diamond_block);
+			block = "blockDiamond";
 			break;
 		}
 		Item magazine = Items.iron_ingot;
-		switch(material)
+		switch(this.material)
 		{
 		case IRON:
 			magazine = Item.getItemFromBlock(Blocks.dispenser);
@@ -110,7 +111,7 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazine
 			magazine = M.magazine_small_fireball_gold.item;
 			break;
 		}
-		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"iBb", "MCF", "iBB", 'B', block, 'i', bar, 'M', magazine, 'C', Items.fire_charge, 'F', Item.getItemFromBlock(Blocks.furnace), 'b', Items.lava_bucket});
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item), new Object[]{"iBb", "MCF", "iBB", 'B', block, 'i', bar, 'M', magazine, 'C', Items.fire_charge, 'F', Item.getItemFromBlock(Blocks.furnace), 'b', Items.lava_bucket}));
 	}
 	
 	@Override
@@ -129,6 +130,6 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazine
 	@Override
 	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return delay + capacity / 32 + 4;
+		return delay + this.capacity / 32 + 4;
 	}
 }

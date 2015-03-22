@@ -1,13 +1,5 @@
 package com.spectral.spectral_guns.components.magazine;
 
-import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.Stuff.Coordinates3D;
-import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.entity.projectile.EntityLaser;
-import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
-import com.spectral.spectral_guns.items.ItemGun;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntitySnowball;
@@ -19,6 +11,14 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff.Coordinates3D;
+import com.spectral.spectral_guns.Stuff.Randomization;
+import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
+import com.spectral.spectral_guns.items.ItemGun;
 
 public class ComponentMagazineSnowball extends ComponentMagazine
 {
@@ -54,7 +54,7 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 		for(int i = 0; i < 32 && world.isRemote; ++i)
 		{
 			Vec3 m = Coordinates3D.stabilize(new Vec3((float)projectile.motionX + Randomization.r(spread), (float)projectile.motionY + Randomization.r(spread), (float)projectile.motionZ + Randomization.r(spread)), ItemGun.speed(stack, player) / 4 * (world.rand.nextFloat() * 0.9F + 0.1F));
-			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[] {Item.getIdFromItem(Items.snowball)});
+			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[]{Item.getIdFromItem(Items.snowball)});
 		}
 		
 		world.playSoundAtEntity(player, "random.bow", 0.3F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
@@ -64,40 +64,40 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 	@Override
 	public void registerRecipe()
 	{
-		Item bar = Items.iron_ingot;
-		switch(material)
+		Object bar = Items.iron_ingot;
+		switch(this.material)
 		{
 		case WOOD:
-			bar = Item.getItemFromBlock(Blocks.planks);
+			bar = "plankWood";
 			break;
 		case IRON:
-			bar = Items.iron_ingot;
+			bar = "ingotIron";
 			break;
 		case GOLD:
-			bar = Items.gold_ingot;
+			bar = "ingotGold";
 			break;
 		case DIAMOND:
-			bar = Items.diamond;
+			bar = "gemDiamond";
 			break;
 		}
-		Item block = Item.getItemFromBlock(Blocks.iron_block);
-		switch(material)
+		Object block = Item.getItemFromBlock(Blocks.iron_block);
+		switch(this.material)
 		{
 		case WOOD:
-			block = Item.getItemFromBlock(Blocks.log);
+			block = "logWood";
 			break;
 		case IRON:
-			block = Item.getItemFromBlock(Blocks.iron_block);
+			block = "blockIron";
 			break;
 		case GOLD:
-			block = Item.getItemFromBlock(Blocks.gold_block);
+			block = "blockGold";
 			break;
 		case DIAMOND:
-			block = Item.getItemFromBlock(Blocks.diamond_block);
+			block = "blockDiamond";
 			break;
 		}
 		Item magazine = Items.iron_ingot;
-		switch(material)
+		switch(this.material)
 		{
 		case WOOD:
 			magazine = Item.getItemFromBlock(Blocks.dispenser);
@@ -112,6 +112,6 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 			magazine = M.magazine_snowball_gold.item;
 			break;
 		}
-		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"BbC", "SMP", "Bb ", 'B', block, 'b', bar, 'M', magazine, 'S', Item.getItemFromBlock(Blocks.snow), 'P', Items.gunpowder, 'C', M.container});
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item), new Object[]{"BbC", "SMP", "Bb ", 'B', block, 'b', bar, 'M', magazine, 'S', Item.getItemFromBlock(Blocks.snow), 'P', Items.gunpowder, 'C', M.container}));
 	}
 }

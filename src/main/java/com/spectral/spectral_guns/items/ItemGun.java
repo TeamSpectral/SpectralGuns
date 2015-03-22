@@ -4,17 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.spectral.spectral_guns.IDAble;
-import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
-import com.spectral.spectral_guns.Stuff.Coordinates3D;
-import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.components.Component.ComponentRegister;
-import com.spectral.spectral_guns.components.ComponentEvents;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
-import com.spectral.spectral_guns.event.HandlerClientFML;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -28,6 +17,18 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
+import com.spectral.spectral_guns.IDAble;
+import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
+import com.spectral.spectral_guns.Stuff.Coordinates3D;
+import com.spectral.spectral_guns.Stuff.Randomization;
+import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.components.Component.ComponentRegister;
+import com.spectral.spectral_guns.components.ComponentEvents;
+import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.event.HandlerClientFML;
 
 public class ItemGun extends ItemBase implements IDAble
 {
@@ -65,6 +66,10 @@ public class ItemGun extends ItemBase implements IDAble
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced)
 	{
+		if(!ComponentEvents.isGunValid(stack))
+		{
+			tooltip.add(ChatFormatting.RED + "ERROR!" + ChatFormatting.RESET);
+		}
 		int ammo = ammo(stack, player);
 		int cap = capacity(stack, player);
 		if(cap > 0)
@@ -88,7 +93,7 @@ public class ItemGun extends ItemBase implements IDAble
 		tooltip.add("Spread: " + Math.floor(spread(stack, player) * 36000) / 100 + "°");
 		tooltip.add("Response Time: " + delay(stack, player) + " ticks");
 		tooltip.add("Fire Rate: " + fireRate(stack, player) + " ticks");
-		int zoom = (int)Math.floor((zoom(stack, player, 1)) * 100);
+		int zoom = (int)Math.floor(zoom(stack, player, 1) * 100);
 		if(zoom > 100)
 		{
 			tooltip.add("Zoom: " + zoom + "%");
@@ -110,16 +115,22 @@ public class ItemGun extends ItemBase implements IDAble
 	public void getSubItems(Item item, CreativeTabs tab, List subItems)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
+		subItems.add(this.getSubItem(mc.thePlayer, item, tab));
+	}
+	
+	public ItemStack getSubItem(EntityPlayer player, Item item, CreativeTabs tab)
+	{
 		ArrayList<ItemStack> a = new ArrayList<ItemStack>();
 		a.add(new ItemStack(item, 1, 0));
-		for(int i = 0; i < a.size(); ++i)
+		for(int i = 0; i < a.size();)
 		{
 			compound(a.get(i));
 			a.get(i).getTagCompound().setInteger(DELAYTIMER, -1);
 			setComponents(a.get(0), getRandomComponents(Item.itemRand));
-			ComponentEvents.setAmmo(capacity(a.get(i), mc.thePlayer), a.get(i), mc.thePlayer, getComponents(a.get(i)));
-			subItems.add(a.get(i));
+			ComponentEvents.setAmmo(capacity(a.get(i), player), a.get(i), player, getComponents(a.get(i)));
+			return a.get(i);
 		}
+		return null;
 	}
 	
 	@Override
@@ -190,7 +201,7 @@ public class ItemGun extends ItemBase implements IDAble
 		{
 			if(entity instanceof EntityPlayer)
 			{
-				recoilPerTick(stack, entity);
+				this.recoilPerTick(stack, entity);
 			}
 		}
 		if(compound.getInteger(FIRERATETIMER) > 0)
@@ -202,12 +213,12 @@ public class ItemGun extends ItemBase implements IDAble
 		{
 			if(compound.getInteger(DELAYTIMER) == 0)
 			{
-				fire(stack, world, (EntityPlayer)entity);
+				this.fire(stack, world, (EntityPlayer)entity);
 			}
 		}
-		if(!(entity instanceof EntityPlayer) || canShoot(stack, (EntityPlayer)entity))
+		if(!(entity instanceof EntityPlayer) || this.canShoot(stack, (EntityPlayer)entity))
 		{
-			resetDelay(stack);
+			this.resetDelay(stack);
 		}
 		
 		if(compound.getInteger(DELAYTIMER) > 0)
@@ -241,11 +252,11 @@ public class ItemGun extends ItemBase implements IDAble
 					world.spawnEntityInWorld(e.get(i));
 				}
 			}
-			kickBack(stack, player, e);
-			applyRecoil(stack, player);
+			this.kickBack(stack, player, e);
+			this.applyRecoil(stack, player);
 			compound.setInteger(FIRERATETIMER, fireRate(stack, player));
 		}
-		resetDelay(stack);
+		this.resetDelay(stack);
 		
 		setComponents(stack, components);
 	}
@@ -671,6 +682,7 @@ public class ItemGun extends ItemBase implements IDAble
 		return cs;
 	}
 	
+	@Override
 	public boolean isFull3D()
 	{
 		return true;
