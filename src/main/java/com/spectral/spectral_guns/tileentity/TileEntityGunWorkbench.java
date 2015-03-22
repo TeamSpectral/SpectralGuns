@@ -29,6 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.collect.Lists;
 import com.spectral.spectral_guns.References;
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
@@ -424,7 +425,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack)
 	{
-		if(stack != null && this.getStackInSlot(index) == null)
+		if(stack == null || this.getStackInSlot(index) != null)
 		{
 			return false;
 		}
@@ -449,7 +450,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 		{
 			if(index >= this.offset && index < this.offset + this.componentStacks.length)
 			{
-				ComponentRegister.Type type = ComponentRegister.Type.values()[index - this.offset - 1];
+				ComponentRegister.Type type = ComponentRegister.Type.values()[index - this.offset + 1];
 				if(stack != null && !(stack.getItem() instanceof ItemComponent && ((ItemComponent)stack.getItem()).c.type == type))
 				{
 					return false;
@@ -523,7 +524,14 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	{
 		if(index == 0)
 		{
-			return this.getStackInSlot(1) != null && this.getStackInSlot(1).getItem() instanceof ItemWrench && this.getStackInSlot(1).getItemDamage() < this.getStackInSlot(1).getMaxDamage();
+			if(this.getStackInSlot(1) != null && this.getStackInSlot(1).getItem() instanceof ItemWrench && this.getStackInSlot(1).getItemDamage() < this.getStackInSlot(1).getMaxDamage())
+			{
+				this.getStackInSlot(1).attemptDamageItem(1, Stuff.rand);
+			}
+			else
+			{
+				return false;
+			}
 		}
 		return true;
 	}
