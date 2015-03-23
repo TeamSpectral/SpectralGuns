@@ -263,7 +263,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 				if(list.getCompoundTagAt(i).getKeySet().size() > 0)
 				{
 					ItemStack stack = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i));
-					if(stack != null && this.isItemValidForSlot(i + this.offset, stack))
+					if(stack != null)
 					{
 						this.componentStacks[i] = stack;
 						continue;
@@ -281,7 +281,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 				if(list.getCompoundTagAt(i).getKeySet().size() > 0)
 				{
 					ItemStack stack = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i));
-					if(stack != null && this.isItemValidForSlot(i + this.offset + this.componentStacks.length, stack))
+					if(stack != null)
 					{
 						this.componentMiscStacks[i] = stack;
 						continue;
@@ -326,7 +326,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 				list.appendTag(new NBTTagCompound());
 			}
 		}
-		compound.setTag(COMPONENT_MISC_STACKS, list);
+		compound.setTag(COMPONENT_STACKS, list);
 		
 		NBTTagList list2 = new NBTTagList();
 		for(int i = 0; i < this.componentMiscStacks.length; ++i)
@@ -359,7 +359,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	 */
 	public boolean isBurning()
 	{
-		return this.playersUsing > 0;
+		return this.playersUsing > 0 || this.gunStack != null && this.canExtractItem(0, this.gunStack, EnumFacing.DOWN, false);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -380,13 +380,19 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 		if(bs.getBlock() instanceof BlockGunWorkbench && bs.getProperties().containsKey(BlockGunWorkbench.ON))
 		{
 			boolean value = (Boolean)bs.getValue(BlockGunWorkbench.ON);
-			if(value != this.isBurning())
+			boolean newValue = this.isBurning();
+			if(value != newValue)
 			{
 				flag1 = true;
 			}
-			this.worldObj.setBlockState(this.pos, bs.withProperty(BlockGunWorkbench.ON, this.isBurning()));
+			this.worldObj.setBlockState(this.pos, bs.withProperty(BlockGunWorkbench.ON, newValue));
 			
 			value = (Boolean)this.worldObj.getBlockState(this.pos).getValue(BlockGunWorkbench.ON);
+		}
+		
+		if(this.getStackInSlot(1) != null && this.getStackInSlot(1).getItemDamage() >= this.getStackInSlot(1).getMaxDamage())
+		{
+			this.setInventorySlotContents(1, null);
 		}
 		
 		if(flag1)
@@ -425,9 +431,12 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack)
 	{
-		if(stack == null || this.getStackInSlot(index) != null)
+		if(this.getStackInSlot(index) != null)
 		{
-			return false;
+			if(!(this.getStackInSlot(index).isItemEqual(stack) && this.getStackInSlot(index).isStackable() && this.getStackInSlot(index).stackSize + stack.stackSize <= stack.getMaxStackSize()))
+			{
+				return false;
+			}
 		}
 		
 		switch(index)
@@ -438,6 +447,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 			{
 				return false;
 			}
+			break;
 		}
 		case 1:
 		{
@@ -445,6 +455,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 			{
 				return false;
 			}
+			break;
 		}
 		default:
 		{
@@ -464,6 +475,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 					return false;
 				}
 			}
+			break;
 		}
 		}
 		
@@ -498,6 +510,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 					return new int[]{1};
 				}
 			}
+			break;
 		}
 		}
 		return new int[]{};
@@ -511,7 +524,18 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	@Override
 	public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction)
 	{
-		return this.isItemValidForSlot(index, stack);
+		if(this.isItemValidForSlot(index, stack))
+		{
+			if(index == 0)
+			{
+				if(stack != null)
+				{
+					new ContainerGunWorkbench(new InventoryPlayer(null), this).insertComponents(ItemGun.getComponents(stack));
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -522,18 +546,40 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
 	{
+		return this.canExtractItem(index, stack, direction, true);
+	}
+	
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction, boolean flag)
+	{
 		if(index == 0)
 		{
 			if(this.getStackInSlot(1) != null && this.getStackInSlot(1).getItem() instanceof ItemWrench && this.getStackInSlot(1).getItemDamage() < this.getStackInSlot(1).getMaxDamage())
 			{
-				this.getStackInSlot(1).attemptDamageItem(1, Stuff.rand);
+				if(flag)
+				{
+					this.getStackInSlot(1).attemptDamageItem(1, Stuff.rand);
+				}
 			}
 			else
 			{
+				flag = true;
 				return false;
 			}
+			for(int i = 0; i < EnumFacing.values().length; ++i)
+			{
+				if(this.worldObj.getRedstonePower(this.pos, EnumFacing.values()[i]) <= 0)
+				{
+					if(flag)
+					{
+						this.clearComponentStacks(false);
+					}
+					flag = true;
+					return true;
+				}
+			}
 		}
-		return true;
+		flag = true;
+		return false;
 	}
 	
 	@Override

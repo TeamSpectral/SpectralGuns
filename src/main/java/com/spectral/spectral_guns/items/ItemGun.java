@@ -177,6 +177,10 @@ public class ItemGun extends ItemBase implements IDAble
 	{
 		compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
+		if(EntityExtendedPlayer.get(player).reloadDelay > 0)
+		{
+			return false;
+		}
 		if(compound.getInteger(DELAYTIMER) >= 0 || compound.getInteger(FIRERATETIMER) > 0)
 		{
 			return false;

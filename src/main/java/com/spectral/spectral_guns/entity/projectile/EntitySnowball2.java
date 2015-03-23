@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -22,6 +23,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.EntitiesInArea;
+import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 
 public class EntitySnowball2 extends EntitySnowball implements IEntityAdditionalSpawnData
 {
@@ -82,7 +84,7 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 			}
 		}
 		
-		double m = Coordinates3D.distance(new Vec3(this.motionX, this.motionY, this.motionZ)) * 3;
+		double m = Coordinates3D.distance(new Vec3(this.motionX, this.motionY, this.motionZ)) * 2;
 		damage *= m - 0.3;
 		
 		if(pos.entityHit != null)
@@ -119,6 +121,15 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 			pos.entityHit.extinguish();
 			float f = 0.01F;
 			pos.entityHit.addVelocity(this.motionX * f, this.motionY * f, this.motionZ * f);
+			
+			if(pos.entityHit instanceof EntityPlayer)
+			{
+				EntityExtendedPlayer propsP = EntityExtendedPlayer.get((EntityPlayer)pos.entityHit);
+				for(int i2 = 0; i2 < (int)Math.ceil(this.damage); ++i2)
+				{
+					propsP.snowball();
+				}
+			}
 		}
 		
 		int h = (int)Math.ceil(16 * damage);

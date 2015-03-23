@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.items.ItemWrench;
@@ -115,14 +116,19 @@ public class SlotGun extends Slot
 	public ItemStack getStack()
 	{
 		ItemStack stackGun = super.getStack();
+		if(stackGun == null)
+		{
+			stackGun = new ItemStack(M.gun);
+		}
 		if(stackGun != null && stackGun.getItem() instanceof ItemGun)
 		{
 			ItemGun.setComponents(stackGun, ((TileEntityGunWorkbench)this.inventory).getComponents());
 		}
 		if(stackGun != null && !ComponentEvents.isGunValid(stackGun))
 		{
-			this.putStack(null);
+			stackGun = null;
 		}
+		this.inventory.setInventorySlotContents(this.getSlotIndex(), stackGun);
 		return stackGun;
 	}
 }

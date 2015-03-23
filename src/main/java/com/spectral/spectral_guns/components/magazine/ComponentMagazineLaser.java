@@ -33,7 +33,7 @@ public class ComponentMagazineLaser extends ComponentGeneric
 	public final static String CHARGE = "Charge";
 	public final static String AMMO = "Ammo";
 	public final static String TIMER = "Timer";
-	public final static int ammoMultiplier = 50;
+	public final static int ammoMultiplier = 25;
 	public final int battery;
 	
 	public ComponentMagazineLaser(Component[] required, Component[] incapatible, ComponentMaterial material, LaserColor color, int capacity, int battery)

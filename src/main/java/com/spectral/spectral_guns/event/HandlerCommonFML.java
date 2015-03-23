@@ -1,27 +1,50 @@
 package com.spectral.spectral_guns.event;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import java.util.HashMap;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import com.spectral.spectral_guns.References;
-import com.spectral.spectral_guns.items.ItemBase;
+import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.packet.PacketPlayerData;
 
 public class HandlerCommonFML extends HandlerBase
 {
 	// fml events for both sides here!
 	
-	// currently unused, but is needed to fix an annoying error in the log
+	public static HashMap<EntityPlayer, NBTTagCompound> playerDeathData = new HashMap<EntityPlayer, NBTTagCompound>();
+	
 	@SubscribeEvent
 	public void playerUpdateEvent(PlayerTickEvent event)
 	{
+		EntityExtendedPlayer props = EntityExtendedPlayer.get(event.player);
 		
+		if(!event.player.worldObj.isRemote)
+		{
+			int i = 10;
+			if(event.player instanceof EntityPlayerMP && event.player.worldObj.getWorldTime() % i == i - 1)
+			{
+				M.network.sendTo(new PacketPlayerData(event.player), (EntityPlayerMP)event.player);
+			}
+			
+			/** makes it so that players keep certain data upon death **/
+			if(playerDeathData.get(event.player) != null && event.player.getHealth() > 0)
+			{
+				props.loadNBTData(playerDeathData.get(event.player), false);
+				playerDeathData.remove(event.player);
+			}
+			if(playerDeathData.get(event.player) == null && event.player.getHealth() <= 0 || event.player.deathTime > 0)
+			{
+				NBTTagCompound playerData = new NBTTagCompound();
+				props.saveNBTData(playerData, false);
+				playerDeathData.put(event.player, playerData);
+			}
+		}
+		
+		props.update();
 	}
 }

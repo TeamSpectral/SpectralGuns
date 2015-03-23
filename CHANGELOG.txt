@@ -48,3 +48,4 @@ i probably changed a bunch of other stuff that i can't remember. note to self: d
 +added gun assembly station with gui and everything (assemble and tinker with your guns! no need to use the crafting table!)
 +added wrench (has durability. required for using the assembly station. durability ticks down every use)
 *recipes now fully support ore dictionary
+*moved all items to the spectral guns tab

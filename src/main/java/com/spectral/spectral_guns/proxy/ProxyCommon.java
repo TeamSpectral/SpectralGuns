@@ -30,6 +30,7 @@ import com.spectral.spectral_guns.event.HandlerCommon;
 import com.spectral.spectral_guns.event.HandlerCommonFML;
 import com.spectral.spectral_guns.gui.GuiHandler;
 import com.spectral.spectral_guns.packet.PacketKey;
+import com.spectral.spectral_guns.packet.PacketPlayerData;
 import com.spectral.spectral_guns.recipe.RecipeGun;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
@@ -67,10 +68,9 @@ public abstract class ProxyCommon
 	{
 		M.network = NetworkRegistry.INSTANCE.newSimpleChannel(References.MODID + "Packets");
 		M.network.registerMessage(PacketKey.Handler.class, PacketKey.class, 0, Side.SERVER);
-		// M.network.registerMessage(PacketEntityData.Handler.class,
-		// PacketEntityData.class, 1, Side.CLIENT);
-		// M.network.registerMessage(PacketPlayerData.Handler.class,
-		// PacketPlayerData.class, 2, Side.CLIENT);
+		M.network.registerMessage(PacketPlayerData.Handler.class, PacketPlayerData.class, 1, Side.CLIENT);
+		// M.network.registerMessage(PacketEntityData.Handler.class, PacketEntityData.class, 1, Side.CLIENT);
+		// M.network.registerMessage(PacketPlayerData.Handler.class, PacketPlayerData.class, 2, Side.CLIENT);
 	}
 	
 	private void recipes()
@@ -93,6 +93,7 @@ public abstract class ProxyCommon
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.laser_diode_green_strong), new Object[]{"IGr", "leg", "IGc", 'I', "ingotIron", 'G', Item.getItemFromBlock(Blocks.light_weighted_pressure_plate), 'r', "blockRedstone", 'l', M.eyepiece, 'e', "gemEmerald", 'g', "glowstone", 'c', Items.comparator}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.laser_diode_red_strong), new Object[]{"IGr", "leg", "IGc", 'I', "ingotIron", 'G', Item.getItemFromBlock(Blocks.light_weighted_pressure_plate), 'r', "blockRedstone", 'l', M.eyepiece, 'e', "gemRuby", 'g', "glowstone", 'c', Items.comparator}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.shuriken, 8), new Object[]{"I I", " i ", "I I", 'I', "ingotIron", 'i', "nuggetIron"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.gun_assembly_station), new Object[]{"gCg", "GAG", "BFB", 'g', "gearIron", 'C', Item.getItemFromBlock(Blocks.crafting_table), 'G', "gearGold", 'A', Item.getItemFromBlock(Blocks.anvil), 'B', new ItemStack(Blocks.stone, 1, 6), 'F', Item.getItemFromBlock(Blocks.furnace)}));
 	}
 	
 	private void registerNugget(Item nugget, Item bar)

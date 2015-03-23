@@ -11,6 +11,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -25,6 +26,8 @@ import com.spectral.spectral_guns.event.HandlerClientFML;
 import com.spectral.spectral_guns.render.entity.RenderFood;
 import com.spectral.spectral_guns.render.entity.RenderNull;
 import com.spectral.spectral_guns.render.entity.RenderShuriken;
+import com.spectral.spectral_guns.render.tileentity.TileEntityGunWorkbenchRenderer;
+import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
 public class ProxyClient extends ProxyCommon
 {
@@ -46,6 +49,7 @@ public class ProxyClient extends ProxyCommon
 		RenderItem ri = Minecraft.getMinecraft().getRenderItem();
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();
 		this.registerItemModels(ri);
+		this.tileEntityRender(rm, ri);
 		this.entityRender(rm, ri);
 	}
 	
@@ -53,6 +57,11 @@ public class ProxyClient extends ProxyCommon
 	public World world(int dimension)
 	{
 		return Minecraft.getMinecraft().theWorld;
+	}
+	
+	private void tileEntityRender(RenderManager rm, RenderItem ri)
+	{
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGunWorkbench.class, new TileEntityGunWorkbenchRenderer());
 	}
 	
 	private void entityRender(RenderManager rm, RenderItem ri)

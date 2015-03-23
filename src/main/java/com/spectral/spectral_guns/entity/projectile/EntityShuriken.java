@@ -4,9 +4,6 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.List;
 
-import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.Stuff.Randomization;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -16,7 +13,6 @@ import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
@@ -33,6 +29,9 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff.Randomization;
 
 public class EntityShuriken extends Entity implements IProjectile, IEntityAdditionalSpawnData
 {
@@ -75,23 +74,23 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		this.shootingEntity = shooter;
 		
 		this.spin = Randomization.r(180);
-		rotationRoll = 180 + shooter.rotationPitch;
+		this.rotationRoll = 180 + shooter.rotationPitch;
 		
-		this.posY = shooter.posY + (double)shooter.getEyeHeight() - 0.10000000149011612D;
+		this.posY = shooter.posY + shooter.getEyeHeight() - 0.10000000149011612D;
 		double d0 = target.posX - shooter.posX;
-		double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - this.posY;
+		double d1 = target.getEntityBoundingBox().minY + target.height / 3.0F - this.posY;
 		double d2 = target.posZ - shooter.posZ;
-		double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+		double d3 = MathHelper.sqrt_double(d0 * d0 + d2 * d2);
 		
 		if(d3 >= 1.0E-7D)
 		{
 			float f2 = (float)(Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
-			float f3 = (float)(-(Math.atan2(d1, d3) * 180.0D / Math.PI));
+			float f3 = (float)-(Math.atan2(d1, d3) * 180.0D / Math.PI);
 			double d4 = d0 / d3;
 			double d5 = d2 / d3;
 			this.setLocationAndAngles(shooter.posX + d4, this.posY, shooter.posZ + d5, f2, f3);
 			float f4 = (float)(d3 * 0.20000000298023224D);
-			this.setThrowableHeading(d0, d1 + (double)f4, d2, velocity, inaccuracy);
+			this.setThrowableHeading(d0, d1 + f4, d2, velocity, inaccuracy);
 		}
 		this.rotationPitch = shooter.rotationPitch;
 	}
@@ -103,48 +102,51 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		this.shootingEntity = shooter;
 		
 		this.spin = Randomization.r(180);
-		rotationRoll = 90 - shooter.rotationPitch;
+		this.rotationRoll = 90 - shooter.rotationPitch;
 		
 		this.setSize(0.5F, 0.5F);
-		this.setLocationAndAngles(shooter.posX, shooter.posY + (double)shooter.getEyeHeight(), shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);
-		this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		this.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);
+		this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
 		this.posY -= 0.10000000149011612D;
-		this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
 		this.setPosition(this.posX, this.posY, this.posZ);
-		this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
+		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
+		this.motionY = -MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI);
 		this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, velocity * 1.5F, 1.0F);
 		
 		this.rotationPitch = shooter.rotationPitch;
 	}
 	
+	@Override
 	protected void entityInit()
 	{
 		this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
 	}
 	
+	@Override
 	public void setThrowableHeading(double x, double y, double z, float velocity, float inaccuracy)
 	{
 		float f2 = MathHelper.sqrt_double(x * x + y * y + z * z);
-		x /= (double)f2;
-		y /= (double)f2;
-		z /= (double)f2;
-		x += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)inaccuracy;
-		y += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)inaccuracy;
-		z += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)inaccuracy;
-		x *= (double)velocity;
-		y *= (double)velocity;
-		z *= (double)velocity;
+		x /= f2;
+		y /= f2;
+		z /= f2;
+		x += this.rand.nextGaussian() * (this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * inaccuracy;
+		y += this.rand.nextGaussian() * (this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * inaccuracy;
+		z += this.rand.nextGaussian() * (this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * inaccuracy;
+		x *= velocity;
+		y *= velocity;
+		z *= velocity;
 		this.motionX = x;
 		this.motionY = y;
 		this.motionZ = z;
 		float f3 = MathHelper.sqrt_double(x * x + z * z);
 		this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
-		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, (double)f3) * 180.0D / Math.PI);
+		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, f3) * 180.0D / Math.PI);
 		this.ticksInGround = 0;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void func_180426_a(double p_180426_1_, double p_180426_3_, double p_180426_5_, float p_180426_7_, float p_180426_8_, int p_180426_9_, boolean p_180426_10_)
 	{
@@ -152,6 +154,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		this.setRotation(p_180426_7_, p_180426_8_);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void setVelocity(double x, double y, double z)
 	{
@@ -163,7 +166,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		{
 			float f = MathHelper.sqrt_double(x * x + z * z);
 			this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
-			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, (double)f) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, f) * 180.0D / Math.PI);
 			this.prevRotationPitch = this.rotationPitch;
 			this.prevRotationYaw = this.rotationYaw;
 			this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
@@ -171,6 +174,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		}
 	}
 	
+	@Override
 	public void onUpdate()
 	{
 		super.onUpdate();
@@ -179,7 +183,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		{
 			float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
 			this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
-			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(this.motionY, (double)f) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(this.motionY, f) * 180.0D / Math.PI);
 		}
 		
 		BlockPos blockpos = new BlockPos(this.xTile, this.yTile, this.zTile);
@@ -218,9 +222,9 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 			else
 			{
 				this.inGround = false;
-				this.motionX *= (double)(this.rand.nextFloat() * 0.2F);
-				this.motionY *= (double)(this.rand.nextFloat() * 0.2F);
-				this.motionZ *= (double)(this.rand.nextFloat() * 0.2F);
+				this.motionX *= this.rand.nextFloat() * 0.2F;
+				this.motionY *= this.rand.nextFloat() * 0.2F;
+				this.motionZ *= this.rand.nextFloat() * 0.2F;
 				this.ticksInGround = 0;
 				this.ticksInAir = 0;
 			}
@@ -253,7 +257,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 				if(entity1.canBeCollidedWith() && (entity1 != this.shootingEntity || this.ticksInAir >= 5))
 				{
 					f1 = 0.3F;
-					AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().expand((double)f1, (double)f1, (double)f1);
+					AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().expand(f1, f1, f1);
 					MovingObjectPosition movingobjectposition1 = axisalignedbb1.calculateIntercept(vec31, vec3);
 					
 					if(movingobjectposition1 != null)
@@ -300,7 +304,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 			{
 				for(i = 0; i < 4; ++i)
 				{
-					this.worldObj.spawnParticle(EnumParticleTypes.CRIT, this.posX + this.motionX * (double)i / 4.0D, this.posY + this.motionY * (double)i / 4.0D, this.posZ + this.motionZ * (double)i / 4.0D, -this.motionX, -this.motionY + 0.2D, -this.motionZ, new int[0]);
+					this.worldObj.spawnParticle(EnumParticleTypes.CRIT, this.posX + this.motionX * i / 4.0D, this.posY + this.motionY * i / 4.0D, this.posZ + this.motionZ * i / 4.0D, -this.motionX, -this.motionY + 0.2D, -this.motionZ, new int[0]);
 				}
 			}
 			
@@ -310,7 +314,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 			f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
 			this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 			
-			for(this.rotationPitch = (float)(Math.atan2(this.motionY, (double)f2) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
+			for(this.rotationPitch = (float)(Math.atan2(this.motionY, f2) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
 			{
 				;
 			}
@@ -350,7 +354,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 				for(int l = 0; l < 4; ++l)
 				{
 					f4 = 0.25F;
-					this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ, new int[0]);
+					this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * f4, this.posY - this.motionY * f4, this.posZ - this.motionZ * f4, this.motionX, this.motionY, this.motionZ, new int[0]);
 				}
 				
 				f3 = 0.6F;
@@ -361,10 +365,10 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 				this.extinguish();
 			}
 			
-			this.motionX *= (double)f3;
-			this.motionY *= (double)f3;
-			this.motionZ *= (double)f3;
-			this.motionY -= (double)f1;
+			this.motionX *= f3;
+			this.motionY *= f3;
+			this.motionZ *= f3;
+			this.motionY -= f1;
 			this.setPosition(this.posX, this.posY, this.posZ);
 			this.doBlockCollisions();
 		}
@@ -379,7 +383,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		if(pos.entityHit != null)
 		{
 			f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-			int k = MathHelper.ceiling_double_int((double)f2 * this.damage);
+			int k = MathHelper.ceiling_double_int(f2 * this.damage);
 			
 			if(this.getIsCritical())
 			{
@@ -409,7 +413,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 					
 					if(f4 > 0.0F)
 					{
-						pos.entityHit.addVelocity(this.motionX * (double)knockback * 0.6000000238418579D / (double)f4, 0.1D, this.motionZ * (double)knockback * 0.6000000238418579D / (double)f4);
+						pos.entityHit.addVelocity(this.motionX * knockback * 0.6000000238418579D / f4, 0.1D, this.motionZ * knockback * 0.6000000238418579D / f4);
 					}
 					
 					if(this.shootingEntity != null && pos.entityHit != this.shootingEntity && pos.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP)
@@ -444,13 +448,13 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 			iblockstate = this.worldObj.getBlockState(blockpos1);
 			this.inTile = iblockstate.getBlock();
 			this.inData = this.inTile.getMetaFromState(iblockstate);
-			this.motionX = (double)((float)(pos.hitVec.xCoord - this.posX));
-			this.motionY = (double)((float)(pos.hitVec.yCoord - this.posY));
-			this.motionZ = (double)((float)(pos.hitVec.zCoord - this.posZ));
+			this.motionX = (float)(pos.hitVec.xCoord - this.posX);
+			this.motionY = (float)(pos.hitVec.yCoord - this.posY);
+			this.motionZ = (float)(pos.hitVec.zCoord - this.posZ);
 			f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-			this.posX -= this.motionX / (double)f3 * 0.05000000074505806D;
-			this.posY -= this.motionY / (double)f3 * 0.05000000074505806D;
-			this.posZ -= this.motionZ / (double)f3 * 0.05000000074505806D;
+			this.posX -= this.motionX / f3 * 0.05000000074505806D;
+			this.posY -= this.motionY / f3 * 0.05000000074505806D;
+			this.posZ -= this.motionZ / f3 * 0.05000000074505806D;
 			this.playSound("random.bowhit", 0.2F, 2.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 			this.inGround = true;
 			this.arrowShake = 7;
@@ -461,9 +465,10 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 				this.inTile.onEntityCollidedWithBlock(this.worldObj, blockpos1, iblockstate, this);
 			}
 		}
-		return new float[] {f2, f3, f4};
+		return new float[]{f2, f3, f4};
 	}
 	
+	@Override
 	public void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
 		tagCompound.setShort("xTile", (short)this.xTile);
@@ -478,6 +483,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		tagCompound.setDouble("damage", this.damage);
 	}
 	
+	@Override
 	public void readEntityFromNBT(NBTTagCompound tagCompund)
 	{
 		this.xTile = tagCompund.getShort("xTile");
@@ -504,6 +510,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		}
 	}
 	
+	@Override
 	public void onCollideWithPlayer(EntityPlayer entityIn)
 	{
 		if(!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0)
@@ -517,6 +524,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		}
 	}
 	
+	@Override
 	protected boolean canTriggerWalking()
 	{
 		return false;
@@ -537,6 +545,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		this.knockbackStrength = p_70240_1_;
 	}
 	
+	@Override
 	public boolean canAttackWithItem()
 	{
 		return false;
@@ -572,6 +581,9 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 	@Override
 	public void writeSpawnData(ByteBuf buf)
 	{
+		buf.writeDouble(this.posX);
+		buf.writeDouble(this.posY);
+		buf.writeDouble(this.posZ);
 		NBTTagCompound compound = new NBTTagCompound();
 		this.writeToNBT(compound);
 		ByteBufUtils.writeTag(buf, compound);
@@ -587,6 +599,9 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 	@Override
 	public void readSpawnData(ByteBuf buf)
 	{
+		this.posX = buf.readDouble();
+		this.posY = buf.readDouble();
+		this.posZ = buf.readDouble();
 		NBTTagCompound compound = ByteBufUtils.readTag(buf);
 		if(compound != null)
 		{

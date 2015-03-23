@@ -1,5 +1,5 @@
 {
-    "parent": "spectralguns:block/gun_assembly_station",
+    "parent": "spectralguns:block/gun_table",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

@@ -1,12 +1,11 @@
 itemGroup.spectralGuns.core=Spectral Guns
 
+container.gunTable.tinkering=Gun Assembly Station
 
 tile.blockRuby.name=Block of Ruby
-
+tile.gunAssemblyStation.name=Gun Assembly Station
 
 item.foodMush.name=Food Mush
-
-item.shuriken.name=Shuriken
 
 item.ironNugget.name=Iron Nugget
 item.container.name=Glass Container
@@ -24,6 +23,8 @@ item.laserDiode.green.strong.name=Lethal Green Laser Diode
 item.laserDiode.red.strong.name=Lethal Red Laser Diode
 
 item.gun.name=Spectral Gun
+item.shuriken.name=Shuriken
+item.wrench.name=Wrench
 
 item.component.magazine.snowball.wood.name=Wooden Snowball Magazine (T1)
 item.component.magazine.snowball.iron.name=Iron Snowball Magazine (T2)

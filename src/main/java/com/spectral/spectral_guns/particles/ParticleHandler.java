@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.particle.EntityReddustFX;
-import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
 
 public class ParticleHandler
 {
@@ -39,11 +37,11 @@ public class ParticleHandler
 				float scale = 1;
 				if(par.length == 1)
 				{
-					scale = ((float)par[0]) / 100;
+					scale = (float)par[0] / 100;
 				}
 				else
 				{
-					par = new int[] {100};
+					par = new int[]{100};
 				}
 				if(scale > 4)
 				{
@@ -54,10 +52,18 @@ public class ParticleHandler
 					scale = 0.1F;
 				}
 				
-				EntityReddust2FX p = (EntityReddust2FX)new EntityReddust2FX(world, x, y, z, scale, mx, my, mz);
+				EntityReddust2FX p = new EntityReddust2FX(world, x, y, z, scale, mx, my, mz);
 				p.motionX = 0;
 				p.motionY = 0;
 				p.motionZ = 0;
+				if(world.isRemote)
+				{
+					RenderManager rm = Minecraft.getMinecraft().getRenderManager();
+					if(p.getDistance(rm.viewerPosX, rm.viewerPosY, rm.viewerPosZ) > 64)
+					{
+						return null;
+					}
+				}
 				return p;
 			}
 			
@@ -82,11 +88,15 @@ public class ParticleHandler
 	public static EntityFX particle(EnumParticleTypes2 particleEnum, World world, boolean ignoreDistance, double x, double y, double z, float mx, float my, float mz, int... par)
 	{
 		EntityFX particle = particleEnum.get(world, x, y, z, mx, my, mz, par);
-		particle.prevPosX = particle.posX;
-		particle.prevPosY = particle.posY;
-		particle.prevPosZ = particle.posZ;
-		particles.add(new P(particle, particleEnum, par));
-		return spawnEntityFX(particle, ignoreDistance, x, y, z, mx, my, mz, par);
+		if(particle != null)
+		{
+			particle.prevPosX = particle.posX;
+			particle.prevPosY = particle.posY;
+			particle.prevPosZ = particle.posZ;
+			particles.add(new P(particle, particleEnum, par));
+			return spawnEntityFX(particle, ignoreDistance, x, y, z, mx, my, mz, par);
+		}
+		return null;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -107,7 +117,7 @@ public class ParticleHandler
 			double d8 = mc.getRenderViewEntity().posZ - z;
 			
 			double r = 32;
-			if(!(ignoreDistance || (d6 * d6 + d7 * d7 + d8 * d8 <= r * r && k <= 1)))
+			if(!(ignoreDistance || d6 * d6 + d7 * d7 + d8 * d8 <= r * r && k <= 1))
 			{
 				particle = null;
 			}

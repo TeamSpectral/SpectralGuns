@@ -1,22 +1,18 @@
 package com.spectral.spectral_guns.gui;
 
-import java.util.ArrayList;
 import java.util.Random;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.relauncher.Side;
@@ -63,25 +59,25 @@ public class GuiSpectralGunsHud extends Gui
 		int h = scaledresolution.getScaledHeight();
 		FontRenderer fontrenderer = this.mc.fontRendererObj;
 		
-		mc.mcProfiler.startSection("snowOverlay");
+		this.mc.mcProfiler.startSection("snowOverlay");
 		
 		this.mc.entityRenderer.setupOverlayRendering();
 		
 		if(this.mc.gameSettings.thirdPersonView == 0 && order == RenderOrder.PRE)
 		{
 			GL11.glEnable(GL11.GL_BLEND);
-			renderSnow(scaledresolution, player);
+			this.renderSnow(scaledresolution, player);
 		}
 		
-		mc.mcProfiler.endSection();
+		this.mc.mcProfiler.endSection();
 		
-		if(mc.inGameHasFocus && order == RenderOrder.POST)
+		if(this.mc.inGameHasFocus && order == RenderOrder.POST && type == ElementType.EXPERIENCE)
 		{
 			if(player.getHeldItem() != null && player.getHeldItem().getItem() == M.gun)
 			{
 				int line = 1;
 				ItemStack stack = player.getHeldItem();
-				mc.mcProfiler.startSection("ammoStats");
+				this.mc.mcProfiler.startSection("ammoStats");
 				if(true)
 				{
 					int a = ItemGun.ammo(stack, player);
@@ -105,9 +101,9 @@ public class GuiSpectralGunsHud extends Gui
 					fontrenderer.drawStringWithShadow(s, 2, h - 10 * line, 0xAF8A33);
 					++line;
 				}
-				mc.mcProfiler.endSection();
+				this.mc.mcProfiler.endSection();
 				
-				mc.mcProfiler.startSection("fireRateStats");
+				this.mc.mcProfiler.startSection("fireRateStats");
 				if(stack.getTagCompound().getInteger(ItemGun.FIRERATETIMER) > 0)
 				{
 					String s = "" + (float)stack.getTagCompound().getInteger(ItemGun.FIRERATETIMER) / 20;
@@ -115,7 +111,7 @@ public class GuiSpectralGunsHud extends Gui
 					fontrenderer.drawStringWithShadow(s, 2, h - 10 * line, 0xAF8A33);
 					++line;
 				}
-				mc.mcProfiler.endSection();
+				this.mc.mcProfiler.endSection();
 			}
 		}
 		
@@ -158,23 +154,21 @@ public class GuiSpectralGunsHud extends Gui
 		GlStateManager.disableDepth();
 		GlStateManager.depthMask(false);
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager.disableAlpha();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, (float)Math.sqrt(f) / 7);
 		if(i > 0)
 		{
-			this.mc.getTextureManager().bindTexture(snowOverlay[i - 1]);
+			this.mc.getTextureManager().bindTexture(this.snowOverlay[i - 1]);
 			Tessellator tessellator = Tessellator.getInstance();
 			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 			worldrenderer.startDrawingQuads();
-			worldrenderer.addVertexWithUV(0.0D, (double)sr.getScaledHeight(), -90.0D, 0.0D, 1.0D);
-			worldrenderer.addVertexWithUV((double)sr.getScaledWidth(), (double)sr.getScaledHeight(), -90.0D, 1.0D, 1.0D);
-			worldrenderer.addVertexWithUV((double)sr.getScaledWidth(), 0.0D, -90.0D, 1.0D, 0.0D);
+			worldrenderer.addVertexWithUV(0.0D, sr.getScaledHeight(), -90.0D, 0.0D, 1.0D);
+			worldrenderer.addVertexWithUV(sr.getScaledWidth(), sr.getScaledHeight(), -90.0D, 1.0D, 1.0D);
+			worldrenderer.addVertexWithUV(sr.getScaledWidth(), 0.0D, -90.0D, 1.0D, 0.0D);
 			worldrenderer.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
 			tessellator.draw();
 		}
 		GlStateManager.depthMask(true);
 		GlStateManager.enableDepth();
-		GlStateManager.enableAlpha();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 	

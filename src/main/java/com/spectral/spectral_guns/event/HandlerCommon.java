@@ -1,28 +1,19 @@
 package com.spectral.spectral_guns.event;
 
-import java.util.List;
-
-import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.Stuff;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
-import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
-import com.spectral.spectral_guns.items.ItemGun;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
+import com.spectral.spectral_guns.items.ItemGun;
 
 public class HandlerCommon extends HandlerBase
 {
@@ -45,11 +36,7 @@ public class HandlerCommon extends HandlerBase
 	@SubscribeEvent
 	public void livingUpdateEvent(LivingUpdateEvent event)
 	{
-		if(event.entity instanceof EntityPlayer)
-		{
-			EntityExtendedPlayer propsP = EntityExtendedPlayer.get((EntityPlayer)event.entity);
-			propsP.update();
-		}
+		
 	}
 	
 	@SubscribeEvent
@@ -59,7 +46,7 @@ public class HandlerCommon extends HandlerBase
 		{
 			EntityExtendedPlayer propsP = EntityExtendedPlayer.get((EntityPlayer)event.entity);
 			Entity e = event.source.getEntity();
-			if(e instanceof EntitySnowball || true)
+			if(e instanceof EntitySnowball)
 			{
 				int i = 1;
 				if(e instanceof EntitySnowball2)

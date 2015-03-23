@@ -24,6 +24,7 @@ import net.minecraft.world.gen.ChunkProviderSettings;
 public class Stuff
 {
 	public static Random rand = new Random();
+	public static Random randSeed = new Random();
 	
 	/** Random stuff **/
 	// - sigurd4
@@ -61,6 +62,16 @@ public class Stuff
 		public static <T> T getRandom(T[] es)
 		{
 			return getRandom(ArraysAndSuch.arrayToArrayList(es));
+		}
+		
+		public static Random randSeed(long seed, long... seeds)
+		{
+			for(int i = 0; i < seeds.length; ++i)
+			{
+				seed += randSeed(seeds[i]).nextLong();
+			}
+			randSeed.setSeed(seed);
+			return randSeed;
 		}
 	}
 	

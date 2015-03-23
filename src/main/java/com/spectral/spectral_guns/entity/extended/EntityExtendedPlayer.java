@@ -1,37 +1,14 @@
 package com.spectral.spectral_guns.entity.extended;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
-
-import com.spectral.spectral_guns.References;
-
-import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import net.minecraftforge.event.brewing.PotionBrewEvent;
-import net.minecraftforge.event.brewing.PotionBrewedEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.spectral.spectral_guns.References;
 
 public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityAdditionalSpawnData
 {
@@ -40,8 +17,8 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 	
 	public void setRightClick(boolean b)
 	{
-		isRightClickHeldDownLast = isRightClickHeldDown;
-		isRightClickHeldDown = b;
+		this.isRightClickHeldDownLast = this.isRightClickHeldDown;
+		this.isRightClickHeldDown = b;
 	}
 	
 	public boolean isRightClickHeldDownLast = false;
@@ -53,7 +30,7 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 	public final static String RIGHTCLICK = "RightClick";
 	public final static String RIGHTCLICKLAST = "RightClickLast";
 	public final static String ZOOM = "Zoom";
-	public final static int maxReloadDelay = 8;
+	public final static int maxReloadDelay = 32;
 	
 	private final EntityPlayer player;
 	
@@ -94,28 +71,28 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 		{
 			return;
 		}
-		isRightClickHeldDown = properties.getBoolean(RIGHTCLICK);
-		isRightClickHeldDownLast = properties.getBoolean(RIGHTCLICKLAST);
-		isZoomHeldDown = properties.getBoolean(ZOOM);
+		this.isRightClickHeldDown = properties.getBoolean(RIGHTCLICK);
+		this.isRightClickHeldDownLast = properties.getBoolean(RIGHTCLICKLAST);
+		this.isZoomHeldDown = properties.getBoolean(ZOOM);
 		
 		if(b)
 		{
-			snow = properties.getFloat(SNOW);
+			this.snow = properties.getFloat(SNOW);
 		}
-		capSnow();
+		this.capSnow();
 	}
 	
 	protected float capSnow()
 	{
-		if(snow < 0)
+		if(this.snow < 0)
 		{
-			snow = 0;
+			this.snow = 0;
 		}
-		if(snow > 7)
+		if(this.snow > 7)
 		{
-			snow = 7;
+			this.snow = 7;
 		}
-		return snow;
+		return this.snow;
 	}
 	
 	@Override
@@ -129,45 +106,45 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 		NBTTagCompound properties = new NBTTagCompound();
 		compound.setTag(PROP, properties);
 		
-		properties.setBoolean(ZOOM, isZoomHeldDown);
-		properties.setBoolean(RIGHTCLICK, isRightClickHeldDown);
-		properties.setBoolean(RIGHTCLICKLAST, isRightClickHeldDownLast);
+		properties.setBoolean(ZOOM, this.isZoomHeldDown);
+		properties.setBoolean(RIGHTCLICK, this.isRightClickHeldDown);
+		properties.setBoolean(RIGHTCLICKLAST, this.isRightClickHeldDownLast);
 		
 		if(b)
 		{
-			properties.setFloat(SNOW, snow);
+			properties.setFloat(SNOW, this.snow);
 		}
 	}
 	
 	public void update()
 	{
-		updateSnow();
-		if(isZoomHeldDown)
+		this.updateSnow();
+		if(this.isZoomHeldDown)
 		{
 			float slow = 0.8F;
-			player.motionX *= slow;
-			player.motionY *= slow;
-			player.motionZ *= slow;
+			this.player.motionX *= slow;
+			this.player.motionY *= slow;
+			this.player.motionZ *= slow;
 		}
-		reloadDelay = Math.min(maxReloadDelay, Math.max(0, reloadDelay - 1));
+		this.reloadDelay = Math.min(maxReloadDelay, Math.max(0, this.reloadDelay - 1));
 	}
 	
 	public void updateSnow()
 	{
-		if(snow > 0)
+		if(this.snow > 0)
 		{
-			snow -= 0.01F;
-			if(player.worldObj.isRemote)
+			this.snow -= 0.01F;
+			if(this.player.worldObj.isRemote)
 			{
-				snow += 0;
+				this.snow += 0;
 			}
 		}
-		capSnow();
+		this.capSnow();
 	}
 	
 	public void snowball()
 	{
-		snow += 1.4F + player.worldObj.rand.nextFloat();
+		this.snow += 1.4F + this.player.worldObj.rand.nextFloat();
 	}
 	
 	@Override
@@ -182,11 +159,14 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 	 * @param buffer
 	 *            The packet data stream
 	 */
+	@Override
 	public void writeSpawnData(ByteBuf buf)
 	{
-		NBTTagCompound compound = new NBTTagCompound();
-		saveNBTData(compound);
-		ByteBufUtils.writeTag(buf, compound);
+		buf.writeFloat(this.snow);
+		buf.writeBoolean(this.isRightClickHeldDown);
+		buf.writeBoolean(this.isRightClickHeldDownLast);
+		buf.writeBoolean(this.isZoomHeldDown);
+		buf.writeInt(this.reloadDelay);
 	}
 	
 	/**
@@ -196,12 +176,13 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 	 * @param data
 	 *            The packet data stream
 	 */
+	@Override
 	public void readSpawnData(ByteBuf buf)
 	{
-		NBTTagCompound compound = ByteBufUtils.readTag(buf);
-		if(compound != null)
-		{
-			loadNBTData(compound);
-		}
+		this.snow = buf.readFloat();
+		this.isRightClickHeldDown = buf.readBoolean();
+		this.isRightClickHeldDownLast = buf.readBoolean();
+		this.isZoomHeldDown = buf.readBoolean();
+		this.reloadDelay = buf.readInt();
 	}
 }

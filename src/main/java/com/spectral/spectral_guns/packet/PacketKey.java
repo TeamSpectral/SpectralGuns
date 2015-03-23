@@ -111,27 +111,32 @@ public class PacketKey implements IMessage
 			}
 			case RELOAD:
 			{
-				if(props.reloadDelay <= 0)
+				if(props.reloadDelay <= props.maxReloadDelay)
 				{
 					if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemGun)
 					{
 						ItemStack stack = player.getHeldItem();
-						ComponentEvents.reload(stack, player, ItemGun.getComponents(stack));
+						if(ComponentEvents.reload(stack, player, ItemGun.getComponents(stack)))
+						{
+							stack.getTagCompound().setInteger(ItemGun.FIRERATETIMER, 20);
+							props.reloadDelay = props.maxReloadDelay;
+						}
 					}
-					props.reloadDelay = props.maxReloadDelay - 1;
 				}
 				break;
 			}
 			case EJECT:
 			{
-				if(props.reloadDelay <= 0)
+				if(props.reloadDelay <= props.maxReloadDelay)
 				{
 					if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemGun)
 					{
 						ItemStack stack = player.getHeldItem();
-						ComponentEvents.eject(stack, player, ItemGun.getComponents(stack));
+						if(ComponentEvents.eject(stack, player, ItemGun.getComponents(stack)))
+						{
+							props.reloadDelay = props.maxReloadDelay;
+						}
 					}
-					props.reloadDelay = props.maxReloadDelay - 1;
 				}
 				break;
 			}

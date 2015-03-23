@@ -1,39 +1,23 @@
 package com.spectral.spectral_guns.event;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Keyboard;
 
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
-import com.spectral.spectral_guns.items.ItemBase;
 import com.spectral.spectral_guns.packet.PacketKey;
 import com.spectral.spectral_guns.packet.PacketKey.Key;
 import com.spectral.spectral_guns.particles.ParticleHandler;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.item.Item;
-import net.minecraft.network.INetHandler;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @SideOnly(Side.CLIENT)
 public class HandlerClientFML extends HandlerCommonFML
@@ -59,32 +43,32 @@ public class HandlerClientFML extends HandlerCommonFML
 	
 	public boolean keypress(KeyBinding k)
 	{
-		if(!keyPressed.containsKey(k))
+		if(!this.keyPressed.containsKey(k))
 		{
-			keyPressed.put(k, 0);
+			this.keyPressed.put(k, 0);
 		}
 		boolean b = true;
-		if(!k.isKeyDown() || keyPressed.get(k) > 0)
+		if(!k.isKeyDown() || this.keyPressed.get(k) > 0)
 		{
 			b = false;
 		}
-		keyPressed.put(k, k.isKeyDown() ? keyPressed.get(k) + 1 : 0);
+		this.keyPressed.put(k, k.isKeyDown() ? this.keyPressed.get(k) + 1 : 0);
 		return b;
 	}
 	
 	public boolean keyhold(KeyBinding k, int rate)
 	{
-		if(!keyPressed.containsKey(k) || !k.isKeyDown())
+		if(!this.keyPressed.containsKey(k) || !k.isKeyDown())
 		{
-			keyPressed.put(k, 0);
+			this.keyPressed.put(k, 0);
 			return false;
 		}
-		if(k.isKeyDown() && keyPressed.get(k) >= rate)
+		if(k.isKeyDown() && this.keyPressed.get(k) >= rate)
 		{
-			keyPressed.put(k, 0);
+			this.keyPressed.put(k, 0);
 			return true;
 		}
-		keyPressed.put(k, k.isKeyDown() ? keyPressed.get(k) + 1 : 0);
+		this.keyPressed.put(k, k.isKeyDown() ? this.keyPressed.get(k) + 1 : 0);
 		return false;
 	}
 	
@@ -92,11 +76,11 @@ public class HandlerClientFML extends HandlerCommonFML
 	public void onKeyInput(InputEvent.KeyInputEvent event)
 	{
 		// use for keys to hit once
-		if(keypress(WeaponReload) && !WeaponEject.isKeyDown())
+		if(this.keypress(WeaponReload) && !WeaponEject.isKeyDown())
 		{
 			M.network.sendToServer(new PacketKey(Key.RELOAD));
 		}
-		if(keypress(WeaponEject) && !WeaponReload.isKeyDown())
+		if(this.keypress(WeaponEject) && !WeaponReload.isKeyDown())
 		{
 			M.network.sendToServer(new PacketKey(Key.EJECT));
 		}
@@ -108,35 +92,43 @@ public class HandlerClientFML extends HandlerCommonFML
 		// use for keys to hold down
 		if(Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown())
 		{
-			sendKey(Key.RIGHTCLICK);
+			this.sendKey(Key.RIGHTCLICK);
 			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+			{
 				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(true);
+			}
 		}
 		else
 		{
-			sendKey(Key.NOTRIGHTCLICK);
+			this.sendKey(Key.NOTRIGHTCLICK);
 			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+			{
 				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(false);
+			}
 		}
-		if(keyhold(WeaponReload, EntityExtendedPlayer.maxReloadDelay) && !WeaponEject.isKeyDown())
+		if(this.keyhold(WeaponReload, 2) && !WeaponEject.isKeyDown())
 		{
-			sendKey(Key.RELOAD);
+			this.sendKey(Key.RELOAD);
 		}
-		if(keyhold(WeaponEject, EntityExtendedPlayer.maxReloadDelay) && !WeaponReload.isKeyDown())
+		if(this.keyhold(WeaponEject, 2) && !WeaponReload.isKeyDown())
 		{
-			sendKey(Key.EJECT);
+			this.sendKey(Key.EJECT);
 		}
 		if(WeaponZoom.isKeyDown())
 		{
-			sendKey(Key.ZOOM);
+			this.sendKey(Key.ZOOM);
 			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+			{
 				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = true;
+			}
 		}
 		else
 		{
-			sendKey(Key.NOTZOOM);
+			this.sendKey(Key.NOTZOOM);
 			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+			{
 				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = false;
+			}
 		}
 		
 		ParticleHandler.update();
