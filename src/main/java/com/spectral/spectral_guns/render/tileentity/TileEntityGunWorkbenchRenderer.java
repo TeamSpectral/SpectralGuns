@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
@@ -19,14 +20,14 @@ public class TileEntityGunWorkbenchRenderer extends TileEntitySpecialRenderer
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float)x + 0.5F, (float)y + 1F, (float)z + 0.5F);
-		GlStateManager.rotate(Stuff.Randomization.randSeed(3523423524l, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()).nextFloat() * 360 - 180, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(Stuff.Randomization.randSeed(M.proxy.world(0).getSeed(), 3523423524l, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()).nextFloat() * 360 - 180, 0.0F, 1.0F, 0.0F);
 		if(tileEntity.getStackInSlot(0) != null)
 		{
-			this.renderStackOnTable(tileEntity.getStackInSlot(0), 0.15F, 0.0F, -20F + (40F * Stuff.Randomization.randSeed(64359438525l, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()).nextFloat() - 20F));
+			this.renderStackOnTable(tileEntity.getStackInSlot(0), 0.15F, 0.0F, -20F + (40F * Stuff.Randomization.randSeed(M.proxy.world(0).getSeed(), 64359438525l, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()).nextFloat() - 20F));
 		}
 		if(tileEntity.getStackInSlot(1) != null)
 		{
-			this.renderStackOnTable(tileEntity.getStackInSlot(1), -0.26F, 0.0F, -70F + (40F * Stuff.Randomization.randSeed(3928590302l, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()).nextFloat() - 20F));
+			this.renderStackOnTable(tileEntity.getStackInSlot(1), -0.26F, 0.0F, -70F + (40F * Stuff.Randomization.randSeed(M.proxy.world(0).getSeed(), 3928590302l, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()).nextFloat() - 20F));
 		}
 		GlStateManager.popMatrix();
 	}
