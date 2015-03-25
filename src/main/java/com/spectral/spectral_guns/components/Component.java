@@ -177,16 +177,16 @@ public abstract class Component
 	{
 		WOOD(
 				40,
-				new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
-				IRON(
-						167,
-						new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
-						GOLD(
-								22,
-								new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.AIM}),
-								DIAMOND(
-										520,
-										new Type[] {Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});
+				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
+		IRON(
+				167,
+				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
+		GOLD(
+				22,
+				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.AIM}),
+		DIAMOND(
+				520,
+				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});
 		
 		public final Type[] types;
 		public final int durability;
@@ -257,6 +257,8 @@ public abstract class Component
 	protected abstract void fireSound(Entity e, ItemStack stack, World world, EntityPlayer player);
 	
 	public abstract float recoil(float recoil, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	
+	public abstract float instability(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
 	
 	public abstract float kickback(float kickback, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
 	

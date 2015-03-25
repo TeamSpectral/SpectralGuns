@@ -78,6 +78,10 @@ item.component.barrel.normal.diamond.name=Diamond Normal Barrel (T4)
 item.component.barrel.wide.diamond.name=Diamond Wide Barrel (T4)
 item.component.barrel.musket.diamond.name=Diamond Scatter Barrel (T4)
 
+item.component.grip.wood.name=Wooden Grip (T1)
+item.component.grip.iron.name=Iron Grip (T2)
+item.component.grip.gold.name=Golden Grip (T3)
+
 item.component.scope.wood.name=Wooden Scope (T1)
 item.component.scope.iron.name=Iron Scope (T2)
 item.component.scope.gold.name=Golden Scope (T3)

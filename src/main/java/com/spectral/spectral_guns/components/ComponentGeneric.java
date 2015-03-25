@@ -2,16 +2,16 @@ package com.spectral.spectral_guns.components;
 
 import java.util.ArrayList;
 
-import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
-import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.items.ItemGun;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.items.ItemGun;
 
 public abstract class ComponentGeneric extends Component
 {
@@ -31,19 +31,19 @@ public abstract class ComponentGeneric extends Component
 	@Override
 	public String getFancyName()
 	{
-		return name;
+		return this.name;
 	}
 	
 	@Override
 	public ArrayList<Component> getRequired()
 	{
-		return ArraysAndSuch.arrayToArrayList(required);
+		return ArraysAndSuch.arrayToArrayList(this.required);
 	}
 	
 	@Override
 	public ArrayList<Component> getIncapatible()
 	{
-		return ArraysAndSuch.arrayToArrayList(incapatible);
+		return ArraysAndSuch.arrayToArrayList(this.incapatible);
 	}
 	
 	public int setAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components, int ammo)
@@ -67,6 +67,12 @@ public abstract class ComponentGeneric extends Component
 	public float recoil(float recoil, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
 		return recoil;
+	}
+	
+	@Override
+	public float instability(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	{
+		return instability;
 	}
 	
 	@Override
@@ -144,16 +150,16 @@ public abstract class ComponentGeneric extends Component
 	public int durabilityDamage(ItemStack gun, ArrayList<Component> components)
 	{
 		NBTTagCompound compound = this.getTagCompound(gun);
-		if(compound.hasKey(ITEMDAMAGE))
+		if(compound.hasKey(this.ITEMDAMAGE))
 		{
-			compound.setInteger(ITEMDAMAGE, 0);
+			compound.setInteger(this.ITEMDAMAGE, 0);
 		}
-		if(compound.getInteger(ITEMDAMAGE) > material.durability)
+		if(compound.getInteger(this.ITEMDAMAGE) > this.material.durability)
 		{
 			ArraysAndSuch.removeFromArrayList(components, this);
 			ItemGun.setComponents(gun, components);
 		}
-		return compound.getInteger(ITEMDAMAGE);
+		return compound.getInteger(this.ITEMDAMAGE);
 	}
 	
 	@Override

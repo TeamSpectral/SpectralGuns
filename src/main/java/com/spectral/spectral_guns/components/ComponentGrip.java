@@ -1,7 +1,11 @@
 package com.spectral.spectral_guns.components;
 
+import java.util.ArrayList;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -9,9 +13,16 @@ import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 
 public class ComponentGrip extends ComponentGeneric
 {
-	public ComponentGrip(Component[] required, Component[] incapatible, ComponentMaterial material)
+	public final float instabilityMultiplier;
+	public final float recoilMultiplier;
+	public final float kickbackMultiplier;
+	
+	public ComponentGrip(Component[] required, Component[] incapatible, ComponentMaterial material, float instabilityMultiplier, float recoilMultiplier, float kickbackMultiplier)
 	{
 		super(new String2("grip", ""), new String2("grip", ""), required, incapatible, Type.GRIP, material);
+		this.instabilityMultiplier = instabilityMultiplier;
+		this.recoilMultiplier = recoilMultiplier;
+		this.kickbackMultiplier = kickbackMultiplier;
 	}
 	
 	@Override
@@ -34,6 +45,24 @@ public class ComponentGrip extends ComponentGeneric
 			break;
 		}
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item, 1), new Object[]{"# ", "# ", "##", '#', resource}));
+	}
+	
+	@Override
+	public float instability(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	{
+		return instability * this.instabilityMultiplier;
+	}
+	
+	@Override
+	public float recoil(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	{
+		return instability * this.recoilMultiplier;
+	}
+	
+	@Override
+	public float kickback(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	{
+		return instability * this.kickbackMultiplier;
 	}
 	
 	@Override

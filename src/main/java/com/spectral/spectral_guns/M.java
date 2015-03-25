@@ -29,6 +29,7 @@ import com.spectral.spectral_guns.blocks.BlockOre2;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentMaterial;
 import com.spectral.spectral_guns.components.ComponentBarrel;
+import com.spectral.spectral_guns.components.ComponentGrip;
 import com.spectral.spectral_guns.components.aim.ComponentScope;
 import com.spectral.spectral_guns.components.aim.ComponentScopeLaser;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
@@ -323,6 +324,10 @@ public class M
 	public static final ComponentScopeLaser scope_gold_laser_green = registerComponent(new ComponentScopeLaser(new Component[]{}, new Component[]{}, scope_gold, LaserColor.GREEN));
 	public static final ComponentScopeLaser scope_diamond_laser_red = registerComponent(new ComponentScopeLaser(new Component[]{}, new Component[]{}, scope_diamond, LaserColor.RED));
 	public static final ComponentScopeLaser scope_diamond_laser_green = registerComponent(new ComponentScopeLaser(new Component[]{}, new Component[]{}, scope_diamond, LaserColor.GREEN));
+	
+	public static final ComponentGrip grip_wood = registerComponent(new ComponentGrip(new Component[]{}, new Component[]{}, ComponentMaterial.WOOD, 0.5F, 1.6F, 0.8F));
+	public static final ComponentGrip grip_iron = registerComponent(new ComponentGrip(new Component[]{}, new Component[]{}, ComponentMaterial.IRON, 0.3F, 0.9F, 1.2F));
+	public static final ComponentGrip grip_gold = registerComponent(new ComponentGrip(new Component[]{}, new Component[]{}, ComponentMaterial.GOLD, 0.1F, 0.7F, 1.4F));
 	
 	// //BLOCKS:
 	// ores

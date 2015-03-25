@@ -89,6 +89,7 @@ public class ItemGun extends ItemBase implements IDAble
 			tooltip.add(s);
 		}
 		tooltip.add("Recoil: " + Math.floor(recoil(stack, player) * 100) / 100 + "°");
+		tooltip.add("Instability: " + Math.floor(instability(stack, player) * 100) + "%");
 		tooltip.add("Kickback: " + Math.floor(kickback(stack, player) * 100) / 100 + " m/tick");
 		tooltip.add("Spread: " + Math.floor(spread(stack, player) * 36000) / 100 + "°");
 		tooltip.add("Response Time: " + delay(stack, player) + " ticks");
@@ -302,7 +303,7 @@ public class ItemGun extends ItemBase implements IDAble
 		NBTTagCompound compound = stack.getTagCompound();
 		float r = compound.getFloat(RECOIL);
 		int i = 3;
-		player.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch + r - r * (i - 1) / i);
+		player.rotationPitch += r - r * (i - 1) / i;
 		
 		compound.setFloat(RECOIL, r * (i - 1) / i);
 	}
@@ -314,7 +315,8 @@ public class ItemGun extends ItemBase implements IDAble
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
 		NBTTagCompound compound = stack.getTagCompound();
 		compound.setFloat(RECOIL, compound.getFloat(RECOIL) + r);
-		player.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw + Randomization.r(r / 8), player.rotationPitch - r);
+		player.rotationYaw += Randomization.r(Math.sqrt(r) * instability(stack, player) * 2);
+		player.rotationPitch -= r;
 	}
 	
 	public static void setComponents(ItemStack stack, Component[] cs)
@@ -464,6 +466,17 @@ public class ItemGun extends ItemBase implements IDAble
 			recoil = f;
 		}
 		return recoil;
+	}
+	
+	public static float instability(ItemStack stack, EntityPlayer player)
+	{
+		float instability = 1;
+		ArrayList<Component> components = getComponents(stack);
+		for(int i = 0; i < components.size(); ++i)
+		{
+			instability = components.get(i).instability(instability, stack, player.worldObj, player, components);
+		}
+		return instability;
 	}
 	
 	public static float spread(ItemStack stack, EntityPlayer player)
