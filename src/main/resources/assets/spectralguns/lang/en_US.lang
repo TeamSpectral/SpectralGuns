@@ -2,6 +2,11 @@ itemGroup.spectralGuns.core=Spectral Guns
 
 container.gunTable.tinkering=Gun Assembly Station
 
+key.categories.spectral.guns=Spectral Guns
+key.WeaponEject=Eject
+key.WeaponReload=Reload
+key.WeaponZoom=Zoom
+
 tile.blockRuby.name=Block of Ruby
 tile.gunAssemblyStation.name=Gun Assembly Station
 
