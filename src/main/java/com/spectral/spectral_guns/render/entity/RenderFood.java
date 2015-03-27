@@ -2,21 +2,18 @@ package com.spectral.spectral_guns.render.entity;
 
 import java.util.Random;
 
-import com.spectral.spectral_guns.Stuff;
-import com.spectral.spectral_guns.Stuff.MathWithMultiple;
-import com.spectral.spectral_guns.entity.projectile.EntityFood;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.spectral.spectral_guns.Stuff.MathWithMultiple;
+import com.spectral.spectral_guns.entity.projectile.EntityFood;
 
 @SideOnly(Side.CLIENT)
 public class RenderFood extends Render
@@ -29,11 +26,12 @@ public class RenderFood extends Render
 		this.ri = ri;
 	}
 	
+	@Override
 	public void doRender(Entity entity, double x, double y, double z, float f, float partialTicks)
 	{
 		if(entity instanceof EntityFood)
 		{
-			doRender((EntityFood)entity, x, y, z, f, partialTicks);
+			this.doRender((EntityFood)entity, x, y, z, f, partialTicks);
 		}
 	}
 	
@@ -51,13 +49,19 @@ public class RenderFood extends Render
 		
 		rand.setSeed(entity.getUniqueID().getMostSignificantBits() / 3);
 		if(rand.nextBoolean())
+		{
 			GlStateManager.scale(-1, 1, 1);
+		}
 		rand.setSeed(entity.getUniqueID().getMostSignificantBits() * 3);
 		if(rand.nextBoolean())
+		{
 			GlStateManager.scale(1, -1, 1);
+		}
 		rand.setSeed(entity.getUniqueID().getMostSignificantBits() / 4);
 		if(rand.nextBoolean())
+		{
 			GlStateManager.scale(1, 1, -1);
+		}
 		
 		rand.setSeed(entity.getUniqueID().getMostSignificantBits());
 		GlStateManager.rotate(-180 + 90 * rand.nextInt(3), 0, 0, 1);
@@ -67,13 +71,14 @@ public class RenderFood extends Render
 		GlStateManager.rotate(180 * rand.nextInt(1), 1, 0, 0);
 		
 		this.bindTexture(TextureMap.locationBlocksTexture);
-		ri.renderItemModel(entity.getItemStack());
+		this.ri.renderItemModel(entity.getItemStack());
 		
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.popMatrix();
 		super.doRender(entity, x, y, z, f, partialTicks);
 	}
 	
+	@Override
 	protected ResourceLocation getEntityTexture(Entity entity)
 	{
 		return TextureMap.locationBlocksTexture;

@@ -1,24 +1,13 @@
 package com.spectral.spectral_guns.entity.projectile;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.List;
-
-import com.spectral.spectral_guns.Stuff.Coordinates3D;
-
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -27,6 +16,8 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.spectral.spectral_guns.Stuff.Coordinates3D;
+
 public class EntitySmallFireball2 extends EntitySmallFireball implements IEntityAdditionalSpawnData
 {
 	public boolean hasBounced = false;
@@ -34,7 +25,7 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 	public EntitySmallFireball2(World world)
 	{
 		super(world);
-		this.setSize(width * 2, height * 2);
+		this.setSize(this.width * 2, this.height * 2);
 	}
 	
 	public EntitySmallFireball2(World world, EntityLivingBase shooter, double accelX, double accelY, double accelZ)
@@ -80,7 +71,7 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 	@Override
 	protected void onImpact(MovingObjectPosition pos)
 	{
-		if(pos.entityHit != null && (!pos.entityHit.canBeCollidedWith() || (pos.entityHit == this.shootingEntity && this.ticksExisted < 15)))
+		if(pos.entityHit != null && (!pos.entityHit.canBeCollidedWith() || pos.entityHit == this.shootingEntity && this.ticksExisted < 15))
 		{
 			return;
 		}
@@ -90,7 +81,7 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 			
 			if(pos.entityHit != null)
 			{
-				flag = pos.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 2.0F);
+				flag = pos.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 8.0F);
 				
 				if(flag)
 				{
@@ -121,10 +112,10 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 						this.worldObj.setBlockState(blockpos, Blocks.fire.getDefaultState());
 					}
 				}
-				if(!hasBounced)
+				if(!this.hasBounced)
 				{
 					Coordinates3D.bounce(this, pos.sideHit, 1);
-					hasBounced = true;
+					this.hasBounced = true;
 				}
 				else
 				{
@@ -134,6 +125,7 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 		}
 	}
 	
+	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
 		if(this.isEntityInvulnerable(source))
@@ -172,6 +164,7 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 		}
 	}
 	
+	@Override
 	public void setVelocity(double x, double y, double z)
 	{
 		this.motionX = x;

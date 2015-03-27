@@ -106,11 +106,11 @@ public class HandlerClientFML extends HandlerCommonFML
 				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(false);
 			}
 		}
-		if(this.keyhold(WeaponReload, 2) && !WeaponEject.isKeyDown())
+		if(this.keyhold(WeaponReload, 8) && !WeaponEject.isKeyDown())
 		{
 			this.sendKey(Key.RELOAD);
 		}
-		if(this.keyhold(WeaponEject, 2) && !WeaponReload.isKeyDown())
+		if(this.keyhold(WeaponEject, 8) && !WeaponReload.isKeyDown())
 		{
 			this.sendKey(Key.EJECT);
 		}

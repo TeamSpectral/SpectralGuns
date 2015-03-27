@@ -3,6 +3,7 @@ package com.spectral.spectral_guns.entity.projectile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -22,7 +23,6 @@ import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.MathWithMultiple;
 import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.items.ItemFood2;
 
 public class EntityFood extends EntityThrowable implements IEntityAdditionalSpawnData
 {
@@ -38,7 +38,7 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 	public EntityFood(World worldIn, EntityLivingBase thrower, ItemStack stack)
 	{
 		this(worldIn, thrower);
-		if(stack.getItem() instanceof ItemFood || stack.getItem() instanceof ItemFood2)
+		if(stack.getItem() instanceof ItemFood)
 		{
 			stack.stackSize = 1;
 			this.stack = stack;
@@ -67,7 +67,7 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 		Item item = stack.getItem();
 		for(int i = 0; i < 1 && this.worldObj.isRemote; ++i)
 		{
-			this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, -this.motionX / 15 + Randomization.r(0.1), -this.motionY / 15 + Randomization.r(0.1), -this.motionZ / 15 + Randomization.r(0.1), new int[]{Item.getIdFromItem(item)});
+			this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, -this.motionX / 15 + Randomization.r(0.1), -this.motionY / 15 + Randomization.r(0.1), -this.motionZ / 15 + Randomization.r(0.1), new int[]{Item.getIdFromItem(this.worldObj.rand.nextInt(3) == 0 ? item : M.food_mush)});
 		}
 	}
 	
@@ -86,9 +86,12 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 			{
 				if(pos.entityHit instanceof EntityLivingBase)
 				{
-					((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, this.rand.nextInt(10 * 20), this.rand.nextInt(3), false, false));
-					((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.confusion.id, this.rand.nextInt(20), 0, false, false));
+					((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, this.rand.nextInt(10), this.rand.nextInt(3), false, false));
 					((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.saturation.id, this.rand.nextInt(2 * 20), 0, false, false));
+				}
+				if(pos.entityHit instanceof EntityPlayer)
+				{
+					stack.getItem().onItemUseFinish(stack, this.worldObj, (EntityPlayer)pos.entityHit);
 				}
 				if(!this.worldObj.isRemote)
 				{
@@ -124,22 +127,22 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 		{
 			for(int i = 0; i < p * 2; ++i)
 			{
-				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, m.xCoord / 10 + Randomization.r(0.3), m.yCoord / 10 + Randomization.r(0.3), m.zCoord / 10 + Randomization.r(0.3), new int[]{Item.getIdFromItem(item)});
+				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, m.xCoord / 10 + Randomization.r(0.3), m.yCoord / 10 + Randomization.r(0.3), m.zCoord / 10 + Randomization.r(0.3), new int[]{Item.getIdFromItem(this.worldObj.rand.nextInt(3) == 0 ? item : M.food_mush)});
 			}
 			for(int i = 0; i < p / 2; ++i)
 			{
-				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, m.xCoord / 10 + Randomization.r(0.2), m.yCoord / 10 + Randomization.r(0.2), m.zCoord / 10 + Randomization.r(0.2), new int[]{Item.getIdFromItem(item)});
+				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, m.xCoord / 10 + Randomization.r(0.2), m.yCoord / 10 + Randomization.r(0.2), m.zCoord / 10 + Randomization.r(0.2), new int[]{Item.getIdFromItem(this.worldObj.rand.nextInt(3) == 0 ? item : M.food_mush)});
 			}
 			for(int i = 0; i < p; ++i)
 			{
-				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, Randomization.r(0.3), Randomization.r(0.3), Randomization.r(0.3), new int[]{Item.getIdFromItem(item)});
+				this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, Randomization.r(0.3), Randomization.r(0.3), Randomization.r(0.3), new int[]{Item.getIdFromItem(this.worldObj.rand.nextInt(3) == 0 ? item : M.food_mush)});
 			}
 		}
 	}
 	
 	public ItemStack getItemStack()
 	{
-		if(this.stack != null && (this.stack.getItem() instanceof ItemFood || this.stack.getItem() instanceof ItemFood2))
+		if(this.stack != null && this.stack.getItem() instanceof ItemFood)
 		{
 			this.stack.stackSize = 1;
 			return this.stack;
@@ -149,7 +152,7 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 	
 	public Item getItem()
 	{
-		if(this.stack != null && (this.stack.getItem() instanceof ItemFood || this.stack.getItem() instanceof ItemFood2))
+		if(this.stack != null && this.stack.getItem() instanceof ItemFood)
 		{
 			return this.stack.getItem();
 		}
@@ -160,6 +163,31 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 	protected float getGravityVelocity()
 	{
 		return 0.09F;
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound tagCompound)
+	{
+		super.writeEntityToNBT(tagCompound);
+		NBTTagCompound stack = this.stack.writeToNBT(new NBTTagCompound());
+		if(stack != null)
+		{
+			tagCompound.setTag("Stack", stack);
+		}
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound tagCompound)
+	{
+		super.readEntityFromNBT(tagCompound);
+		if(tagCompound.getCompoundTag("Stack") != null)
+		{
+			ItemStack stack = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("Stack"));
+			if(stack != null)
+			{
+				this.stack = stack;
+			}
+		}
 	}
 	
 	/**

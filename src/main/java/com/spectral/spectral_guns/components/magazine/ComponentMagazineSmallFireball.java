@@ -37,7 +37,7 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazine
 	@Override
 	public Item ammoItem()
 	{
-		return Items.coal;
+		return Items.fire_charge;
 	}
 	
 	@Override

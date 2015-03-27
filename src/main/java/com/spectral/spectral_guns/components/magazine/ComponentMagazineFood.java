@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -22,12 +21,13 @@ import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
-import com.spectral.spectral_guns.items.ItemFood2;
 import com.spectral.spectral_guns.items.ItemGun;
 
 public final class ComponentMagazineFood extends ComponentMagazine
 {
 	protected ItemStack lastUsedStack = null;
+	protected ItemStack firedStack = null;
+	protected long firedStackTick = 0;
 	
 	// nbt
 	public static final String ITEMS = "Items";
@@ -40,7 +40,12 @@ public final class ComponentMagazineFood extends ComponentMagazine
 	@Override
 	protected Entity projectile(ItemStack stack, World world, EntityPlayer player)
 	{
-		return new EntityFood(world, player, this.getLastItem(stack));
+		if(this.firedStack == null)
+		{
+			this.firedStack = this.getLastItem(stack);
+			this.firedStackTick = world.getTotalWorldTime();
+		}
+		return new EntityFood(world, player, this.firedStack);
 	}
 	
 	@Override
@@ -65,17 +70,22 @@ public final class ComponentMagazineFood extends ComponentMagazine
 	@Override
 	protected void fireSound(Entity projectile, ItemStack stack, World world, EntityPlayer player)
 	{
+		if(this.firedStack == null)
+		{
+			this.firedStack = new ItemStack(this.ammoItem());
+		}
 		float spread = ItemGun.spread(stack, player) + 0.03F;
 		
 		for(int i = 0; i < 64 && world.isRemote; ++i)
 		{
 			Vec3 m = Coordinates3D.stabilize(new Vec3((float)projectile.motionX + Randomization.r(spread), (float)projectile.motionY + Randomization.r(spread), (float)projectile.motionZ + Randomization.r(spread)), ItemGun.speed(stack, player) / 4 * world.rand.nextFloat());
-			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[]{Item.getIdFromItem(this.ammoItem())});
+			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[]{Item.getIdFromItem(world.rand.nextInt(3) == 0 ? this.firedStack.getItem() : this.ammoItem())});
 		}
 		
 		world.playSoundAtEntity(player, "mob.slime.big", 2.0F, 1 + world.rand.nextFloat());
 		world.playSoundAtEntity(player, "mob.slime.small", 2.0F, 1 + world.rand.nextFloat());
 		world.playSoundAtEntity(player, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+		this.firedStack = null;
 		
 	}
 	
@@ -269,7 +279,7 @@ public final class ComponentMagazineFood extends ComponentMagazine
 			}
 			return true;
 		}
-		else if((stack.getItem() instanceof ItemFood || stack.getItem() instanceof ItemFood2) && stack.getItem().getRarity(stack) == EnumRarity.COMMON)
+		else if(stack.getItem() instanceof ItemFood)
 		{
 			if(flag)
 			{
