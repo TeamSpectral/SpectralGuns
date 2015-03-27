@@ -21,6 +21,8 @@ import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkProviderSettings;
 
+import com.google.common.collect.Lists;
+
 public class Stuff
 {
 	public static Random rand = new Random();
@@ -272,10 +274,10 @@ public class Stuff
 		public static <T> ArrayList<T> hashMapKeysToArrayList(HashMap<T, ?> map)
 		{
 			ArrayList<T> a = new ArrayList<T>();
-			Iterator<T> keys = map.keySet().iterator();
-			while(keys.hasNext())
+			T[] keys = (T[])map.keySet().toArray();
+			for(T key : keys)
 			{
-				a.add(keys.next());
+				a.add(key);
 			}
 			return a;
 		}
@@ -611,6 +613,38 @@ public class Stuff
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	/** string utilities **/
+	// - sigurd4
+	public static class Strings
+	{
+		public static String UnderscoresToCamelSpaces(String s)
+		{
+			s = s.toLowerCase();
+			ArrayList<Character> cs = Lists.newArrayList();
+			for(int i = 0; i < s.length(); ++i)
+			{
+				cs.add(s.charAt(i));
+			}
+			for(int i = 0; i < cs.size(); ++i)
+			{
+				char c = cs.get(i);
+				if(c == '_')
+				{
+					cs.remove(i);
+					cs.set(i, Character.toUpperCase(cs.get(i)));
+					--i;
+				}
+			}
+			s = "";
+			for(int i = 0; i < cs.size(); ++i)
+			{
+				char c = cs.get(i);
+				s = s + c;
+			}
+			return s;
 		}
 	}
 }

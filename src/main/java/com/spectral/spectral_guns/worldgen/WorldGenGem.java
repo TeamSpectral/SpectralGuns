@@ -2,7 +2,7 @@ package com.spectral.spectral_guns.worldgen;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -10,12 +10,14 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
+import com.spectral.spectral_guns.M;
+
 public class WorldGenGem implements IWorldGenerator
 {
-	public final Block ore;
+	public final IBlockState ore;
 	public final Class<? extends BiomeGenBase>[] biomes;
 	
-	public WorldGenGem(Block ore2, Class<? extends BiomeGenBase>[] biomes)
+	public WorldGenGem(IBlockState ore2, Class<? extends BiomeGenBase>[] biomes)
 	{
 		this.ore = ore2;
 		this.biomes = biomes;
@@ -24,6 +26,11 @@ public class WorldGenGem implements IWorldGenerator
 	@Override
 	public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
 	{
+		if(!M.visible(this.ore.getBlock()))
+		{
+			return;
+		}
+		
 		int i = 3 + rand.nextInt(6);
 		int j;
 		int k;
@@ -43,7 +50,7 @@ public class WorldGenGem implements IWorldGenerator
 				{
 					if(world.getBlockState(blockpos1).getBlock().isReplaceableOreGen(world, blockpos1, net.minecraft.block.state.pattern.BlockHelper.forBlock(Blocks.stone)))
 					{
-						world.setBlockState(blockpos1, this.ore.getDefaultState(), 2);
+						world.setBlockState(blockpos1, this.ore, 2);
 					}
 					break;
 				}

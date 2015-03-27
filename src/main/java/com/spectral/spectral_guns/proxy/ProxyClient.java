@@ -14,6 +14,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
@@ -32,9 +34,9 @@ import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 public class ProxyClient extends ProxyCommon
 {
 	@Override
-	public void preInit()
+	public void preInit(FMLPreInitializationEvent event)
 	{
-		super.preInit();
+		super.preInit(event);
 		
 		MinecraftForge.EVENT_BUS.register(new HandlerClient());
 		FMLCommonHandler.instance().bus().register(new HandlerClientFML());
@@ -42,9 +44,9 @@ public class ProxyClient extends ProxyCommon
 	}
 	
 	@Override
-	public void init()
+	public void init(FMLInitializationEvent event)
 	{
-		super.init();
+		super.init(event);
 		
 		RenderItem ri = Minecraft.getMinecraft().getRenderItem();
 		RenderManager rm = Minecraft.getMinecraft().getRenderManager();

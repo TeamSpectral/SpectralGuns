@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.IDAble;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
@@ -26,6 +27,7 @@ import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
@@ -111,12 +113,71 @@ public class ItemGun extends ItemBase implements IDAble
 		}
 	}
 	
+	private ArrayList<ItemStack> guns = null;
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List subItems)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		subItems.add(this.getSubItem(mc.thePlayer, item, tab));
+		if(Config.showAllPossibleGunsInTab.get())
+		{
+			if(this.guns == null)
+			{
+				this.guns = new ArrayList<ItemStack>();
+				for(Component misc1 : getComponentsOfType(Type.MISC, true))
+				{
+					for(Component misc2 : getComponentsOfType(Type.MISC, true))
+					{
+						for(Component misc3 : getComponentsOfType(Type.MISC, true))
+						{
+							for(Component misc4 : getComponentsOfType(Type.MISC, true))
+							{
+								for(Component barrel : getComponentsOfType(Type.BARREL, true))
+								{
+									for(Component magazine : getComponentsOfType(Type.MAGAZINE, true))
+									{
+										for(Component trigger : getComponentsOfType(Type.TRIGGER, true))
+										{
+											for(Component grip : getComponentsOfType(Type.GRIP, true))
+											{
+												for(Component stock : getComponentsOfType(Type.STOCK, true))
+												{
+													for(Component aim : getComponentsOfType(Type.AIM, true))
+													{
+														ItemStack gun = new ItemStack(M.gun);
+														ItemGun.addComponent(gun, misc1);
+														ItemGun.addComponent(gun, misc2);
+														ItemGun.addComponent(gun, misc3);
+														ItemGun.addComponent(gun, misc4);
+														ItemGun.addComponent(gun, barrel);
+														ItemGun.addComponent(gun, magazine);
+														ItemGun.addComponent(gun, trigger);
+														ItemGun.addComponent(gun, grip);
+														ItemGun.addComponent(gun, stock);
+														ItemGun.addComponent(gun, aim);
+														if(ComponentEvents.isGunValid(gun))
+														{
+															this.guns.add(gun);
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			subItems.addAll(this.guns);
+		}
+		else
+		{
+			this.guns = null;
+			subItems.add(this.getSubItem(mc.thePlayer, item, tab));
+		}
 	}
 	
 	public ItemStack getSubItem(EntityPlayer player, Item item, CreativeTabs tab)
@@ -326,12 +387,14 @@ public class ItemGun extends ItemBase implements IDAble
 	
 	public static void addComponent(ItemStack stack, Component c)
 	{
-		ArrayList<Component> cs = getComponents(stack);
-		if(!ArraysAndSuch.has(cs, c) || true)
+		if(c == null)
 		{
-			cs.add(c);
-			setComponents(stack, cs);
+			return;
 		}
+		ArrayList<Component> cs = getComponents(stack);
+		
+		cs.add(c);
+		setComponents(stack, cs);
 	}
 	
 	public static void setComponents(ItemStack stack, ArrayList<Component> cs)
@@ -697,6 +760,29 @@ public class ItemGun extends ItemBase implements IDAble
 			}
 		}
 		return cs;
+	}
+	
+	public static ArrayList<Component> getComponentsOfType(Type type)
+	{
+		ArrayList<Component> a = new ArrayList<Component>();
+		for(Component c : ComponentRegister.getAll())
+		{
+			if(c.type == type)
+			{
+				a.add(c);
+			}
+		}
+		return a;
+	}
+	
+	public static ArrayList<Component> getComponentsOfType(Type type, boolean withNull)
+	{
+		ArrayList<Component> a = getComponentsOfType(type);
+		if(withNull)
+		{
+			a.add(null);
+		}
+		return a;
 	}
 	
 	@Override

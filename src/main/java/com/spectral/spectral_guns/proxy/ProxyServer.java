@@ -4,6 +4,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.spectral.spectral_guns.event.HandlerServer;
 import com.spectral.spectral_guns.event.HandlerServerFML;
@@ -11,18 +13,18 @@ import com.spectral.spectral_guns.event.HandlerServerFML;
 public class ProxyServer extends ProxyCommon
 {
 	@Override
-	public void preInit()
+	public void preInit(FMLPreInitializationEvent event)
 	{
-		super.preInit();
+		super.preInit(event);
 		
 		MinecraftForge.EVENT_BUS.register(new HandlerServer());
 		FMLCommonHandler.instance().bus().register(new HandlerServerFML());
 	}
 	
 	@Override
-	public void init()
+	public void init(FMLInitializationEvent event)
 	{
-		super.init();
+		super.init(event);
 	}
 	
 	@Override

@@ -5,10 +5,13 @@ import java.util.HashMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
+import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.packet.PacketPlayerData;
 
@@ -46,5 +49,21 @@ public class HandlerCommonFML extends HandlerBase
 		}
 		
 		props.update();
+	}
+	
+	@SubscribeEvent
+	public void OnConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
+	{
+		if(event.modID.equals(References.MODID))
+		{
+			for(int i = 0; i < Config.entries.size(); ++i)
+			{
+				Config.entries.get(i).set(Config.config);
+			}
+			if(Config.config.hasChanged())
+			{
+				Config.config.save();
+			}
+		}
 	}
 }

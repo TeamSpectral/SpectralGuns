@@ -7,6 +7,7 @@ import java.util.Iterator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.material.MapColor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -50,7 +51,7 @@ import com.spectral.spectral_guns.proxy.ProxyCommon;
 import com.spectral.spectral_guns.tabs.TabGeneric;
 import com.spectral.spectral_guns.worldgen.WorldGenGem;
 
-@Mod(modid = References.MODID, version = References.VERSION)
+@Mod(modid = References.MODID, name = References.NAME, version = References.VERSION, guiFactory = References.GUI_FACTORY_CLASS)
 public class M
 {
 	// if we are ever going to add mobs, enable this and notify me! i have some
@@ -130,7 +131,12 @@ public class M
 	@Deprecated
 	private static boolean hasItem(Object item)
 	{
-		return ids.containsKey(item);
+		return ids.containsKey(item) && ids.get(item).visible;
+	}
+	
+	public static boolean visible(Object item)
+	{
+		return !ids.containsKey(item) || ids.get(item).visible;
 	}
 	
 	public static class Id
@@ -222,9 +228,7 @@ public class M
 		@Override
 		public ItemStack getIconItemStack()
 		{
-			ArrayList<ItemStack> a = new ArrayList<ItemStack>();
-			M.gun.getSubItems(M.gun, this, a);
-			return a.get(0);
+			return M.gun.getSubItem(Minecraft.getMinecraft().thePlayer, M.gun, this);
 		}
 	};
 	
@@ -336,7 +340,7 @@ public class M
 		@Override
 		public IWorldGenerator worldGen()
 		{
-			return new WorldGenGem(this, new Class[]{BiomeGenHills.class});
+			return new WorldGenGem(this.getDefaultState(), new Class[]{BiomeGenHills.class});
 		}
 	}.setHardness(3.0F).setResistance(5.0F).setStepSound(Block.soundTypePiston).setUnlocalizedName("oreRuby"), true, new String[]{"oreRuby"});
 	
@@ -351,24 +355,24 @@ public class M
 		
 	}
 	
-	@SidedProxy(clientSide = References.Client, serverSide = References.Server)
+	@SidedProxy(clientSide = References.CLIENT_PROXY_CLASS, serverSide = References.SERVER_PROXY_CLASS)
 	public static ProxyCommon proxy;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		proxy.preInit();
+		proxy.preInit(event);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		proxy.init();
+		proxy.init(event);
 	}
 	
 	@EventHandler
 	public void init(FMLPostInitializationEvent event)
 	{
-		proxy.postInit();
+		proxy.postInit(event);
 	}
 }
