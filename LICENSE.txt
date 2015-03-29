@@ -1,0 +1,9 @@
+All content here in this repository is property of Team Spectral.
+
+Terms of use:
+Note: it is illegal to not follow the below terms. 
+- This mod should not be distributed, posted or hosted anywhere else than on the mod's official PlanetMinecraft page and official links included there. Exceptions are videos, reviews and pictures. Videos and reviews featuring the mod needs to have a link to the mod's page on PlanetMinecraft. Pictures may be uploaded anywhere and does not require any credit.
+- You may use the source code freely, as long as you link the mod's PlanetMinecraft page upon distribution.
+- This mod should not be included in modpacks without permission.
+
+If you find a violation of the Terms of Use, please do notify us.
