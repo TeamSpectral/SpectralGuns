@@ -51,6 +51,11 @@ item.component.magazine.laser.iron.green.name=Green Iron Laser Magazine (T1)
 item.component.magazine.laser.gold.green.name=Green Golden Laser Magazine (T2)
 item.component.magazine.laser.diamond.green.name=Green Diamond Laser Magazine (T3)
 
+item.component.magazine.shuriken.wood.name=Wooden Shuriken Magazine (T1)
+item.component.magazine.shuriken.iron.name=Iron Shuriken Magazine (T2)
+item.component.magazine.shuriken.gold.name=Golden Shuriken Magazine (T3)
+item.component.magazine.shuriken.diamond.name=Diamond Shuriken Magazine (T4)
+
 item.component.trigger.wood.name=Wooden Trigger Mechanism (T1)
 item.component.trigger.iron.name=Iron Trigger Mechanism (T2)
 item.component.trigger.gold.name=Golden Trigger Mechanism (T3)

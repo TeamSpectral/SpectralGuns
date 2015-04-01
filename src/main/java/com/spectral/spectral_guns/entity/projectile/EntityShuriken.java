@@ -48,6 +48,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 	private double damage = 3.0D;
 	private int knockbackStrength;
 	public float spin = 0;
+	public float spinVelocity;
 	public float rotationRoll = 90;
 	
 	public EntityShuriken(World worldIn)
@@ -56,6 +57,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		this.renderDistanceWeight = 10.0D;
 		this.setSize(0.5F, 0.5F);
 		this.spin = Randomization.r(180);
+		this.spinVelocity = 23;
 	}
 	
 	public EntityShuriken(World worldIn, double x, double y, double z)
@@ -65,6 +67,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		this.setSize(0.5F, 0.5F);
 		this.setPosition(x, y, z);
 		this.spin = Randomization.r(180);
+		this.spinVelocity = 23;
 	}
 	
 	public EntityShuriken(World worldIn, EntityLivingBase shooter, EntityLivingBase target, float velocity, float inaccuracy)
@@ -75,6 +78,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		
 		this.spin = Randomization.r(180);
 		this.rotationRoll = 180 + shooter.rotationPitch;
+		this.spinVelocity = 23;
 		
 		this.posY = shooter.posY + shooter.getEyeHeight() - 0.10000000149011612D;
 		double d0 = target.posX - shooter.posX;
@@ -103,6 +107,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		
 		this.spin = Randomization.r(180);
 		this.rotationRoll = 90 - shooter.rotationPitch;
+		this.spinVelocity = 23;
 		
 		this.setSize(0.5F, 0.5F);
 		this.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);
@@ -232,7 +237,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		else
 		{
 			++this.ticksInAir;
-			this.spin += 23;
+			this.spin += this.spinVelocity;
 			Vec3 vec31 = new Vec3(this.posX, this.posY, this.posZ);
 			Vec3 vec3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 			MovingObjectPosition movingobjectposition = this.worldObj.rayTraceBlocks(vec31, vec3, false, true, false);
