@@ -3,7 +3,8 @@
 bin
 !build
 build/*
-!build/lib
+!build/libs
+!build/libs/*
 eclipse
 gradle
 !src
