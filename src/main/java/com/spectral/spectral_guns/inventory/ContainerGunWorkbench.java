@@ -17,7 +17,7 @@ import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
-public class ContainerGunWorkbench extends Container
+public class ContainerGunWorkbench extends Container implements IContainerAddPlayerSlots
 {
 	private final TileEntityGunWorkbench inventory;
 	private int playersUsing;
@@ -159,5 +159,11 @@ public class ContainerGunWorkbench extends Container
 				}
 			}
 		}
+	}
+	
+	@Override
+	public Slot addSlotToContainer2(Slot slotIn)
+	{
+		return super.addSlotToContainer(slotIn);
 	}
 }

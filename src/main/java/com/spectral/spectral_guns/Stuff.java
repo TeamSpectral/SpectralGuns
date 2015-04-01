@@ -1,6 +1,5 @@
 package com.spectral.spectral_guns;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkProviderSettings;
 
 import com.google.common.collect.Lists;
+import com.spectral.spectral_guns.inventory.IContainerAddPlayerSlots;
 
 public class Stuff
 {
@@ -563,37 +563,21 @@ public class Stuff
 				return ChunkProviderSettings.Factory.func_177865_a("").func_177864_b();
 			}
 		}
-		
-		public static Method getAddSlotToContainer()
-		{
-			try
-			{
-				Method method = Container.class.getDeclaredMethod("addSlotToContainer", Slot.class);
-				method.setAccessible(true);
-				return method;
-			}
-			catch(Throwable e)
-			{
-				e.printStackTrace();
-			}
-			return null;
-		}
 	}
 	
 	/** guis **/
 	// - sigurd4
 	public static class GuiStuff
 	{
-		public static void addPlayerInventorySlots(Container container, InventoryPlayer playerInventory, int x, int y)
+		public static <T extends Container & IContainerAddPlayerSlots> void addPlayerInventorySlots(T container, InventoryPlayer playerInventory, int x, int y)
 		{
-			Method addSlotToContainer = Reflection.getAddSlotToContainer();
 			for(int a = 0; a < 3; ++a)
 			{
 				for(int b = 0; b < 9; ++b)
 				{
 					try
 					{
-						addSlotToContainer.invoke(container, new Slot(playerInventory, b + a * 9 + 9, 8 + b * 18 + x, 84 + a * 18 + y));
+						container.addSlotToContainer2(new Slot(playerInventory, b + a * 9 + 9, 8 + b * 18 + x, 84 + a * 18 + y));
 					}
 					catch(Throwable e)
 					{
@@ -606,7 +590,7 @@ public class Stuff
 			{
 				try
 				{
-					addSlotToContainer.invoke(container, new Slot(playerInventory, a, 8 + a * 18 + x, 142 + y));
+					container.addSlotToContainer2(new Slot(playerInventory, a, 8 + a * 18 + x, 142 + y));
 				}
 				catch(Throwable e)
 				{
