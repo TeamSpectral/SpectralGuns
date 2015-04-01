@@ -44,8 +44,19 @@ i probably changed a bunch of other stuff that i can't remember. note to self: d
 *fixed blocks rendering with double (more or less) size when held in hand in third person
 +added ore dictionary entries for some items and a mechanic for easily doing this for more items in the future
 
-1.2 - sigurd4 (in progress)
-+added gun assembly station with gui and everything (assemble and tinker with your guns! no need to use the crafting table!)
-+added wrench (has durability. required for using the assembly station. durability ticks down every use)
+1.2 - sigurd4
++added gun assembly station with gui and everything (assemble and tinker with your guns! no need to use the crafting table anymore!)
++added wrench
++added configuration (with ingame config as well)
+  •show all possible gun combinations in creative tab
+  •disable rubies and iron nuggets for mod compatibility.
++added shuriken magazine
++added grip components
 *recipes now fully support ore dictionary
 *moved all items to the spectral guns tab
+*food projectiles now render as the food the firing gun was reloaded with
+*your screen gets covered in snow when you get hit by a snowball
+*other tweaks and fixes
+
+1.2.1 - sigurd4
+*woops! fixed gun workbench bug
