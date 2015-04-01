@@ -35,6 +35,7 @@ import com.spectral.spectral_guns.components.aim.ComponentScope;
 import com.spectral.spectral_guns.components.aim.ComponentScopeLaser;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineShuriken;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineSmallFireball;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineSnowball;
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanism;
@@ -282,6 +283,11 @@ public class M
 	public static final ComponentMagazineLaser magazine_laser_iron_green = registerComponent(new ComponentMagazineLaser(new Component[]{}, new Component[]{}, ComponentMaterial.IRON, LaserColor.GREEN, 4, 2));
 	public static final ComponentMagazineLaser magazine_laser_gold_green = registerComponent(new ComponentMagazineLaser(new Component[]{}, new Component[]{}, ComponentMaterial.GOLD, LaserColor.GREEN, 8, 4));
 	public static final ComponentMagazineLaser magazine_laser_diamond_green = registerComponent(new ComponentMagazineLaser(new Component[]{}, new Component[]{}, ComponentMaterial.DIAMOND, LaserColor.GREEN, 16, 8));
+	
+	public static final ComponentMagazineShuriken magazine_shuriken_wood = registerComponent(new ComponentMagazineShuriken(new Component[]{}, new Component[]{}, ComponentMaterial.WOOD, 4, 0.01F, 3F, 1));
+	public static final ComponentMagazineShuriken magazine_shuriken_iron = registerComponent(new ComponentMagazineShuriken(new Component[]{}, new Component[]{}, ComponentMaterial.IRON, 8, 0.08F, 6F, 1));
+	public static final ComponentMagazineShuriken magazine_shuriken_gold = registerComponent(new ComponentMagazineShuriken(new Component[]{}, new Component[]{}, ComponentMaterial.GOLD, 16, 0.16F, 12F, 1));
+	public static final ComponentMagazineShuriken magazine_shuriken_diamond = registerComponent(new ComponentMagazineShuriken(new Component[]{}, new Component[]{}, ComponentMaterial.DIAMOND, 32, 0.32F, 24F, 1));
 	
 	public static final ComponentTriggerMechanism trigger_wood = registerComponent(new ComponentTriggerMechanism(new Component[]{}, new Component[]{}, ComponentMaterial.WOOD, 14F));
 	public static final ComponentTriggerMechanism trigger_wood_redstone = registerComponent(new ComponentTriggerMechanismBoosted(new Component[]{}, new Component[]{}, trigger_wood));
