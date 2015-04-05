@@ -10,6 +10,7 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenHills;
@@ -23,6 +24,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.spectral.spectral_guns.Stuff.HashMapStuff;
 import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
@@ -228,6 +231,19 @@ public class M
 		
 		@Override
 		public ItemStack getIconItemStack()
+		{
+			if(M.proxy.world(0).isRemote)
+			{
+				return this.getIconItemStackClient();
+			}
+			else
+			{
+				return M.gun.getSubItem((EntityPlayer)M.proxy.world(0).playerEntities.get(0), M.gun, this);
+			}
+		}
+		
+		@SideOnly(Side.CLIENT)
+		public ItemStack getIconItemStackClient()
 		{
 			return M.gun.getSubItem(Minecraft.getMinecraft().thePlayer, M.gun, this);
 		}
