@@ -60,3 +60,7 @@ i probably changed a bunch of other stuff that i can't remember. note to self: d
 
 1.2.1 - sigurd4
 *woops! fixed gun workbench bug
+
+1.2.2 - sigurd4
++added config option to disable gun crafting in crafting table
+*fixed server non-exsistent clientside class acces crash
