@@ -21,6 +21,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.Config;
@@ -82,7 +84,11 @@ public abstract class ProxyCommon
 	
 	private void recipes()
 	{
-		GameRegistry.addRecipe(new RecipeGun());
+		if(Config.canCraftGunInCraftingTable.get())
+		{
+			RecipeSorter.register(References.MODID + ":" + "gun_recipe", RecipeGun.class, Category.SHAPELESS, "after:minecraft:shaped");
+			GameRegistry.addRecipe(new RecipeGun());
+		}
 		ComponentEvents.registerRecipes();
 		this.registerNugget(M.iron_nugget, Items.iron_ingot);
 		this.registerNugget(M.ruby, Item.getItemFromBlock(M.ruby_block));

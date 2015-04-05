@@ -21,7 +21,7 @@ public class Config
 				return Configuration.CATEGORY_GENERAL;
 			}
 		},
-		MOD_COMPATABILITY, CREATIVE_TABS;
+		MOD_COMPATABILITY, CREATIVE_TABS, OPTIONAL_FEATURES;
 		
 		@Override
 		public String toString()
@@ -34,6 +34,7 @@ public class Config
 	
 	public static final ConfigEntryBoolean enableRubies = new ConfigEntryBoolean(true, "enableRubies", ConfigEntryCategory.MOD_COMPATABILITY, "Set to false to disable the ruby items in case another mod adds them. Prevents worldGen, recipes and everything. Restart required for changes to have effect.");
 	public static final ConfigEntryBoolean enableIronNugget = new ConfigEntryBoolean(true, "enableIronNugget", ConfigEntryCategory.MOD_COMPATABILITY, "Set to false to disable the iron nugget item in case another mod adds it. Prevents recipes and everything. Restart required for changes to have effect.");
+	public static final ConfigEntryBoolean canCraftGunInCraftingTable = new ConfigEntryBoolean(false, "canCraftGunInCraftingTable", ConfigEntryCategory.OPTIONAL_FEATURES, "Wether or not players should be able to craft guns in the crafting table as well as in the gun assembly table.");
 	
 	public abstract static class ConfigEntry<T>
 	{
