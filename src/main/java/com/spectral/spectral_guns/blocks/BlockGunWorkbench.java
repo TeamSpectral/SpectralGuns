@@ -233,9 +233,6 @@ public class BlockGunWorkbench extends BlockContainer
 		return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(ON, on);
 	}
 	
-	/**
-	 * Convert the BlockState into the correct metadata value
-	 */
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
