@@ -2,7 +2,13 @@
 .settings
 bin
 !build
-build/*
+build/classes
+build/dependency-cache
+build/natives
+build/resources
+build/sources
+build/taskLogs
+build/tmp
 !build/libs
 !build/libs/*
 eclipse
