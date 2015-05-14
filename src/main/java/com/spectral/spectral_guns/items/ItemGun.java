@@ -79,14 +79,7 @@ public class ItemGun extends ItemBase implements IDAble
 			String s = ChatFormatting.WHITE + "Ammo: " + ChatFormatting.GRAY + ammo + "/" + cap + ChatFormatting.RESET;
 			if(ammo <= 0)
 			{
-				if(HandlerClientFML.WeaponReload.getKeyCode() == HandlerClientFML.WeaponReload.getKeyCodeDefault())
-				{
-					s += " (hit 'R' to reload)";
-				}
-				else
-				{
-					s += " (hit reload key to reload)";
-				}
+				s += " (hit '" + new String(Character.toChars(HandlerClientFML.WeaponReload.getKeyCode())).toUpperCase() + "' to reload)";
 			}
 			tooltip.add(s + ChatFormatting.RESET);
 		}
