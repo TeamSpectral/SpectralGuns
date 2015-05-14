@@ -73,6 +73,7 @@ public class HandlerCommon extends HandlerBase
 				EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
 				if(itemstack.getItem() instanceof ItemGun && props.isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1))
 				{
+					event.newfov = 1;
 					event.newfov -= (ItemGun.zoom(itemstack, player, 1) - 1) / 3 + 0.05;
 				}
 			}
