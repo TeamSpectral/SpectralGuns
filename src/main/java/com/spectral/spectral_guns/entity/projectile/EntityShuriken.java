@@ -43,7 +43,6 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 	private int inData;
 	private boolean inGround;
 	public int arrowShake;
-	public Entity shootingEntity;
 	private int ticksInGround;
 	private int ticksInAir;
 	private double damage = 3.0D;
