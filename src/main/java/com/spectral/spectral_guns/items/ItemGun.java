@@ -76,7 +76,7 @@ public class ItemGun extends ItemBase implements IDAble
 		int cap = capacity(stack, player);
 		if(cap > 0)
 		{
-			String s = "Ammo: " + ammo + "/" + cap;
+			String s = ChatFormatting.WHITE + "Ammo: " + ChatFormatting.GRAY + ammo + "/" + cap + ChatFormatting.RESET;
 			if(ammo <= 0)
 			{
 				if(HandlerClientFML.WeaponReload.getKeyCode() == HandlerClientFML.WeaponReload.getKeyCodeDefault())
@@ -88,27 +88,27 @@ public class ItemGun extends ItemBase implements IDAble
 					s += " (hit reload key to reload)";
 				}
 			}
-			tooltip.add(s);
+			tooltip.add(s + ChatFormatting.RESET);
 		}
-		tooltip.add("Recoil: " + Math.floor(recoil(stack, player) * 100) / 100 + "°");
-		tooltip.add("Instability: " + Math.floor(instability(stack, player) * 100) + "%");
-		tooltip.add("Kickback: " + Math.floor(kickback(stack, player) * 100) / 100 + " m/tick");
-		tooltip.add("Spread: " + Math.floor(spread(stack, player) * 36000) / 100 + "°");
-		tooltip.add("Response Time: " + delay(stack, player) + " ticks");
-		tooltip.add("Fire Rate: " + fireRate(stack, player) + " ticks");
+		tooltip.add(ChatFormatting.WHITE + "Recoil: " + ChatFormatting.GRAY + Math.floor(recoil(stack, player) * 100) / 100 + "°" + ChatFormatting.RESET);
+		tooltip.add(ChatFormatting.WHITE + "Instability: " + ChatFormatting.GRAY + Math.floor(instability(stack, player) * 100) + "%" + ChatFormatting.RESET);
+		tooltip.add(ChatFormatting.WHITE + "Kickback: " + ChatFormatting.GRAY + Math.floor(kickback(stack, player) * 100) / 100 + " m/tick" + ChatFormatting.RESET);
+		tooltip.add(ChatFormatting.WHITE + "Spread: " + ChatFormatting.GRAY + Math.floor(spread(stack, player) * 36000) / 100 + "°" + ChatFormatting.RESET);
+		tooltip.add(ChatFormatting.WHITE + "Response Time: " + ChatFormatting.GRAY + delay(stack, player) + " ticks" + ChatFormatting.RESET);
+		tooltip.add(ChatFormatting.WHITE + "Fire Rate: " + ChatFormatting.GRAY + fireRate(stack, player) + " ticks" + ChatFormatting.RESET);
 		int zoom = (int)Math.floor(zoom(stack, player, 1) * 100);
 		if(zoom > 100)
 		{
-			tooltip.add("Zoom: " + zoom + "%");
+			tooltip.add(ChatFormatting.WHITE + "Zoom: " + ChatFormatting.GRAY + zoom + "%" + ChatFormatting.RESET);
 		}
 		ArrayList<Component> c = getComponents(stack);
 		if(c.size() > 0)
 		{
 			tooltip.add("");
-			tooltip.add("Components used:");
+			tooltip.add(ChatFormatting.WHITE + "Components used:" + ChatFormatting.GRAY + ChatFormatting.RESET);
 			for(int i = 0; i < c.size(); ++i)
 			{
-				tooltip.add(" - " + I18n.format(c.get(i).item.getUnlocalizedName() + ".name"));
+				tooltip.add(" - " + I18n.format(c.get(i).item.getUnlocalizedName() + ".name") + ChatFormatting.RESET);
 			}
 		}
 	}
