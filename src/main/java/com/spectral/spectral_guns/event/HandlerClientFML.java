@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Keyboard;
 
+import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.packet.PacketKey;
@@ -121,7 +122,7 @@ public class HandlerClientFML extends HandlerCommonFML
 			this.sendKey(Key.ZOOM);
 			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 			{
-				if(!this.lastZoom)
+				if(!this.lastZoom && Config.smoothZooming.get())
 				{
 					Minecraft.getMinecraft().gameSettings.smoothCamera = true;
 				}
@@ -134,7 +135,7 @@ public class HandlerClientFML extends HandlerCommonFML
 			this.sendKey(Key.NOTZOOM);
 			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 			{
-				if(this.lastZoom)
+				if(this.lastZoom && Config.smoothZooming.get())
 				{
 					Minecraft.getMinecraft().gameSettings.smoothCamera = false;
 				}
