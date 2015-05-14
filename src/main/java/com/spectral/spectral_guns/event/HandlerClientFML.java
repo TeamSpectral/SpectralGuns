@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -16,6 +17,7 @@ import org.lwjgl.input.Keyboard;
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.packet.PacketKey;
 import com.spectral.spectral_guns.packet.PacketKey.Key;
 import com.spectral.spectral_guns.particles.ParticleHandler;
@@ -76,74 +78,76 @@ public class HandlerClientFML extends HandlerCommonFML
 	@SubscribeEvent
 	public void onKeyInput(InputEvent.KeyInputEvent event)
 	{
-		// use for keys to hit once
-		if(this.keypress(WeaponReload) && !WeaponEject.isKeyDown())
+		if(Minecraft.getMinecraft().thePlayer != null)
 		{
-			M.network.sendToServer(new PacketKey(Key.RELOAD));
-		}
-		if(this.keypress(WeaponEject) && !WeaponReload.isKeyDown())
-		{
-			M.network.sendToServer(new PacketKey(Key.EJECT));
+			// use for keys to hit once
+			if(this.keypress(WeaponReload) && !WeaponEject.isKeyDown())
+			{
+				M.network.sendToServer(new PacketKey(Key.RELOAD));
+			}
+			if(this.keypress(WeaponEject) && !WeaponReload.isKeyDown())
+			{
+				M.network.sendToServer(new PacketKey(Key.EJECT));
+			}
 		}
 	}
-	
-	private boolean lastZoom = false;
 	
 	@SubscribeEvent
 	public void clientTickEvent(ClientTickEvent event)
 	{
-		// use for keys to hold down
-		if(Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown())
+		if(Minecraft.getMinecraft().thePlayer != null)
 		{
-			this.sendKey(Key.RIGHTCLICK);
-			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+			// use for keys to hold down
+			if(Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown())
 			{
-				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(true);
-			}
-		}
-		else
-		{
-			this.sendKey(Key.NOTRIGHTCLICK);
-			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
-			{
-				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(false);
-			}
-		}
-		if(this.keyhold(WeaponReload, 8) && !WeaponEject.isKeyDown())
-		{
-			this.sendKey(Key.RELOAD);
-		}
-		if(this.keyhold(WeaponEject, 8) && !WeaponReload.isKeyDown())
-		{
-			this.sendKey(Key.EJECT);
-		}
-		if(WeaponZoom.isKeyDown())
-		{
-			this.sendKey(Key.ZOOM);
-			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
-			{
-				if(!this.lastZoom && Config.smoothZooming.get())
+				this.sendKey(Key.RIGHTCLICK);
+				if(EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 				{
-					Minecraft.getMinecraft().gameSettings.smoothCamera = true;
+					EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(true);
 				}
-				this.lastZoom = true;
-				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = true;
 			}
-		}
-		else
-		{
-			this.sendKey(Key.NOTZOOM);
-			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+			else
 			{
-				if(this.lastZoom && Config.smoothZooming.get())
+				this.sendKey(Key.NOTRIGHTCLICK);
+				if(EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 				{
-					Minecraft.getMinecraft().gameSettings.smoothCamera = false;
+					EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(false);
 				}
-				this.lastZoom = false;
-				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = false;
+			}
+			if(this.keyhold(WeaponReload, 8) && !WeaponEject.isKeyDown())
+			{
+				this.sendKey(Key.RELOAD);
+			}
+			if(this.keyhold(WeaponEject, 8) && !WeaponReload.isKeyDown())
+			{
+				this.sendKey(Key.EJECT);
+			}
+			if(WeaponZoom.isKeyDown())
+			{
+				this.sendKey(Key.ZOOM);
+				if(EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+				{
+					EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = true;
+				}
+			}
+			else
+			{
+				this.sendKey(Key.NOTZOOM);
+				if(EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+				{
+					EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = false;
+				}
+			}
+			
+			if(Minecraft.getMinecraft().thePlayer.getHeldItem() != null)
+			{
+				ItemStack itemstack = Minecraft.getMinecraft().thePlayer.getHeldItem();
+				if(itemstack.getItem() instanceof ItemGun)
+				{
+					Minecraft.getMinecraft().gameSettings.smoothCamera = Config.smoothZooming.get() && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1);
+				}
 			}
 		}
-		
 		ParticleHandler.update();
 	}
 	
