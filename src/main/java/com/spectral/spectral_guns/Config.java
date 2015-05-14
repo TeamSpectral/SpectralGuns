@@ -36,6 +36,7 @@ public class Config
 	public static final ConfigEntryBoolean enableIronNugget = new ConfigEntryBoolean(true, "enableIronNugget", ConfigEntryCategory.MOD_COMPATABILITY, "Set to false to disable the iron nugget item in case another mod adds it. Prevents recipes and everything. Restart required for changes to have effect.");
 	public static final ConfigEntryBoolean canCraftGunInCraftingTable = new ConfigEntryBoolean(false, "canCraftGunInCraftingTable", ConfigEntryCategory.GUN, "Wether or not players should be able to craft guns in the crafting table as well as in the gun assembly table.");
 	public static final ConfigEntryBoolean smoothZooming = new ConfigEntryBoolean(true, "smoothZooming", ConfigEntryCategory.GUN, "Enable or disable smooth camera movement while zooming/aiming with the guns.");
+	public static final ConfigEntryBoolean canReloadWithoutAmmoInCreativeMode = new ConfigEntryBoolean(true, "canReloadWithoutAmmoInCreativeMode", ConfigEntryCategory.GUN, "Wether or not creative mode players should be able to reload their gun without having ammunition in their inventory.");
 	
 	public abstract static class ConfigEntry<T>
 	{

@@ -2,17 +2,7 @@ package com.spectral.spectral_guns.components;
 
 import java.util.ArrayList;
 
-import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
-import com.spectral.spectral_guns.Stuff.Coordinates3D;
-import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.components.Component.ComponentRegister;
-import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazine;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
-import com.spectral.spectral_guns.items.ItemGun;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,8 +11,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameData;
+
+import com.spectral.spectral_guns.Config;
+import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
+import com.spectral.spectral_guns.Stuff.Coordinates3D;
+import com.spectral.spectral_guns.components.Component.ComponentRegister;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazine;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
+import com.spectral.spectral_guns.items.ItemGun;
 
 public class ComponentEvents
 {
@@ -151,15 +148,15 @@ public class ComponentEvents
 			Entity e = projectiles.get(i);
 			if(e != null)
 			{
-				e.setLocationAndAngles(player.posX, player.posY + (double)player.getEyeHeight(), player.posZ, player.rotationYaw, player.rotationPitch);
-				e.posX -= (double)(MathHelper.cos(e.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+				e.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, player.rotationYaw, player.rotationPitch);
+				e.posX -= MathHelper.cos(e.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
 				e.posY -= 0.10000000149011612D;
-				e.posZ -= (double)(MathHelper.sin(e.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+				e.posZ -= MathHelper.sin(e.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
 				e.setPosition(e.posX, e.posY, e.posZ);
 				float f = 0.4F;
-				e.motionX = (double)(-MathHelper.sin(e.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(e.rotationPitch / 180.0F * (float)Math.PI) * f);
-				e.motionY = (double)(-MathHelper.sin((e.rotationPitch) / 180.0F * (float)Math.PI) * f);
-				e.motionZ = (double)(MathHelper.cos(e.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(e.rotationPitch / 180.0F * (float)Math.PI) * f);
+				e.motionX = -MathHelper.sin(e.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(e.rotationPitch / 180.0F * (float)Math.PI) * f;
+				e.motionY = -MathHelper.sin(e.rotationPitch / 180.0F * (float)Math.PI) * f;
+				e.motionZ = MathHelper.cos(e.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(e.rotationPitch / 180.0F * (float)Math.PI) * f;
 			}
 		}
 		for(int i2 = 0; i2 < components.size() && projectiles.size() > 0; ++i2)
@@ -185,7 +182,7 @@ public class ComponentEvents
 				
 				if(e instanceof EntityThrowable)
 				{
-					Vec3 v = new Vec3((player.worldObj.rand.nextGaussian() * 2) - 1, (player.worldObj.rand.nextGaussian() * 2) - 1, (player.worldObj.rand.nextGaussian() * 2) - 1);
+					Vec3 v = new Vec3(player.worldObj.rand.nextGaussian() * 2 - 1, player.worldObj.rand.nextGaussian() * 2 - 1, player.worldObj.rand.nextGaussian() * 2 - 1);
 					v = Coordinates3D.stabilize(v, spread);
 					((EntityThrowable)e).setThrowableHeading(e.motionX + v.xCoord, e.motionY + v.yCoord, e.motionZ + v.zCoord, 1, 1);
 				}
@@ -211,7 +208,7 @@ public class ComponentEvents
 		}
 		
 		InventoryPlayer inv = player.inventory;
-		if(!player.capabilities.isCreativeMode)
+		if(!player.capabilities.isCreativeMode || !Config.canReloadWithoutAmmoInCreativeMode.get())
 		{
 			for(int i = 0; i < inv.getSizeInventory(); ++i)
 			{
@@ -223,13 +220,9 @@ public class ComponentEvents
 						--s.stackSize;
 						if(s.stackSize <= 0)
 						{
-							if(!player.capabilities.isCreativeMode)
-							{
-								inv.setInventorySlotContents(i, null);
-							}
+							inv.setInventorySlotContents(i, null);
 						}
 						player.worldObj.playSoundAtEntity(player, "random.pop", 0.2F, ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-						
 						return true;
 					}
 				}
@@ -240,7 +233,6 @@ public class ComponentEvents
 			if(addAmmo(amount, stack, player, components))
 			{
 				player.worldObj.playSoundAtEntity(player, "random.pop", 0.2F, ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-				
 				return true;
 			}
 		}
@@ -290,7 +282,6 @@ public class ComponentEvents
 	
 	public static int amount(ItemStack gun)
 	{
-		
 		int amount = 0;
 		
 		ArrayList<ComponentMagazineLaser> cs = ArraysAndSuch.allExtending(ItemGun.getComponents(gun), ComponentMagazineLaser.class);
