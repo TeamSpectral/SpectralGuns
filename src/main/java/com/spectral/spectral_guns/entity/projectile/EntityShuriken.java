@@ -13,6 +13,7 @@ import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
@@ -33,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.Randomization;
 
-public class EntityShuriken extends Entity implements IProjectile, IEntityAdditionalSpawnData
+public class EntityShuriken extends EntityArrow implements IProjectile, IEntityAdditionalSpawnData
 {
 	private int xTile = -1;
 	private int yTile = -1;
@@ -535,16 +536,19 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		return false;
 	}
 	
+	@Override
 	public void setDamage(double p_70239_1_)
 	{
 		this.damage = p_70239_1_;
 	}
 	
+	@Override
 	public double getDamage()
 	{
 		return this.damage;
 	}
 	
+	@Override
 	public void setKnockbackStrength(int p_70240_1_)
 	{
 		this.knockbackStrength = p_70240_1_;
@@ -556,6 +560,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		return false;
 	}
 	
+	@Override
 	public void setIsCritical(boolean p_70243_1_)
 	{
 		byte b0 = this.dataWatcher.getWatchableObjectByte(16);
@@ -570,6 +575,7 @@ public class EntityShuriken extends Entity implements IProjectile, IEntityAdditi
 		}
 	}
 	
+	@Override
 	public boolean getIsCritical()
 	{
 		byte b0 = this.dataWatcher.getWatchableObjectByte(16);
