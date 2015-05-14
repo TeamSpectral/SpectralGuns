@@ -142,7 +142,7 @@ public abstract class ProxyCommon
 		}
 		if(M.visible(M.wrench))
 		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.wrench), new Object[]{"  i", "ig ", " i ", 'g', "gearIron", 'i', "ingotIron"}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.wrench), new Object[]{" i ", "ig ", "  i", 'g', "gearIron", 'i', "ingotIron"}));
 		}
 	}
 	
