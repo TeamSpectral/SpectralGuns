@@ -140,6 +140,10 @@ public abstract class ProxyCommon
 		{
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.gun_assembly_station), new Object[]{"gCg", "GAG", "BFB", 'g', "gearIron", 'C', Item.getItemFromBlock(Blocks.crafting_table), 'G', "gearGold", 'A', Item.getItemFromBlock(Blocks.anvil), 'B', new ItemStack(Blocks.stone, 1, 6), 'F', Item.getItemFromBlock(Blocks.furnace)}));
 		}
+		if(M.visible(M.wrench))
+		{
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(M.wrench), new Object[]{"  i", "ig ", " i ", 'g', "gearIron", 'i', "ingotIron"}));
+		}
 	}
 	
 	private void registerNugget(Item nugget, Item bar)
