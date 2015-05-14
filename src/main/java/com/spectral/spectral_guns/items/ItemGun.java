@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import org.lwjgl.input.Keyboard;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.IDAble;
@@ -79,7 +81,7 @@ public class ItemGun extends ItemBase implements IDAble
 			String s = ChatFormatting.WHITE + "Ammo: " + ChatFormatting.GRAY + ammo + "/" + cap + ChatFormatting.RESET;
 			if(ammo <= 0)
 			{
-				s += " (hit '" + new String(Character.toChars(HandlerClientFML.WeaponReload.getKeyCode())).toUpperCase() + "' to reload)";
+				s += " (hit '" + Keyboard.getKeyName(HandlerClientFML.WeaponReload.getKeyCode()) + "' to reload)";
 			}
 			tooltip.add(s + ChatFormatting.RESET);
 		}
