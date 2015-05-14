@@ -546,7 +546,7 @@ public class Stuff
 		}
 	}
 	
-	/** get various stuff **/
+	/** sneaky workarounds for various stuff **/
 	// - sigurd4
 	public static class Reflection
 	{
