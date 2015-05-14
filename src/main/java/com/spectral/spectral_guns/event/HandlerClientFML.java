@@ -86,6 +86,8 @@ public class HandlerClientFML extends HandlerCommonFML
 		}
 	}
 	
+	private boolean lastZoom = false;
+	
 	@SubscribeEvent
 	public void clientTickEvent(ClientTickEvent event)
 	{
@@ -119,6 +121,11 @@ public class HandlerClientFML extends HandlerCommonFML
 			this.sendKey(Key.ZOOM);
 			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 			{
+				if(!this.lastZoom)
+				{
+					Minecraft.getMinecraft().gameSettings.smoothCamera = true;
+				}
+				this.lastZoom = true;
 				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = true;
 			}
 		}
@@ -127,6 +134,11 @@ public class HandlerClientFML extends HandlerCommonFML
 			this.sendKey(Key.NOTZOOM);
 			if(Minecraft.getMinecraft().thePlayer != null && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 			{
+				if(this.lastZoom)
+				{
+					Minecraft.getMinecraft().gameSettings.smoothCamera = false;
+				}
+				this.lastZoom = false;
 				EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = false;
 			}
 		}
