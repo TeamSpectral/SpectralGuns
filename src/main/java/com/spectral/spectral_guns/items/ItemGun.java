@@ -20,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Keyboard;
 
+import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.IDAble;
@@ -416,8 +417,18 @@ public class ItemGun extends ItemBase implements IDAble
 		setComponentIDs(stack, ids);
 	}
 	
-	public static void setComponentIDs(ItemStack stack, ArrayList<String> components)
+	public static void setComponentIDs(ItemStack stack, ArrayList<String> components2)
 	{
+		ArrayList<String> components = Lists.newArrayList();
+		ArrayList<String> allIds = Component.ComponentRegister.getIDs();
+		for(String id : allIds)
+		{
+			if(components2.contains(id))
+			{
+				components.add(id);
+			}
+		}
+		
 		compound(stack);
 		NBTTagCompound csOld = stack.getTagCompound().getCompoundTag(COMPONENTS);
 		NBTTagCompound cs = new NBTTagCompound();
