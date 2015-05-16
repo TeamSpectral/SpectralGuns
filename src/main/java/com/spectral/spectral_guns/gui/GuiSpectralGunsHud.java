@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import com.spectral.spectral_guns.M;
@@ -89,14 +90,7 @@ public class GuiSpectralGunsHud extends Gui
 					}
 					if((b || player.capabilities.isCreativeMode) && a <= 0)
 					{
-						if(HandlerClientFML.WeaponReload.getKeyCode() == HandlerClientFML.WeaponReload.getKeyCodeDefault())
-						{
-							s += " (hit 'R' to reload)";
-						}
-						else
-						{
-							s += " (hit reload key to reload)";
-						}
+						s += " (hit '" + Keyboard.getKeyName(HandlerClientFML.WeaponReload.getKeyCode()) + "' to reload)";
 					}
 					fontrenderer.drawStringWithShadow(s, 2, h - 10 * line, 0xAF8A33);
 					++line;
