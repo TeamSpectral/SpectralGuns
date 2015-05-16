@@ -82,6 +82,7 @@ public class SlotGun extends Slot
 								if(e != null)
 								{
 									e.setDefaultPickupDelay();
+									e.setPosition(this.vec.xCoord, this.vec.yCoord, this.vec.zCoord);
 									e.motionX = e.motionY = e.motionZ = 0;
 									e.setOwner(player.getName());
 									player.worldObj.playSoundAtEntity(player, "random.pop", 0.2F, ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.4F);
