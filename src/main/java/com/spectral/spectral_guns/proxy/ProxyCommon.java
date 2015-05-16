@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -72,6 +73,11 @@ public abstract class ProxyCommon
 	}
 	
 	public abstract World world(int dimension);
+	
+	public EntityPlayer player()
+	{
+		return null;
+	}
 	
 	private void packets()
 	{

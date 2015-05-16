@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.gui.GuiHandler.GuiIDs;
+import com.spectral.spectral_guns.gui.GuiHandler;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
 public class BlockGunWorkbench extends BlockContainer
@@ -135,7 +135,7 @@ public class BlockGunWorkbench extends BlockContainer
 			
 			if(tileentity instanceof TileEntityGunWorkbench)
 			{
-				player.openGui(M.instance, GuiIDs.GUN_WORKBENCH.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+				player.openGui(M.instance, GuiHandler.GuiIDs.GUN_WORKBENCH.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
 			}
 			
 			return true;

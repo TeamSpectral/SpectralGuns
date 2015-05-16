@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.RenderFireball;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -59,6 +60,12 @@ public class ProxyClient extends ProxyCommon
 	public World world(int dimension)
 	{
 		return Minecraft.getMinecraft().theWorld;
+	}
+	
+	@Override
+	public EntityPlayer player()
+	{
+		return Minecraft.getMinecraft().thePlayer;
 	}
 	
 	private void tileEntityRender(RenderManager rm, RenderItem ri)

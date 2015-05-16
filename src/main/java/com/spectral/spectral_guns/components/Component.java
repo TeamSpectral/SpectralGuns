@@ -183,7 +183,7 @@ public abstract class Component
 				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
 		GOLD(
 				22,
-				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.AIM}),
+				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
 		DIAMOND(
 				520,
 				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});

@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
@@ -26,7 +27,7 @@ public class HandlerCommonFML extends HandlerBase
 	{
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(event.player);
 		
-		if(!event.player.worldObj.isRemote)
+		if(event.side == Side.SERVER)
 		{
 			int i = 10;
 			if(event.player instanceof EntityPlayerMP && event.player.worldObj.getWorldTime() % i == i - 1)

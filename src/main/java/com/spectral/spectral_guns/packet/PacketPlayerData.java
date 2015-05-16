@@ -1,12 +1,12 @@
 package com.spectral.spectral_guns.packet;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 
 public class PacketPlayerData implements IMessage
@@ -26,7 +26,7 @@ public class PacketPlayerData implements IMessage
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		this.player = Minecraft.getMinecraft().thePlayer;
+		this.player = M.proxy.player();
 		this.buf = buf;
 	}
 	

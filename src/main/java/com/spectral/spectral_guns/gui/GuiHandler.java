@@ -7,6 +7,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.spectral.spectral_guns.inventory.ContainerGunWorkbench;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
@@ -18,6 +20,7 @@ public class GuiHandler implements IGuiHandler
 		GUN_WORKBENCH
 		{
 			@Override
+			@SideOnly(Side.SERVER)
 			public Container server(EntityPlayer player, World world, TileEntity tileEntity)
 			{
 				if(tileEntity == null || !(tileEntity instanceof TileEntityGunWorkbench))
@@ -28,6 +31,7 @@ public class GuiHandler implements IGuiHandler
 			}
 			
 			@Override
+			@SideOnly(Side.CLIENT)
 			public Gui client(EntityPlayer player, World world, TileEntity tileEntity)
 			{
 				if(tileEntity == null || !(tileEntity instanceof TileEntityGunWorkbench))
