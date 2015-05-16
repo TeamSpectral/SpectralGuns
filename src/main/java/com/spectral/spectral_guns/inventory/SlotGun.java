@@ -1,11 +1,19 @@
 package com.spectral.spectral_guns.inventory;
 
+import java.util.ArrayList;
+
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Vec3;
 
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff;
+import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.ComponentEvents;
+import com.spectral.spectral_guns.components.ComponentEvents.ConsumerComponentEventVec3;
 import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.items.ItemWrench;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
@@ -43,7 +51,48 @@ public class SlotGun extends Slot
 		super.putStack(stack);
 		if(stack != null)
 		{
-			this.container.insertComponents(ItemGun.getComponents(stack));
+			TileEntityGunWorkbench tileEntity = (TileEntityGunWorkbench)this.inventory;
+			Vec3 vec = Stuff.Coordinates3D.middle(tileEntity.getPos());
+			EntityPlayer player = tileEntity.lastUsing;
+			if(player == null)
+			{
+				player = tileEntity.getWorld().getClosestPlayer(vec.xCoord, vec.yCoord, vec.zCoord, 100);
+			}
+			if(player != null)
+			{
+				ArrayList<Component> cs = ItemGun.getComponents(stack);
+				for(int i = 0; i < 1000 && ItemGun.ammo(stack, player) > 0; ++i)
+				{
+					vec.add(new Vec3(0, 1.5, 0));
+					ConsumerComponentEventVec3 cce = new ConsumerComponentEventVec3(vec)
+					{
+						@Override
+						public void action(ItemStack gun, EntityPlayer player, ArrayList<Component> components)
+						{
+							Item item = ItemGun.ejectableAmmo(gun, gun, player);
+							ItemStack drop = new ItemStack(item, 1, 0);
+							if(drop.stackSize != 0 && drop.getItem() != null)
+							{
+								EntityItem e = new EntityItem(player.worldObj, this.vec.xCoord, this.vec.yCoord, this.vec.zCoord, drop);
+								if(!player.worldObj.isRemote)
+								{
+									player.worldObj.spawnEntityInWorld(e);
+								}
+								
+								if(e != null)
+								{
+									e.setDefaultPickupDelay();
+									e.motionX = e.motionY = e.motionZ = 0;
+									e.setOwner(player.getName());
+									player.worldObj.playSoundAtEntity(player, "random.pop", 0.2F, ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.4F);
+								}
+							}
+						}
+					};
+					ComponentEvents.eject(stack, player, cs, cce);
+				}
+				this.container.insertComponents(ItemGun.getComponents(stack));
+			}
 		}
 	}
 	

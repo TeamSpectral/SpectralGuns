@@ -35,6 +35,7 @@ import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.inventory.ContainerGunWorkbench;
+import com.spectral.spectral_guns.inventory.SlotGun;
 import com.spectral.spectral_guns.items.ItemComponent;
 import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.items.ItemWrench;
@@ -530,7 +531,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 			{
 				if(stack != null)
 				{
-					new ContainerGunWorkbench(new InventoryPlayer(null), this).insertComponents(ItemGun.getComponents(stack));
+					((SlotGun)new ContainerGunWorkbench(new InventoryPlayer(null), this).inventorySlots.get(0)).putStack(stack);
 				}
 			}
 			return true;
@@ -562,7 +563,6 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 			}
 			else
 			{
-				flag = true;
 				return false;
 			}
 			for(int i = 0; i < EnumFacing.values().length; ++i)
@@ -573,12 +573,10 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 					{
 						this.clearComponentStacks(false);
 					}
-					flag = true;
 					return true;
 				}
 			}
 		}
-		flag = true;
 		return false;
 	}
 	

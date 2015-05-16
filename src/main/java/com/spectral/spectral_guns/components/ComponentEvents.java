@@ -241,6 +241,28 @@ public class ComponentEvents
 	
 	public static boolean eject(ItemStack stack, EntityPlayer player, ArrayList<Component> components)
 	{
+		return eject(stack, player, components, new ConsumerComponentEvent()
+		{
+			@Override
+			public void action(ItemStack gun, EntityPlayer player, ArrayList<Component> components)
+			{
+				if(!player.capabilities.isCreativeMode || !Config.canReloadWithoutAmmoInCreativeMode.get())
+				{
+					Item item = ItemGun.ejectableAmmo(gun, gun, player);
+					EntityItem e = player.dropItem(item, 1);
+					if(e != null)
+					{
+						e.setNoPickupDelay();
+						e.setOwner(player.getName());
+						player.worldObj.playSoundAtEntity(player, "random.pop", 0.2F, ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.4F);
+					}
+				}
+			}
+		});
+	}
+	
+	public static boolean eject(ItemStack stack, EntityPlayer player, ArrayList<Component> components, ConsumerComponentEvent func)
+	{
 		int amount = amount(stack);
 		
 		if(!isGunValid(stack) || ItemGun.ammo(stack, player) - amount < 0)
@@ -255,16 +277,7 @@ public class ComponentEvents
 			InventoryPlayer inv = player.inventory;
 			if(addAmmo(-amount, stack, player, components))
 			{
-				if(!player.capabilities.isCreativeMode)
-				{
-					EntityItem e = player.dropItem(item, 1);
-					if(e != null)
-					{
-						e.setNoPickupDelay();
-						e.setOwner(player.getName());
-						player.worldObj.playSoundAtEntity(player, "random.pop", 0.2F, ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 1.4F);
-					}
-				}
+				func.action(stack, player, components);
 				return true;
 			}
 		}
@@ -296,5 +309,25 @@ public class ComponentEvents
 		}
 		
 		return amount;
+	}
+	
+	public abstract static class ConsumerComponentEvent
+	{
+		public ConsumerComponentEvent()
+		{
+			
+		}
+		
+		public abstract void action(ItemStack gun, EntityPlayer player, ArrayList<Component> components);
+	}
+	
+	public abstract static class ConsumerComponentEventVec3 extends ConsumerComponentEvent
+	{
+		public final Vec3 vec;
+		
+		public ConsumerComponentEventVec3(Vec3 vec)
+		{
+			this.vec = vec;
+		}
 	}
 }
