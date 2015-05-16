@@ -71,6 +71,7 @@ i probably changed a bunch of other stuff that i can't remember. note to self: d
 1.2.4 - sigurd4
 +added recipe for wrench
 *formatting in the gun tooltip so that some parts stand out better
+*fixed the degree symbols glitching out in the gun tooltip
 *reload help key changes with the set keybind instead of being 'R' regardless of what key is bound for reloading
 *shurikens can now trigger wooden buttons and are treated in code as a type of arrow
 *you can no longer zoom with other mods, like optifine, if you're holding a gun
