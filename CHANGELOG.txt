@@ -64,3 +64,18 @@ i probably changed a bunch of other stuff that i can't remember. note to self: d
 1.2.2 - sigurd4
 +added config option to disable gun crafting in crafting table
 *fixed server non-exsistent clientside class acces crash
+
+1.2.3 - ExtraMeteorP
++added chinese localization
+
+1.2.4 - sigurd4
++added recipe for wrench
+*formatting in the gun tooltip so that some parts stand out better
+*reload help key changes with the set keybind instead of being 'R' regardless of what key is bound for reloading
+*shurikens can now trigger wooden buttons and are treated in code as a type of arrow
+*you can no longer zoom with other mods, like optifine, if you're holding a gun
+*camera movement is smooth while aiming
++config option for smooth camera movement zooming
++config option for wether or not reloading in creative mode should use ammo or be infinite
+*guns now drop their ammunition when inserted into a gun table (previously it just disappeared)
+*fixed some server crashes and annoyances
