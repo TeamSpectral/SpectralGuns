@@ -80,3 +80,6 @@ i probably changed a bunch of other stuff that i can't remember. note to self: d
 +config option for wether or not reloading in creative mode should use ammo or be infinite
 *guns now drop their ammunition when inserted into a gun table (previously it just disappeared)
 *fixed some server crashes and annoyances
+
+1.2.4 - sigurd4
+*fixed the gun assembly table. derp i'm so sowwy
