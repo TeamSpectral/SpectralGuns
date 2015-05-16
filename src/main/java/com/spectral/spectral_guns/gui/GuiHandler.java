@@ -20,7 +20,6 @@ public class GuiHandler implements IGuiHandler
 		GUN_WORKBENCH
 		{
 			@Override
-			@SideOnly(Side.SERVER)
 			public Container server(EntityPlayer player, World world, TileEntity tileEntity)
 			{
 				if(tileEntity == null || !(tileEntity instanceof TileEntityGunWorkbench))
