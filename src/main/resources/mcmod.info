@@ -5,11 +5,11 @@
   "description": "Modular guns. 100% customizable.",
   "version": "1.2.5",
   "mcversion": "1.8",
-  "url": "",
+  "url": "http://www.planetminecraft.com/mod/spectralguns/",
   "updateUrl": "",
-  "authorList": ["KH111, Beardielover99, NonExistingName, sigurd4, FortuneLessThan3, AstaZora"], #write your username here, guys
-  "credits": "thanks to ExtraMeteorP for chinese localization.",
-  "logoFile": "WIP",
+  "authorList": ["KH111", "Beardielover99", "NonExistingName", "sigurd4", "FortuneLessThan3", "AstaZora"], #write your username here, guys
+  "credits": "Thanks to ExtraMeteorP for Chinese localization.",
+  "logoFile": "/info/logo_blur.png",
   "screenshots": [],
   "dependencies": []
 }
