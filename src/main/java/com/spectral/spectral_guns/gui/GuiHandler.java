@@ -41,18 +41,25 @@ public class GuiHandler implements IGuiHandler
 			}
 		};
 		
-		public abstract Container server(EntityPlayer player, World world, TileEntity tileEntity);
+		public Container server(EntityPlayer player, World world, TileEntity tileEntity)
+		{
+			return null;
+		};
 		
-		public abstract Gui client(EntityPlayer player, World world, TileEntity tileEntity);
+		public Gui client(EntityPlayer player, World world, TileEntity tileEntity)
+		{
+			return null;
+		};
 	}
 	
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-		if(GuiIDs.values()[ID] != null)
+		GuiIDs guiId = GuiIDs.values()[ID];
+		if(guiId != null)
 		{
-			return GuiIDs.values()[ID].server(player, world, tileEntity);
+			return guiId.server(player, world, tileEntity);
 		}
 		return null;
 	}
@@ -61,9 +68,10 @@ public class GuiHandler implements IGuiHandler
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-		if(GuiIDs.values()[ID] != null)
+		GuiIDs guiId = GuiIDs.values()[ID];
+		if(guiId != null)
 		{
-			return GuiIDs.values()[ID].client(player, world, tileEntity);
+			return guiId.client(player, world, tileEntity);
 		}
 		return null;
 	}
