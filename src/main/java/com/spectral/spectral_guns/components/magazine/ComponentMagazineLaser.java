@@ -24,7 +24,7 @@ import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
 import com.spectral.spectral_guns.items.ItemGun;
 
-public class ComponentMagazineLaser extends ComponentGeneric
+public class ComponentMagazineLaser extends ComponentGeneric implements IComponentAmmoItem
 {
 	public final int capacity;
 	public final LaserColor color;

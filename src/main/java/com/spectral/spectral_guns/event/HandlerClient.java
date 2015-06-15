@@ -14,8 +14,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
+import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazine;
+import com.spectral.spectral_guns.components.magazine.IComponentAmmoItem;
 import com.spectral.spectral_guns.gui.GuiSpectralGunsHud;
 import com.spectral.spectral_guns.gui.GuiSpectralGunsHud.RenderOrder;
 import com.spectral.spectral_guns.items.ItemGun;
@@ -47,7 +48,7 @@ public class HandlerClient extends HandlerCommon
 	@SubscribeEvent
 	public void ItemTooltipEvent(ItemTooltipEvent event)
 	{
-		ArrayList<ComponentMagazine> cs = ArraysAndSuch.allExtending(ComponentRegister.getAll(), ComponentMagazine.class);
+		ArrayList<IComponentAmmoItem> cs = ArraysAndSuch.allExtending(ComponentRegister.getAll(), IComponentAmmoItem.class);
 		for(int i = 0; i < cs.size(); ++i)
 		{
 			if(!cs.get(i).isAmmoItem(event.itemStack, event.entityPlayer.worldObj, event.entityPlayer))
@@ -58,10 +59,16 @@ public class HandlerClient extends HandlerCommon
 		}
 		if(cs.size() > 0)
 		{
-			event.toolTip.add("Ammo for:");
 			for(int i = 0; i < cs.size(); ++i)
 			{
-				event.toolTip.add(" - " + I18n.format(cs.get(i).item.getUnlocalizedName() + ".name"));
+				if(cs.get(i) instanceof Component)
+				{
+					if(i == 0)
+					{
+						event.toolTip.add("Ammo for:");
+					}
+					event.toolTip.add(" - " + I18n.format(((Component)cs.get(i)).item.getUnlocalizedName() + ".name"));
+				}
 			}
 		}
 	}
