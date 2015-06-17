@@ -92,7 +92,7 @@ public class SlotGun extends Slot
 					};
 					ComponentEvents.eject(stack, player, cs, cce);
 				}
-				this.container.insertComponents(ItemGun.getComponents(stack));
+				this.container.insertComponents(stack);
 			}
 		}
 	}

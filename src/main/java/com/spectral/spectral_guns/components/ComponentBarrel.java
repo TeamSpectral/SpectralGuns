@@ -19,11 +19,12 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	public final float spread;
 	public final float velocity;
 	
-	public ComponentBarrel(String id, String name, Component[] required, Component[] incapatible, ComponentMaterial material, float spread, float velocity)
+	public ComponentBarrel(String id, String name, ComponentMaterial material, float spread, float velocity)
 	{
-		super(new String2("barrel_" + id, ""), new String2("barrel." + name, ""), required, incapatible, Type.BARREL, material);
+		super(new String2("barrel_" + id, ""), new String2("barrel." + name, ""), 0.5, 10 * 4 * 4, Type.BARREL, material);
 		this.spread = spread;
 		this.velocity = velocity;
+		this.requiredTypes = new Type[]{Type.MAGAZINE};
 	}
 	
 	@Override
@@ -85,9 +86,9 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	
 	public static class ComponentBarrelThin extends ComponentBarrel
 	{
-		public ComponentBarrelThin(Component[] required, Component[] incapatible, ComponentMaterial material, float velocity)
+		public ComponentBarrelThin(ComponentMaterial material, float velocity)
 		{
-			super("thin", "thin", required, incapatible, material, 0.3F, velocity);
+			super("thin", "thin", material, 0.3F, velocity);
 		}
 		
 		@Override
@@ -121,9 +122,9 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	
 	public static class ComponentBarrelNormal extends ComponentBarrel
 	{
-		public ComponentBarrelNormal(Component[] required, Component[] incapatible, ComponentMaterial material, float velocity)
+		public ComponentBarrelNormal(ComponentMaterial material, float velocity)
 		{
-			super("normal", "normal", required, incapatible, material, 8.5F, velocity);
+			super("normal", "normal", material, 8.5F, velocity);
 		}
 		
 		@Override
@@ -157,9 +158,9 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	
 	public static class ComponentBarrelWide extends ComponentBarrel
 	{
-		public ComponentBarrelWide(Component[] required, Component[] incapatible, ComponentMaterial material, float velocity)
+		public ComponentBarrelWide(ComponentMaterial material, float velocity)
 		{
-			super("wide", "wide", required, incapatible, material, 38.0F, velocity);
+			super("wide", "wide", material, 38.0F, velocity);
 		}
 		
 		@Override
@@ -193,9 +194,9 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	
 	public static class ComponentBarrelMusket extends ComponentBarrel
 	{
-		public ComponentBarrelMusket(Component[] required, Component[] incapatible, ComponentMaterial material, float velocity)
+		public ComponentBarrelMusket(ComponentMaterial material, float velocity)
 		{
-			super("musket", "musket", required, incapatible, material, 70.0F, velocity);
+			super("musket", "musket", material, 70.0F, velocity);
 		}
 		
 		@Override

@@ -257,8 +257,10 @@ public class ItemGun extends ItemBase implements IDAble
 		NBTTagCompound compound = stack.getTagCompound();
 		ArrayList<Component> components = getComponents(stack);
 		
-		components = ComponentEvents.updateComponents(stack, entity, slot, isSelected, components);
-		
+		if(entity instanceof EntityPlayer)
+		{
+			components = ComponentEvents.updateComponents(stack, (EntityPlayer)entity, slot, isSelected, components);
+		}
 		if(compound.getFloat(RECOIL) > 0.01)
 		{
 			if(entity instanceof EntityPlayer)
@@ -740,7 +742,7 @@ public class ItemGun extends ItemBase implements IDAble
 		ArrayList<Component> components = getComponents(stack);
 		for(int i = 0; i < components.size(); ++i)
 		{
-			capacity += components.get(i).material.durability;
+			capacity += components.get(i).item.getMaxDamage(components.get(i).toItemStack(stack));
 		}
 		return capacity;
 	}
@@ -796,4 +798,15 @@ public class ItemGun extends ItemBase implements IDAble
 	{
 		return true;
 	}
+	
+	public static void dropAllComponents(EntityPlayer player, ItemStack stack)
+	{
+		for(Component c : getComponents(stack))
+		{
+			ItemStack drop = c.toItemStack(stack);
+			player.dropItem(drop, true, false);
+		}
+		setComponents(stack, new ArrayList());
+	}
+	
 }

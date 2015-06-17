@@ -20,18 +20,20 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	public final float spread;
 	public final int projectileCount;
 	public final float fireRate;
+	public final float heating;
 	
 	// nbt
 	public static final String AMMO = "Ammo";
 	
-	public ComponentMagazine(String id, String name, Component[] required, Component[] incapatible, ComponentMaterial material, int capacity, float kickback, float spread, float fireRate, int projectileCount)
+	public ComponentMagazine(String id, String name, double heatLoss, float heatThreshold, ComponentMaterial material, int capacity, float kickback, float spread, float fireRate, int projectileCount, float heating)
 	{
-		super(new String2("magazine_" + id, ""), new String2("magazine." + name, ""), required, incapatible, Type.MAGAZINE, material);
+		super(new String2("magazine_" + id, ""), new String2("magazine." + name, ""), heatLoss, heatThreshold, Type.MAGAZINE, material);
 		this.capacity = capacity;
 		this.kickback = kickback;
 		this.spread = spread;
 		this.projectileCount = projectileCount;
 		this.fireRate = fireRate;
+		this.heating = heating;
 	}
 	
 	@Override
@@ -65,6 +67,18 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 		for(int i = 0; i < this.projectileCount; ++i)
 		{
 			e.add(this.projectile(stack, world, player));
+		}
+		this.addHeat(this.heating, stack, components);
+		for(Component c : components)
+		{
+			if(c.type == Type.BARREL)
+			{
+				c.addHeat(this.heating / 2, stack, components);
+			}
+			else if(c.type == Type.TRIGGER)
+			{
+				c.addHeat(this.heating / 3, stack, components);
+			}
 		}
 		return e;
 	}

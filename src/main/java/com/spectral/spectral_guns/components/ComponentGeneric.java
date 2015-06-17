@@ -6,26 +6,29 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.items.ItemGun;
 
 public abstract class ComponentGeneric extends Component
 {
 	final protected String name;
-	final protected Component[] required;
-	final protected Component[] incapatible;
-	final protected String ITEMDAMAGE = "ItemDamage";
+	protected Component[] required;
+	protected Component[] incapatible;
+	protected Type[] requiredTypes;
+	protected Type[] incapatibleTypes;
+	protected ComponentMaterial[] requiredMats;
+	protected ComponentMaterial[] incapatibleMats;
+	final protected double heatLoss;
+	final protected float heatThreshold;
 	
-	public ComponentGeneric(String2 id, String2 name, Component[] required, Component[] incapatible, Type type, ComponentMaterial material)
+	public ComponentGeneric(String2 id, String2 name, double heatLoss, float heatThreshold, Type type, ComponentMaterial material)
 	{
 		super(id, type, material);
 		this.name = name.s1 + "." + material.getDisplayName(type, this) + name.s2;
-		this.required = required;
-		this.incapatible = incapatible;
+		this.heatLoss = heatLoss;
+		this.heatThreshold = heatThreshold;
 	}
 	
 	@Override
@@ -44,6 +47,30 @@ public abstract class ComponentGeneric extends Component
 	public ArrayList<Component> getIncapatible()
 	{
 		return ArraysAndSuch.arrayToArrayList(this.incapatible);
+	}
+	
+	@Override
+	public ArrayList<Type> getRequiredTypes()
+	{
+		return ArraysAndSuch.arrayToArrayList(this.requiredTypes);
+	}
+	
+	@Override
+	public ArrayList<Type> getIncapatibleTypes()
+	{
+		return ArraysAndSuch.arrayToArrayList(this.incapatibleTypes);
+	}
+	
+	@Override
+	public ArrayList<ComponentMaterial> getRequiredMats()
+	{
+		return ArraysAndSuch.arrayToArrayList(this.requiredMats);
+	}
+	
+	@Override
+	public ArrayList<ComponentMaterial> getIncapatibleMats()
+	{
+		return ArraysAndSuch.arrayToArrayList(this.incapatibleMats);
 	}
 	
 	public int setAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components, int ammo)
@@ -147,23 +174,39 @@ public abstract class ComponentGeneric extends Component
 	}
 	
 	@Override
-	public int durabilityDamage(ItemStack gun, ArrayList<Component> components)
+	public double heatConductiveness(ItemStack stack, ArrayList<Component> components)
 	{
-		NBTTagCompound compound = this.getTagCompound(gun);
-		if(compound.hasKey(this.ITEMDAMAGE))
-		{
-			compound.setInteger(this.ITEMDAMAGE, 0);
-		}
-		if(compound.getInteger(this.ITEMDAMAGE) > this.material.durability)
-		{
-			ArraysAndSuch.removeFromArrayList(components, this);
-			ItemGun.setComponents(gun, components);
-		}
-		return compound.getInteger(this.ITEMDAMAGE);
+		return this.heatLoss;
 	}
 	
 	@Override
-	public void update(ItemStack stack, World world, Entity entity, int slot, boolean isSelected, ArrayList<Component> components)
+	public float heatThreshold(ItemStack stack, ArrayList<Component> components)
 	{
+		return this.heatThreshold;
+	}
+	
+	@Override
+	public void update(ItemStack stack, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
+	{
+		if(this.heat(stack, components) > this.heatThreshold(stack, components) || this.heat(stack, components) < -this.heatThreshold(stack, components))
+		{
+			this.addDurabilityDamage(-1, stack, player, components);
+		}
+		this.heatMix(stack, 0, 1, 0.3, components);
+		loop:
+		for(Component c : components)
+		{
+			if(c != this)
+			{
+				for(Type type : this.requiredTypes)
+				{
+					if(type == c.type)
+					{
+						this.heatMix(stack, c, components);
+						continue loop;
+					}
+				}
+			}
+		}
 	}
 }

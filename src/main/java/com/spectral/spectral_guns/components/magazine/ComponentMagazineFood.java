@@ -32,9 +32,9 @@ public final class ComponentMagazineFood extends ComponentMagazine
 	// nbt
 	public static final String ITEMS = "Items";
 	
-	public ComponentMagazineFood(Component[] required, Component[] incapatible, ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount)
+	public ComponentMagazineFood(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
-		super("food", "food", required, incapatible, material, capacity, kickback, 90, fireRate, projectileCount);
+		super("food", "food", 0.4, 5 * 8 * 8, material, capacity, kickback, 90, fireRate, projectileCount, 6.2F * heating);
 	}
 	
 	@Override

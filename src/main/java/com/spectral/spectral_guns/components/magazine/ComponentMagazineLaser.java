@@ -36,12 +36,13 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 	public final static int ammoMultiplier = 25;
 	public final int battery;
 	
-	public ComponentMagazineLaser(Component[] required, Component[] incapatible, ComponentMaterial material, LaserColor color, int capacity, int battery)
+	public ComponentMagazineLaser(ComponentMaterial material, LaserColor color, int capacity, int battery)
 	{
-		super(new String2("magazine_laser", "_" + color.toString().toLowerCase()), new String2("magazine.laser", "." + color.toString().toLowerCase()), required, incapatible, Type.MAGAZINE, material);
+		super(new String2("magazine_laser", "_" + color.toString().toLowerCase()), new String2("magazine.laser", "." + color.toString().toLowerCase()), 0.4, 3 * 9 * 3, Type.MAGAZINE, material);
 		this.color = color;
 		this.capacity = capacity;
 		this.battery = battery;
+		this.required = new Component[]{M.barrel_thin_diamond};
 	}
 	
 	public int battery()
@@ -50,26 +51,27 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 	}
 	
 	@Override
-	public void update(ItemStack gun, World world, Entity entity, int slot, boolean isSelected, ArrayList<Component> components)
+	public void update(ItemStack gun, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
 	{
 		NBTTagCompound compound = this.getTagCompound(gun);
-		if(entity instanceof EntityPlayer && isSelected)
+		if(isSelected)
 		{
-			EntityExtendedPlayer props = EntityExtendedPlayer.get((EntityPlayer)entity);
+			EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
 			if(props.isRightClickHeldDown && props.reloadDelay <= 0)
 			{
 				compound.setBoolean(FIRING, true);
 			}
 		}
-		if(!isSelected || !(entity instanceof EntityPlayer) || !EntityExtendedPlayer.get((EntityPlayer)entity).isRightClickHeldDown || compound.getInteger(AMMO) - 1 < 0)
+		if(!isSelected || !EntityExtendedPlayer.get(player).isRightClickHeldDown || compound.getInteger(AMMO) - 1 < 0)
 		{
 			compound.setBoolean(FIRING, false);
 			compound.setInteger(TIMER, 0);
 		}
-		if(compound.getBoolean(FIRING) && entity instanceof EntityPlayer)
+		if(compound.getBoolean(FIRING))
 		{
-			float incline = 1.13F / ItemGun.delay(gun, (EntityPlayer)entity);
+			float incline = 1.13F / ItemGun.delay(gun, player);
 			compound.setFloat(CHARGE, compound.getFloat(CHARGE) + incline);
+			this.heatMix(gun, incline * 200, 1, 1.1, components);
 		}
 		else
 		{
@@ -77,9 +79,9 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 		}
 		compound.setInteger(TIMER, 1 + compound.getInteger(TIMER));
 		compound.setFloat(CHARGE, Math.max(0, Math.min(12, compound.getFloat(CHARGE))));
-		if(compound.getFloat(CHARGE) > 0.5 && entity instanceof EntityPlayer)
+		if(compound.getFloat(CHARGE) > 0.5)
 		{
-			EntityLaser e = new EntityLaser(world, (EntityPlayer)entity, compound.getFloat(CHARGE), this.color, 0);
+			EntityLaser e = new EntityLaser(world, player, compound.getFloat(CHARGE), this.color, 0);
 			
 			if(!world.isRemote || true) //this needs to be spawned clientside as well, but only for laser entities
 			{
@@ -89,25 +91,25 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 			int t = (int)(12 / compound.getFloat(CHARGE));
 			if(t <= 0 || compound.getInteger(TIMER) % t == t - 1)
 			{
-				this.setAmmo(-1, gun, world, (EntityPlayer)entity, components);
+				this.setAmmo(-1, gun, world, player, components);
 			}
 		}
 		if(world.isRemote)
 		{
 			if(compound.getFloat(CHARGE) > 1)
 			{
-				if(AudioHandler.getSound(entity, "fire.fire") == null || !AudioHandler.isPlaying(entity, "fire.fire"))
+				if(AudioHandler.getSound(player, "fire.fire") == null || !AudioHandler.isPlaying(player, "fire.fire"))
 				{
-					AudioHandler.createMovingEntitySound(entity, "fire.fire", 1.8F + world.rand.nextFloat(), world.rand.nextFloat() * 0.5F + 0.1F, false);
+					AudioHandler.createMovingEntitySound(player, "fire.fire", 1.8F + world.rand.nextFloat(), world.rand.nextFloat() * 0.5F + 0.1F, false);
 				}
 			}
 			if(compound.getFloat(CHARGE) <= 0)
 			{
-				AudioHandler.stopSound(entity, "fire.fire");
+				AudioHandler.stopSound(player, "fire.fire");
 			}
-			if(AudioHandler.getSound(entity, "fire.fire") != null && AudioHandler.getSound(entity, "fire.fire") instanceof MovingSoundPublic)
+			if(AudioHandler.getSound(player, "fire.fire") != null && AudioHandler.getSound(player, "fire.fire") instanceof MovingSoundPublic)
 			{
-				((MovingSoundPublic)AudioHandler.getSound(entity, "fire.fire")).setVolume(compound.getFloat(CHARGE) / 2);
+				((MovingSoundPublic)AudioHandler.getSound(player, "fire.fire")).setVolume(compound.getFloat(CHARGE) / 2);
 			}
 		}
 		this.capAmmo(compound);

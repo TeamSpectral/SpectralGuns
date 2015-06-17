@@ -1,5 +1,7 @@
 package com.spectral.spectral_guns.components.magazine;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntitySnowball;
@@ -22,14 +24,9 @@ import com.spectral.spectral_guns.items.ItemGun;
 
 public class ComponentMagazineSnowball extends ComponentMagazine
 {
-	public ComponentMagazineSnowball(Component[] required, Component[] incapatible, ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount)
+	public ComponentMagazineSnowball(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
-		super("snowball", "snowball", required, incapatible, material, capacity, kickback, 60, fireRate, projectileCount);
-	}
-	
-	public ComponentMagazineSnowball(String id, String name, Component[] required, Component[] incapatible, ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount)
-	{
-		super("snowball" + id, "snowball" + name, required, incapatible, material, capacity, kickback, 60, fireRate, projectileCount);
+		super("snowball", "snowball", 0.3, 4 * 4 * 9, material, capacity, kickback, 60, fireRate, projectileCount, 4.5F * heating);
 	}
 	
 	@Override
@@ -113,5 +110,14 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 			break;
 		}
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item), new Object[]{"BbC", "SMP", "Bb ", 'B', block, 'b', bar, 'M', magazine, 'S', Item.getItemFromBlock(Blocks.snow), 'P', Items.gunpowder, 'C', M.container}));
+	}
+	
+	@Override
+	public void update(ItemStack stack, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
+	{
+		if(this.ammo(stack, world, player, components) > 0)
+		{
+			this.heatMix(stack, -100, this.heatThreshold(stack, components), 1.2, components);
+		}
 	}
 }

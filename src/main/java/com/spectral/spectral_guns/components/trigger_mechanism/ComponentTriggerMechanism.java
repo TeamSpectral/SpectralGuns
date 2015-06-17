@@ -1,39 +1,29 @@
 package com.spectral.spectral_guns.components.trigger_mechanism;
 
-import java.util.ArrayList;
-
-import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.components.ComponentGeneric;
-import com.spectral.spectral_guns.components.Component.ComponentMaterial;
-import com.spectral.spectral_guns.components.Component.String2;
-import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.items.ItemComponent;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockPressurePlate;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.components.ComponentGeneric;
 
 public class ComponentTriggerMechanism extends ComponentGeneric
 {
 	public final float delay;
 	
-	protected ComponentTriggerMechanism(String2 id, String2 name, Component[] required, Component[] incapatible, ComponentMaterial material, float delay)
+	protected ComponentTriggerMechanism(String2 id, String2 name, ComponentMaterial material, float delay)
 	{
-		super(new String2("trigger", "").add(id), new String2("trigger", "").add(name), required, incapatible, Type.TRIGGER, material);
+		super(new String2("trigger", "").add(id), new String2("trigger", "").add(name), 0.4, 3 * 4 * 5 / 6, Type.TRIGGER, material);
 		this.delay = delay;
+		this.requiredTypes = new Type[]{Type.MAGAZINE};
 	}
 	
-	public ComponentTriggerMechanism(Component[] required, Component[] incapatible, ComponentMaterial material, float delay)
+	public ComponentTriggerMechanism(ComponentMaterial material, float delay)
 	{
-		this(new String2(), new String2(), required, incapatible, material, delay);
+		this(new String2(), new String2(), material, delay);
 	}
 	
 	@SuppressWarnings("incomplete-switch")
@@ -41,7 +31,7 @@ public class ComponentTriggerMechanism extends ComponentGeneric
 	public void registerRecipe()
 	{
 		Item bar = Items.iron_ingot;
-		switch(material)
+		switch(this.material)
 		{
 		case WOOD:
 			bar = Item.getItemFromBlock(Blocks.planks);
@@ -57,7 +47,7 @@ public class ComponentTriggerMechanism extends ComponentGeneric
 			break;
 		}
 		Item nugget = M.iron_nugget;
-		switch(material)
+		switch(this.material)
 		{
 		case WOOD:
 			nugget = Items.stick;
@@ -70,7 +60,7 @@ public class ComponentTriggerMechanism extends ComponentGeneric
 			break;
 		}
 		Item gear = M.gear_iron;
-		switch(material)
+		switch(this.material)
 		{
 		case WOOD:
 			gear = M.gear_wood;
@@ -85,7 +75,7 @@ public class ComponentTriggerMechanism extends ComponentGeneric
 			bar = M.gear_diamond;
 			break;
 		}
-		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[] {"NNB", "LGB", " HB", 'N', nugget, 'B', bar, 'L', Item.getItemFromBlock(Blocks.lever), 'G', gear, 'H', Item.getItemFromBlock(Blocks.tripwire_hook)});
+		GameRegistry.addShapedRecipe(new ItemStack(this.item), new Object[]{"NNB", "LGB", " HB", 'N', nugget, 'B', bar, 'L', Item.getItemFromBlock(Blocks.lever), 'G', gear, 'H', Item.getItemFromBlock(Blocks.tripwire_hook)});
 	}
 	
 	@Override

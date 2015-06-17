@@ -7,16 +7,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.components.ComponentGeneric;
-import com.spectral.spectral_guns.components.Component.ComponentMaterial;
-import com.spectral.spectral_guns.components.Component.String2;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.components.ComponentGeneric;
 
 public class ComponentAim extends ComponentGeneric
 {
-	public ComponentAim(Component[] required, Component[] incapatible, ComponentMaterial material)
+	public ComponentAim(ComponentMaterial material)
 	{
-		super(new String2("aim", ""), new String2("aim", ""), required, incapatible, Type.AIM, material);
+		super(new String2("aim", ""), new String2("aim", ""), 0.8, 1 * 0.24F * 2, Type.AIM, material);
+		this.requiredTypes = new Type[]{Type.TRIGGER};
 	}
 	
 	@Override

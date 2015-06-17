@@ -62,7 +62,7 @@ public class ComponentEvents
 		return rts.size() <= 0;
 	}
 	
-	public static ArrayList<Component> updateComponents(ItemStack stack, Entity entity, int slot, boolean isSelected, ArrayList<Component> components)
+	public static ArrayList<Component> updateComponents(ItemStack stack, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
 	{
 		if(!isGunValid(stack))
 		{
@@ -71,7 +71,7 @@ public class ComponentEvents
 		for(int i = 0; i < components.size(); ++i)
 		{
 			Component component = components.get(i);
-			component.update(stack, entity.worldObj, entity, slot, isSelected, components);
+			component.update(stack, player.worldObj, player, slot, isSelected, components);
 			if(!component.isValid(components))
 			{
 				components.remove(i);

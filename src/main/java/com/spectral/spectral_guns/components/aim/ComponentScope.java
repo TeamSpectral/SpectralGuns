@@ -17,14 +17,15 @@ public class ComponentScope extends ComponentGeneric
 {
 	public final float zoom;
 	
-	public ComponentScope(Component[] required, Component[] incapatible, ComponentMaterial material, float zoom)
+	public ComponentScope(ComponentMaterial material, float zoom)
 	{
-		this(new String2("", ""), new String2("", ""), required, incapatible, material, zoom);
+		this(new String2("", ""), new String2("", ""), material, zoom);
 	}
 	
-	protected ComponentScope(String2 id, String2 name, Component[] required, Component[] incapatible, ComponentMaterial material, float zoom)
+	protected ComponentScope(String2 id, String2 name, ComponentMaterial material, float zoom)
 	{
-		super(new String2("scope", "").add(id), new String2("scope", "").add(name), required, incapatible, Type.AIM, material);
+		super(new String2("scope", "").add(id), new String2("scope", "").add(name), 0.5, 9 * 2 * 2, Type.AIM, material);
+		this.requiredTypes = new Type[]{Type.TRIGGER};
 		this.zoom = zoom;
 	}
 	

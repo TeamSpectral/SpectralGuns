@@ -23,9 +23,9 @@ import com.spectral.spectral_guns.items.ItemGun;
 
 public final class ComponentMagazineSmallFireball extends ComponentMagazine
 {
-	public ComponentMagazineSmallFireball(Component[] required, Component[] incapatible, ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount)
+	public ComponentMagazineSmallFireball(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
-		super("small_fireball", "fireballSmall", required, incapatible, material, capacity, kickback, 30, fireRate, projectileCount);
+		super("small_fireball", "fireballSmall", 0.2, 5 * 5 * 8, material, capacity, kickback, 30, fireRate, projectileCount, 86.9F * heating);
 	}
 	
 	@Override

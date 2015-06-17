@@ -2,8 +2,6 @@ package com.spectral.spectral_guns.components.aim;
 
 import java.util.ArrayList;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,23 +18,19 @@ public class ComponentScopeLaser extends ComponentScope
 {
 	public final LaserColor color;
 	
-	public ComponentScopeLaser(Component[] required, Component[] incapatible, ComponentScope c, LaserColor color)
+	public ComponentScopeLaser(ComponentScope c, LaserColor color)
 	{
-		super(new String2("", "_laser_" + color.toString().toLowerCase()), new String2("", ".laser." + color.toString().toLowerCase()), required, incapatible, c.material, c.zoom);
+		super(new String2("", "_laser_" + color.toString().toLowerCase()), new String2("", ".laser." + color.toString().toLowerCase()), c.material, c.zoom);
 		this.color = color;
 	}
 	
 	@Override
-	public void update(ItemStack gun, World world, Entity entity, int slot, boolean isSelected, ArrayList<Component> components)
+	public void update(ItemStack gun, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
 	{
-		boolean b = true;
-		if(entity instanceof EntityPlayer)
+		boolean b = EntityExtendedPlayer.get(player).isZoomHeldDown;
+		if(isSelected && b)
 		{
-			b = EntityExtendedPlayer.get((EntityPlayer)entity).isZoomHeldDown;
-		}
-		if(entity instanceof EntityLivingBase && isSelected && b)
-		{
-			EntityLaser e = new EntityLaser(world, (EntityLivingBase)entity, 0.1, this.color, 0.1);
+			EntityLaser e = new EntityLaser(world, player, 0.1, this.color, 0.1);
 			if(!world.isRemote || true) //this needs to be spawned clientside as well, but only for laser entities
 			{
 				world.spawnEntityInWorld(e);

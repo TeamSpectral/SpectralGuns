@@ -11,19 +11,13 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
 
 public class ComponentMagazineShuriken extends ComponentMagazine
 {
-	public ComponentMagazineShuriken(Component[] required, Component[] incapatible, ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount)
+	public ComponentMagazineShuriken(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
-		super("shuriken", "shuriken", required, incapatible, material, capacity, kickback, 60, fireRate, projectileCount);
-	}
-	
-	public ComponentMagazineShuriken(String id, String name, Component[] required, Component[] incapatible, ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount)
-	{
-		super("shuriken" + id, "shuriken" + name, required, incapatible, material, capacity, kickback, 60, fireRate, projectileCount);
+		super("shuriken", "shuriken", 0.2, 3 * 10 * 3 / 6, material, capacity, kickback, 60, fireRate, projectileCount, 0.9F * heating);
 	}
 	
 	@Override

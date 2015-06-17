@@ -1,7 +1,5 @@
 package com.spectral.spectral_guns.inventory;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,6 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
 public class ContainerGunWorkbench extends Container implements IContainerAddPlayerSlots
@@ -143,12 +142,21 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 		this.inventory.closeInventory(player);
 	}
 	
-	public void insertComponents(ArrayList<Component> a)
+	public void insertComponents(ItemStack gun)
 	{
 		this.inventory.clearComponentStacks(true);
-		for(int i = 0; i < a.size(); ++i)
+		for(Component c : ItemGun.getComponents(gun))
 		{
-			ItemStack stack = new ItemStack(a.get(i).item);
+			ItemStack stack = new ItemStack(c.item);
+			try
+			{
+				ItemStack stack2 = c.toItemStack(gun);
+				stack = stack2;
+			}
+			catch(Throwable e)
+			{
+				
+			}
 			if(!this.mergeItemStack(stack, 0, this.inventory.getSizeInventory() - 1, true))
 			{
 				EntityItem entity = new EntityItem(this.inventory.getWorld(), this.inventory.getPos().getX() + 0.5, this.inventory.getPos().getY() + 0.5, this.inventory.getPos().getZ() + 0.5, stack);
