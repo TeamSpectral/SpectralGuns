@@ -1,5 +1,7 @@
 package com.spectral.spectral_guns.gui;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
@@ -9,6 +11,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
@@ -23,6 +26,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References;
+import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
 import com.spectral.spectral_guns.items.ItemGun;
@@ -86,7 +91,7 @@ public class GuiSpectralGunsHud extends Gui
 					boolean b = false;
 					if(!player.capabilities.isCreativeMode)
 					{
-						
+						b = this.getInventoryItem(player.inventory, ItemGun.ejectableAmmo(stack, player)) > 0;
 					}
 					if((b || player.capabilities.isCreativeMode) && a <= 0)
 					{
@@ -104,6 +109,36 @@ public class GuiSpectralGunsHud extends Gui
 					
 					fontrenderer.drawStringWithShadow(s, 2, h - 10 * line, 0xAF8A33);
 					++line;
+				}
+				this.mc.mcProfiler.endSection();
+				
+				this.mc.mcProfiler.startSection("components");
+				if(ComponentEvents.isGunValid(stack))
+				{
+					ArrayList<Component> cs = ItemGun.getComponents(stack);
+					for(int i = 0; i < cs.size(); ++i)
+					{
+						Component c = cs.get(i);
+						
+						double heat = c.heat(stack, cs);
+						double heatThreshold = c.heatThreshold(stack, cs);
+						double value = heat / heatThreshold / 3;
+						int m = 255;
+						Color color = new Color(m / 2, m / 2, m / 2);
+						if(value > 0)
+						{
+							color = new Color(m / 2 + (int)(value * m / 2), m / 2 - (int)(value * m / 2), m / 2 - (int)(value * m / 2));
+						}
+						else
+						{
+							color = new Color(m / 2 - (int)(-value * m / 2), m / 2 - (int)(-value * m / 2), m / 2 + (int)(-value * m / 2));
+						}
+						fontrenderer.drawStringWithShadow(I18n.format(c.toItemStack(stack).getUnlocalizedName() + ".name"), w - 120, h - 10 * (cs.size() - i), color.hashCode());
+					}
+				}
+				else
+				{
+					fontrenderer.drawStringWithShadow("GUN IS INVALID!", w - 100, h, 0xFF0000);
 				}
 				this.mc.mcProfiler.endSection();
 			}
