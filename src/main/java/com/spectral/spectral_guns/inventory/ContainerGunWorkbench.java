@@ -147,16 +147,7 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 		this.inventory.clearComponentStacks(true);
 		for(Component c : ItemGun.getComponents(gun))
 		{
-			ItemStack stack = new ItemStack(c.item);
-			try
-			{
-				ItemStack stack2 = c.toItemStack(gun);
-				stack = stack2;
-			}
-			catch(Throwable e)
-			{
-				
-			}
+			ItemStack stack = c.toItemStack(gun);
 			if(!this.mergeItemStack(stack, 0, this.inventory.getSizeInventory() - 1, true))
 			{
 				EntityItem entity = new EntityItem(this.inventory.getWorld(), this.inventory.getPos().getX() + 0.5, this.inventory.getPos().getY() + 0.5, this.inventory.getPos().getZ() + 0.5, stack);

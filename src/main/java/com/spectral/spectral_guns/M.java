@@ -32,6 +32,7 @@ import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
 import com.spectral.spectral_guns.blocks.BlockOre2;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentMaterial;
+import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.ComponentBarrel;
 import com.spectral.spectral_guns.components.ComponentGrip;
 import com.spectral.spectral_guns.components.aim.ComponentScope;
@@ -173,7 +174,7 @@ public class M
 	
 	public static <T extends Component> T registerComponent(T component)
 	{
-		ItemComponent item = component.item;
+		ItemComponent item = ComponentRegister.getItem(component);
 		registerItem(item, false, new String[]{});
 		return component;
 	}
@@ -276,7 +277,7 @@ public class M
 	// components
 	public static ItemComponent componentItem(Component c)
 	{
-		return c.item;
+		return ComponentRegister.getItem(c);
 	}
 	
 	public static final ComponentMagazineSnowball magazine_snowball_wood = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.WOOD, 16, 0.2F, 5F, 1, 1));

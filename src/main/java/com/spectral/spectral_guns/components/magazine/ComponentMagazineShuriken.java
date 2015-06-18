@@ -17,7 +17,7 @@ public class ComponentMagazineShuriken extends ComponentMagazine
 {
 	public ComponentMagazineShuriken(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
-		super("shuriken", "shuriken", 0.2, 3 * 10 * 3 / 6, material, capacity, kickback, 60, fireRate, projectileCount, 0.9F * heating);
+		super("shuriken", "shuriken", 0.2, 3 * 10 * 3 / 6, material, capacity, kickback, 60, fireRate, projectileCount, 0.3F * heating);
 	}
 	
 	@Override

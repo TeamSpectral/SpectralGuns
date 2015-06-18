@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -64,6 +65,29 @@ public class ComponentGrip extends ComponentGeneric
 	public float kickback(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
 		return instability * this.kickbackMultiplier;
+	}
+	
+	@Override
+	public void update(ItemStack gun, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
+	{
+		super.update(gun, world, player, slot, isSelected, components);
+		if(this.heat(gun, components) * this.heatConductiveness(gun, components) > 100 || this.heat(gun, components) > this.heatThreshold(gun, components) * 2)
+		{
+			this.addHeat(-1, gun, components);
+			if(player.ticksExisted % 20 == 1 && player.getHeldItem() == gun)
+			{
+				player.attackEntityFrom(DamageSource.inFire, 1F);
+				this.addHeat(-1, gun, components);
+			}
+			if(this.heat(gun, components) * this.heatConductiveness(gun, components) > 800 || this.heat(gun, components) >= this.heatThreshold(gun, components) * 3)
+			{
+				if(world.rand.nextFloat() > 6 / 7)
+				{
+					player.setFire(1);
+					this.addHeat(-1, gun, components);
+				}
+			}
+		}
 	}
 	
 	@Override

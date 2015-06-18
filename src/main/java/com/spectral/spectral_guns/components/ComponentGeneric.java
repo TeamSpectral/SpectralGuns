@@ -182,7 +182,7 @@ public abstract class ComponentGeneric extends Component
 	@Override
 	public float heatThreshold(ItemStack stack, ArrayList<Component> components)
 	{
-		return this.heatThreshold;
+		return (float)(this.heatThreshold * (this.heat(stack, components) > 0 ? this.material.heatThresholdMax : this.material.heatThresholdMin));
 	}
 	
 	@Override
@@ -190,9 +190,9 @@ public abstract class ComponentGeneric extends Component
 	{
 		if(this.heat(stack, components) > this.heatThreshold(stack, components) || this.heat(stack, components) < -this.heatThreshold(stack, components))
 		{
-			this.addDurabilityDamage(-1, stack, player, components);
+			this.addDurabilityDamage(1, stack, player, components);
 		}
-		this.heatMix(stack, 0, 1, 0.3, components);
+		this.heatMix(stack, player.isInWater() ? -20 : 0, this.heatThreshold(stack, components), 0.1, components);
 		loop:
 		for(Component c : components)
 		{

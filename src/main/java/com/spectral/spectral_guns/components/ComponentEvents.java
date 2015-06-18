@@ -54,7 +54,7 @@ public class ComponentEvents
 	public static boolean hasRequired(ArrayList<Component> cs)
 	{
 		ArrayList<Type> ts = ComponentRegister.getComponentTypes(cs);
-		ArrayList<Type> rts = ComponentRegister.getRequiredTypes();
+		ArrayList<Type> rts = (ArrayList<Type>)ComponentRegister.getRequiredTypes().clone();
 		for(int i = 0; i < ts.size(); ++i)
 		{
 			rts.remove(ts.get(i));
@@ -248,7 +248,7 @@ public class ComponentEvents
 			{
 				if(!player.capabilities.isCreativeMode || !Config.canReloadWithoutAmmoInCreativeMode.get())
 				{
-					Item item = ItemGun.ejectableAmmo(gun, gun, player);
+					Item item = ItemGun.ejectableAmmo(gun, player);
 					EntityItem e = player.dropItem(item, 1);
 					if(e != null)
 					{
@@ -270,7 +270,7 @@ public class ComponentEvents
 			return false;
 		}
 		
-		Item item = ItemGun.ejectableAmmo(stack, stack, player);
+		Item item = ItemGun.ejectableAmmo(stack, player);
 		
 		if(item != null)
 		{

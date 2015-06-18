@@ -34,7 +34,7 @@ public final class ComponentMagazineFood extends ComponentMagazine
 	
 	public ComponentMagazineFood(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
-		super("food", "food", 0.4, 5 * 8 * 8, material, capacity, kickback, 90, fireRate, projectileCount, 6.2F * heating);
+		super("food", "food", 0.4, 5 * 8 * 8, material, capacity, kickback, 90, fireRate, projectileCount, 5.2F * heating);
 	}
 	
 	@Override

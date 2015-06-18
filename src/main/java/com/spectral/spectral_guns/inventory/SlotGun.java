@@ -69,7 +69,7 @@ public class SlotGun extends Slot
 						@Override
 						public void action(ItemStack gun, EntityPlayer player, ArrayList<Component> components)
 						{
-							Item item = ItemGun.ejectableAmmo(gun, gun, player);
+							Item item = ItemGun.ejectableAmmo(gun, player);
 							ItemStack drop = new ItemStack(item, 1, 0);
 							if(drop.stackSize != 0 && drop.getItem() != null)
 							{

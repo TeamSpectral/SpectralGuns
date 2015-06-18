@@ -71,7 +71,19 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 		{
 			float incline = 1.13F / ItemGun.delay(gun, player);
 			compound.setFloat(CHARGE, compound.getFloat(CHARGE) + incline);
-			this.heatMix(gun, incline * 200, 1, 1.1, components);
+			float heating = 4;
+			this.addHeat(heating, gun, components);
+			for(Component c : components)
+			{
+				if(c.type == Type.BARREL)
+				{
+					c.addHeat(heating / 2, gun, components);
+				}
+				else if(c.type == Type.TRIGGER)
+				{
+					c.addHeat(heating / 3, gun, components);
+				}
+			}
 		}
 		else
 		{
@@ -113,6 +125,7 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 			}
 		}
 		this.capAmmo(compound);
+		super.update(gun, world, player, slot, isSelected, components);
 	}
 	
 	@Override

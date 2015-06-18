@@ -117,7 +117,7 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 	{
 		if(this.ammo(stack, world, player, components) > 0)
 		{
-			this.heatMix(stack, -100, this.heatThreshold(stack, components), 1.2, components);
+			this.heatMix(stack, -200, 1, 0.8, components);
 		}
 	}
 }

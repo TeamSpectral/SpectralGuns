@@ -104,7 +104,7 @@ public class ItemGun extends ItemBase implements IDAble
 			tooltip.add(ChatFormatting.WHITE + "Components used:" + ChatFormatting.GRAY + ChatFormatting.RESET);
 			for(int i = 0; i < c.size(); ++i)
 			{
-				tooltip.add(" - " + I18n.format(c.get(i).item.getUnlocalizedName() + ".name") + ChatFormatting.RESET);
+				tooltip.add(" - " + I18n.format(c.get(i).toItemStack(stack).getUnlocalizedName() + ".name") + ChatFormatting.RESET);
 			}
 		}
 	}
@@ -742,7 +742,7 @@ public class ItemGun extends ItemBase implements IDAble
 		ArrayList<Component> components = getComponents(stack);
 		for(int i = 0; i < components.size(); ++i)
 		{
-			capacity += components.get(i).item.getMaxDamage(components.get(i).toItemStack(stack));
+			capacity += ComponentRegister.getItem(components.get(i)).getMaxDamage(components.get(i).toItemStack(stack));
 		}
 		return capacity;
 	}

@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.items.ItemComponent;
@@ -310,12 +311,13 @@ public abstract class Component
 		if(durability >= this.item.getMaxDamage())
 		{
 			ItemGun.dropAllComponents(player, stack);
+			stack.setItem(null);
 		}
 		if(durability < 0)
 		{
 			durability = 0;
 		}
-		stack.getTagCompound().setInteger(ItemComponent.ITEMDAMAGE, durability);
+		this.getTagCompound(stack).setInteger(ItemComponent.ITEMDAMAGE, durability);
 	}
 	
 	public void addDurabilityDamage(int heat, ItemStack stack, EntityPlayer player, ArrayList<Component> components)
@@ -325,22 +327,22 @@ public abstract class Component
 	
 	public int durabilityDamage(ItemStack stack, ArrayList<Component> components)
 	{
-		return stack.getTagCompound().getInteger(ItemComponent.ITEMDAMAGE);
+		return this.getTagCompound(stack).getInteger(ItemComponent.ITEMDAMAGE);
 	}
 	
 	public abstract Item ejectableAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
 	
 	public void setHeat(double heat, ItemStack stack, ArrayList<Component> components)
 	{
-		if(heat > this.heatThreshold(stack, components) * 2)
+		if(heat > this.heatThreshold(stack, components) * 3)
 		{
-			heat = this.heatThreshold(stack, components) * 2;
+			heat = this.heatThreshold(stack, components) * 3;
 		}
-		if(heat < -this.heatThreshold(stack, components) * 2)
+		if(heat < -this.heatThreshold(stack, components) * 3)
 		{
-			heat = -this.heatThreshold(stack, components) * 2;
+			heat = -this.heatThreshold(stack, components) * 3;
 		}
-		stack.getTagCompound().setDouble(ItemComponent.HEAT, heat);
+		this.getTagCompound(stack).setDouble(ItemComponent.HEAT, heat);
 	}
 	
 	public void addHeat(double heat, ItemStack stack, ArrayList<Component> components)
@@ -350,7 +352,9 @@ public abstract class Component
 	
 	public double heat(ItemStack stack, ArrayList<Component> components)
 	{
-		return stack.getTagCompound().getDouble(ItemComponent.HEAT);
+		double d = this.getTagCompound(stack).getDouble(ItemComponent.HEAT);
+		
+		return d;
 	}
 	
 	public abstract double heatConductiveness(ItemStack stack, ArrayList<Component> components);
@@ -361,13 +365,13 @@ public abstract class Component
 	{
 		double oldHeat1 = this.heat(stack, components);
 		double oldHeat2 = c.heat(stack, components);
-		double heat1 = this.heat(stack, components) / this.heatThreshold(stack, components);
+		double heat1 = this.heat(stack, components);
 		double cond1 = this.heatConductiveness(stack, components) * this.material.heatLoss / 10;
-		double heat2 = c.heat(stack, components) / c.heatThreshold(stack, components);
+		double heat2 = c.heat(stack, components);
 		double cond2 = c.heatConductiveness(stack, components) * c.material.heatLoss / 10;
 		double distr = heat1 * cond1 + heat2 * cond2;
-		this.setHeat((heat1 * (1 - cond1) + distr / 2) * this.heatThreshold(stack, components), stack, components);
-		c.setHeat((heat2 * (1 - cond2) + distr / 2) * c.heatThreshold(stack, components), stack, components);
+		this.setHeat(heat1 * (1 - cond1) + distr / 2, stack, components);
+		c.setHeat(heat2 * (1 - cond2) + distr / 2, stack, components);
 		for(Type type : c.getRequiredTypes())
 		{
 			if(type == this.type)
@@ -381,12 +385,12 @@ public abstract class Component
 	
 	public void heatMix(ItemStack stack, double c2Heat, double c2Threshold, double c2HeatLoss, ArrayList<Component> components)
 	{
-		double heat1 = this.heat(stack, components) / this.heatThreshold(stack, components);
+		double heat1 = this.heat(stack, components) * this.heatThreshold(stack, components);
 		double cond1 = this.heatConductiveness(stack, components) * this.material.heatLoss / 10;
-		double heat2 = c2Heat / c2Threshold;
+		double heat2 = c2Heat * c2Threshold;
 		double cond2 = c2HeatLoss / 10;
 		double distr = heat1 * cond1 + heat2 * cond2;
-		this.setHeat((heat1 * (1 - cond1) + distr / 2) * c2Threshold, stack, components);
+		this.setHeat((heat1 * (1 - cond1) + distr / 2) / c2Threshold, stack, components);
 	}
 	
 	public abstract void update(ItemStack stack, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components);
@@ -395,44 +399,92 @@ public abstract class Component
 	
 	public boolean isValid(ArrayList<Component> ecs)
 	{
-		int count = 0;
-		for(int i = 0; i < ecs.size(); ++i)
+		if(true)
 		{
-			if(ecs.get(i).type == this.type)
+			int count = 0;
+			for(int i = 0; i < ecs.size(); ++i)
 			{
-				++count;
+				if(ecs.get(i).type == this.type)
+				{
+					++count;
+				}
+			}
+			if(count > this.maxAmount)
+			{
+				return false;
 			}
 		}
-		if(count > this.maxAmount)
+		
+		if(true)
 		{
-			return false;
-		}
-		ArrayList<Component> rcs = this.getRequired();
-		ArrayList<Component> ics = this.getIncapatible();
-		ArrayList<Component> a = new ArrayList<Component>();
-		for(int i = 0; i < ecs.size(); ++i)
-		{
-			Component ec = ecs.get(i);
-			for(int i2 = 0; i2 < rcs.size(); ++i2)
+			ArrayList<Component> rcs = this.getRequired();
+			ArrayList<Component> ics = this.getIncapatible();
+			for(Component ec : ecs)
 			{
-				Component rc = rcs.get(i2);
-				if(ec == rc)
+				if(ec != null && Stuff.ArraysAndSuch.has(ics, ec))
 				{
-					a.add(ec);
+					return false;
+				}
+			}
+			for(Component rc : rcs)
+			{
+				if(rc != null && !Stuff.ArraysAndSuch.has(ecs, rc))
+				{
+					return false;
 				}
 			}
 		}
-		if(a.size() < rcs.size())
+		
+		if(true)
 		{
-			return false;
-		}
-		for(int i = 0; i < ecs.size(); ++i)
-		{
-			Component ec = ecs.get(i);
-			for(int i2 = 0; i2 < ics.size(); ++i2)
+			ArrayList<Type> rts = this.getRequiredTypes();
+			ArrayList<Type> its = this.getIncapatibleTypes();
+			ArrayList<Type> ets = new ArrayList();
+			for(Component ec : ecs)
 			{
-				Component ic = ics.get(i2);
-				if(ec == ic)
+				if(ec != null && !Stuff.ArraysAndSuch.has(ets, ec.type))
+				{
+					ets.add(ec.type);
+				}
+			}
+			for(Type et : ets)
+			{
+				if(et != null && Stuff.ArraysAndSuch.has(its, et))
+				{
+					return false;
+				}
+			}
+			for(Type rt : rts)
+			{
+				if(rt != null && !Stuff.ArraysAndSuch.has(ets, rt))
+				{
+					return false;
+				}
+			}
+		}
+		
+		if(true)
+		{
+			ArrayList<ComponentMaterial> rms = this.getRequiredMats();
+			ArrayList<ComponentMaterial> ims = this.getIncapatibleMats();
+			ArrayList<ComponentMaterial> ems = new ArrayList();
+			for(Component ec : ecs)
+			{
+				if(ec != null && !Stuff.ArraysAndSuch.has(ems, ec.material))
+				{
+					ems.add(ec.material);
+				}
+			}
+			for(ComponentMaterial em : ems)
+			{
+				if(em != null && Stuff.ArraysAndSuch.has(ims, em))
+				{
+					return false;
+				}
+			}
+			for(ComponentMaterial rm : rms)
+			{
+				if(rm != null && !Stuff.ArraysAndSuch.has(ems, rm))
 				{
 					return false;
 				}
@@ -496,6 +548,11 @@ public abstract class Component
 	
 	public ItemStack toItemStack(ItemStack gun)
 	{
-		return ItemStack.loadItemStackFromNBT(gun.getTagCompound().getCompoundTag(ItemGun.COMPONENTS).getCompoundTag(this.getID()));
+		ItemStack stack = ItemStack.loadItemStackFromNBT(gun.getTagCompound().getCompoundTag(ItemGun.COMPONENTS).getCompoundTag(this.getID()));
+		if(stack != null)
+		{
+			return stack;
+		}
+		return new ItemStack(this.item);
 	}
 }

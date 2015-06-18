@@ -24,7 +24,7 @@ public class ComponentScope extends ComponentGeneric
 	
 	protected ComponentScope(String2 id, String2 name, ComponentMaterial material, float zoom)
 	{
-		super(new String2("scope", "").add(id), new String2("scope", "").add(name), 0.5, 9 * 2 * 2, Type.AIM, material);
+		super(new String2("scope", "").add(id), new String2("scope", "").add(name), 0.3, 6 * 2 * 2, Type.AIM, material);
 		this.requiredTypes = new Type[]{Type.TRIGGER};
 		this.zoom = zoom;
 	}
