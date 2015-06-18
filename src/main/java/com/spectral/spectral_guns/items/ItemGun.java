@@ -682,12 +682,12 @@ public class ItemGun extends ItemBase implements IDAble
 		return ammo;
 	}
 	
-	public static Item ejectableAmmo(ItemStack gun, ItemStack stack, EntityPlayer player)
+	public static Item ejectableAmmo(ItemStack gun, EntityPlayer player)
 	{
 		ArrayList<Component> components = getComponents(gun);
 		for(int i = 0; i < components.size(); ++i)
 		{
-			Item item = components.get(i).ejectableAmmo(stack, player.worldObj, player, components);
+			Item item = components.get(i).ejectableAmmo(gun, player.worldObj, player, components);
 			if(item != null)
 			{
 				return item;

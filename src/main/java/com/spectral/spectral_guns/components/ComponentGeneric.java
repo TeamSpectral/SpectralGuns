@@ -198,7 +198,7 @@ public abstract class ComponentGeneric extends Component
 		{
 			if(c != this)
 			{
-				for(Type type : this.requiredTypes)
+				for(Type type : this.getRequiredTypes())
 				{
 					if(type == c.type)
 					{

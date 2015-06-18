@@ -312,7 +312,7 @@ public class Stuff
 		
 		public static <T> T[] arrayListToArray2(ArrayList<T> al, T[] a)
 		{
-			if(al.size() == a.length)
+			if(a != null ? al.size() == a.length : al.size() == 0)
 			{
 				for(int i = 0; i < al.size(); ++i)
 				{
@@ -325,7 +325,7 @@ public class Stuff
 		public static <T> ArrayList<T> arrayToArrayList(T[] a)
 		{
 			ArrayList<T> al = new ArrayList<T>();
-			for(int i = 0; i < a.length; ++i)
+			for(int i = 0; a != null && i < a.length; ++i)
 			{
 				al.add(a[i]);
 			}

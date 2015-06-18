@@ -177,30 +177,42 @@ public abstract class Component
 	{
 		WOOD(
 				40,
-				0.01,
+				0.04,
+				3,
+				0.1,
 				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
 		IRON(
 				167,
 				3.3,
+				0.5,
+				7,
 				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
 		GOLD(
 				22,
 				3.9,
+				1,
+				0.5,
 				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
 		DIAMOND(
 				520,
-				0.4,
+				0.2,
+				0.1,
+				1,
 				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});
 		
 		public final Type[] types;
 		public final int durability;
 		public final double heatLoss;
+		public final double heatThresholdMin;
+		public final double heatThresholdMax;
 		
-		private ComponentMaterial(int durability, double heatLoss, Type[] types)
+		private ComponentMaterial(int durability, double heatLoss, double heatThresholdMin, double heatThresholdMax, Type[] types)
 		{
 			this.types = types;
 			this.durability = durability;
 			this.heatLoss = heatLoss;
+			this.heatThresholdMin = heatThresholdMin;
+			this.heatThresholdMax = heatThresholdMax;
 		}
 		
 		public String getDisplayName(Type type, Component c)
