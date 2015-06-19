@@ -16,7 +16,7 @@ public class ComponentTriggerMechanism extends ComponentGeneric
 	
 	protected ComponentTriggerMechanism(String2 id, String2 name, ComponentMaterial material, float delay)
 	{
-		super(new String2("trigger", "").add(id), new String2("trigger", "").add(name), 0.4, 3 * 4 * 5 / 6, Type.TRIGGER, material);
+		super(new String2("trigger", "").add(id), new String2("trigger", "").add(name), 0.4, 3 * 4 * 5 / 6, 3.2F, Type.TRIGGER, material);
 		this.delay = delay;
 		this.requiredTypes = new Type[]{Type.MAGAZINE};
 	}

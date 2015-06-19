@@ -26,7 +26,7 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 {
 	public ComponentMagazineSnowball(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
-		super("snowball", "snowball", 0.3, 4 * 4 * 9, material, capacity, kickback, 60, fireRate, projectileCount, 4.5F * heating);
+		super("snowball", "snowball", 0.3, 4 * 4 * 9, material, capacity, kickback, 60, fireRate, projectileCount, 4.2F * heating);
 	}
 	
 	@Override
@@ -115,9 +115,10 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 	@Override
 	public void update(ItemStack stack, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
 	{
-		if(this.ammo(stack, world, player, components) > 0)
+		super.update(stack, world, player, slot, isSelected, components);
+		if(this.ammo(stack, world, player, components) > 0 && this.heat(stack, components) <= 0)
 		{
-			this.heatMix(stack, -200, 1, 0.8, components);
+			this.addHeat(-5, stack, components);
 		}
 	}
 }

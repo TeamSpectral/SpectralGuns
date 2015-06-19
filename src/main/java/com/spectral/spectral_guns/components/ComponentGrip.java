@@ -20,7 +20,7 @@ public class ComponentGrip extends ComponentGeneric
 	
 	public ComponentGrip(ComponentMaterial material, float instabilityMultiplier, float recoilMultiplier, float kickbackMultiplier)
 	{
-		super(new String2("grip", ""), new String2("grip", ""), 0.34, 3 * 9 * 1, Type.GRIP, material);
+		super(new String2("grip", ""), new String2("grip", ""), 0.34, 3 * 9 * 1, 4.2F, Type.GRIP, material);
 		this.instabilityMultiplier = instabilityMultiplier;
 		this.recoilMultiplier = recoilMultiplier;
 		this.kickbackMultiplier = kickbackMultiplier;
@@ -71,15 +71,14 @@ public class ComponentGrip extends ComponentGeneric
 	public void update(ItemStack gun, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
 	{
 		super.update(gun, world, player, slot, isSelected, components);
-		if(this.heat(gun, components) * this.heatConductiveness(gun, components) > 100 || this.heat(gun, components) > this.heatThreshold(gun, components) * 2)
+		if(this.heat(gun, components) * this.heatConductiveness(gun, components) > this.heatThreshold(gun, components) || this.heat(gun, components) > this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax * 2)
 		{
-			this.addHeat(-1, gun, components);
 			if(player.ticksExisted % 20 == 1 && player.getHeldItem() == gun)
 			{
 				player.attackEntityFrom(DamageSource.inFire, 1F);
 				this.addHeat(-1, gun, components);
 			}
-			if(this.heat(gun, components) * this.heatConductiveness(gun, components) > 800 || this.heat(gun, components) >= this.heatThreshold(gun, components) * 3)
+			if(this.heat(gun, components) * this.heatConductiveness(gun, components) > 800 || this.heat(gun, components) >= this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax * 3)
 			{
 				if(world.rand.nextFloat() > 6 / 7)
 				{

@@ -19,9 +19,9 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	public final float spread;
 	public final float velocity;
 	
-	public ComponentBarrel(String id, String name, ComponentMaterial material, float spread, float velocity)
+	public ComponentBarrel(String id, String name, ComponentMaterial material, float spread, float velocity, float maxDurability)
 	{
-		super(new String2("barrel_" + id, ""), new String2("barrel." + name, ""), 0.5, 10 * 4 * 4, Type.BARREL, material);
+		super(new String2("barrel_" + id, ""), new String2("barrel." + name, ""), 0.5, 10 * 4 * 4, maxDurability, Type.BARREL, material);
 		this.spread = spread;
 		this.velocity = velocity;
 		this.requiredTypes = new Type[]{Type.MAGAZINE};
@@ -88,7 +88,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	{
 		public ComponentBarrelThin(ComponentMaterial material, float velocity)
 		{
-			super("thin", "thin", material, 0.3F, velocity);
+			super("thin", "thin", material, 0.3F, velocity, 1.8F);
 		}
 		
 		@Override
@@ -124,7 +124,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	{
 		public ComponentBarrelNormal(ComponentMaterial material, float velocity)
 		{
-			super("normal", "normal", material, 8.5F, velocity);
+			super("normal", "normal", material, 8.5F, velocity, 2.1F);
 		}
 		
 		@Override
@@ -160,7 +160,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	{
 		public ComponentBarrelWide(ComponentMaterial material, float velocity)
 		{
-			super("wide", "wide", material, 38.0F, velocity);
+			super("wide", "wide", material, 38.0F, velocity, 2.8F);
 		}
 		
 		@Override
@@ -196,7 +196,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	{
 		public ComponentBarrelMusket(ComponentMaterial material, float velocity)
 		{
-			super("musket", "musket", material, 70.0F, velocity);
+			super("musket", "musket", material, 70.0F, velocity, 2.4F);
 		}
 		
 		@Override

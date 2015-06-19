@@ -571,7 +571,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 				{
 					if(flag)
 					{
-						this.clearComponentStacks(false);
+						this.clearComponentStacks(false, 1);
 					}
 					return true;
 				}
@@ -657,36 +657,56 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 		}
 		this.gunStack = null;
 		this.wrenchStack = null;
-		this.clearComponentStacks(drop);
+		this.clearComponentStacks(drop, 64);
 	}
 	
-	public void clearComponentStacks(boolean drop)
+	public void clearComponentStacks(boolean drop, int amount)
 	{
 		for(int i = 0; i < this.componentStacks.length; ++i)
 		{
-			if(drop && this.componentStacks[i] != null)
+			if(this.componentStacks[i] != null)
 			{
-				EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, this.componentStacks[i]);
-				entity.setNoPickupDelay();
-				if(!this.getWorld().isRemote)
+				for(int i2 = 0; i2 < amount; ++i2)
 				{
-					this.getWorld().spawnEntityInWorld(entity);
+					if(drop)
+					{
+						EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, this.componentStacks[i]);
+						entity.setNoPickupDelay();
+						if(!this.getWorld().isRemote)
+						{
+							this.getWorld().spawnEntityInWorld(entity);
+						}
+					}
+					this.componentStacks[i].stackSize -= 1;
+					if(this.componentStacks[i].stackSize <= 0)
+					{
+						this.componentStacks[i] = null;
+					}
 				}
 			}
-			this.componentStacks[i] = null;
 		}
 		for(int i = 0; i < this.componentMiscStacks.length; ++i)
 		{
-			if(drop && this.componentMiscStacks[i] != null)
+			if(this.componentMiscStacks[i] != null)
 			{
-				EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, this.componentMiscStacks[i]);
-				entity.setNoPickupDelay();
-				if(!this.getWorld().isRemote)
+				for(int i2 = 0; i2 < amount; ++i2)
 				{
-					this.getWorld().spawnEntityInWorld(entity);
+					if(drop)
+					{
+						EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, this.componentMiscStacks[i]);
+						entity.setNoPickupDelay();
+						if(!this.getWorld().isRemote)
+						{
+							this.getWorld().spawnEntityInWorld(entity);
+						}
+					}
+					this.componentMiscStacks[i].stackSize -= 1;
+					if(this.componentMiscStacks[i].stackSize <= 0)
+					{
+						this.componentMiscStacks[i] = null;
+					}
 				}
 			}
-			this.componentMiscStacks[i] = null;
 		}
 	}
 	

@@ -38,7 +38,7 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 	
 	public ComponentMagazineLaser(ComponentMaterial material, LaserColor color, int capacity, int battery)
 	{
-		super(new String2("magazine_laser", "_" + color.toString().toLowerCase()), new String2("magazine.laser", "." + color.toString().toLowerCase()), 0.4, 3 * 9 * 3, Type.MAGAZINE, material);
+		super(new String2("magazine_laser", "_" + color.toString().toLowerCase()), new String2("magazine.laser", "." + color.toString().toLowerCase()), 0.4, 3 * 9 * 3, 4.6F, Type.MAGAZINE, material);
 		this.color = color;
 		this.capacity = capacity;
 		this.battery = battery;
@@ -71,7 +71,7 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 		{
 			float incline = 1.13F / ItemGun.delay(gun, player);
 			compound.setFloat(CHARGE, compound.getFloat(CHARGE) + incline);
-			float heating = 4;
+			float heating = 5;
 			this.addHeat(heating, gun, components);
 			for(Component c : components)
 			{

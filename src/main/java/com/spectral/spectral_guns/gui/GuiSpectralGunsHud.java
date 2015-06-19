@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,6 +28,8 @@ import org.lwjgl.opengl.GL11;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.components.Component.ComponentMaterial;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
@@ -35,6 +38,7 @@ import com.spectral.spectral_guns.items.ItemGun;
 @SideOnly(Side.CLIENT)
 public class GuiSpectralGunsHud extends Gui
 {
+	protected static final ResourceLocation vignetteTexPath = new ResourceLocation("textures/misc/vignette.png");
 	protected final Random rand = new Random();
 	protected final Minecraft mc;
 	/** Remaining ticks the item highlight should be visible */
@@ -121,8 +125,12 @@ public class GuiSpectralGunsHud extends Gui
 						Component c = cs.get(i);
 						
 						double heat = c.heat(stack, cs);
-						double heatThreshold = c.heatThreshold(stack, cs);
+						double heatThreshold = (c.heatThreshold(stack, cs) + 10 * ComponentMaterial.IRON.heatThresholdMax) / 10;
 						double value = heat / heatThreshold / 3;
+						if(value > 1)
+						{
+							value = 1;
+						}
 						int m = 255;
 						Color color = new Color(m / 2, m / 2, m / 2);
 						if(value > 0)
@@ -142,6 +150,12 @@ public class GuiSpectralGunsHud extends Gui
 				}
 				this.mc.mcProfiler.endSection();
 			}
+			
+			this.mc.mcProfiler.startSection("gunHeatBorder");
+			
+			this.gunHeatBorder(scaledresolution, player);
+			
+			this.mc.mcProfiler.endSection();
 		}
 		
 		int line = 0;
@@ -216,5 +230,91 @@ public class GuiSpectralGunsHud extends Gui
 			}
 		}
 		return j;
+	}
+	
+	private void gunHeatBorder(ScaledResolution sr, EntityPlayer player)
+	{
+		float f = 0;
+		int amount = 0;
+		for(int i = 0; i < player.inventory.getSizeInventory(); ++i)
+		{
+			ItemStack gun = player.inventory.getStackInSlot(i);
+			if(gun != null && gun.getItem() instanceof ItemGun)
+			{
+				ArrayList<Component> cs = ItemGun.getComponents(gun);
+				for(Component c : cs)
+				{
+					double heat = c.heat(gun, cs);
+					double max = c.heatThreshold(gun, cs);
+					if(max > 0 && heat > max)
+					{
+						f += (float)(heat - max) / max / 3;
+					}
+				}
+				amount += cs.size();
+			}
+		}
+		if(amount > 0)
+		{
+			f /= amount;
+			
+			for(int i = 0; i < player.inventory.getSizeInventory(); ++i)
+			{
+				ItemStack gun = player.inventory.getStackInSlot(i);
+				if(gun != null && gun.getItem() instanceof ItemGun)
+				{
+					ArrayList<Component> cs = ItemGun.getComponents(gun);
+					for(Component c : cs)
+					{
+						if(c.type == Type.GRIP)
+						{
+							ItemStack stack2 = new ItemStack(M.gun);
+							stack2.setTagCompound(new NBTTagCompound());
+							if(c.heat(gun, cs) * c.heatConductiveness(gun, cs) > c.heatThreshold(gun, cs) || c.heat(gun, cs) > M.grip_iron.heatThreshold(stack2, new ArrayList()) * 2)
+							{
+								double heat = c.heat(gun, cs);
+								double max = M.grip_iron.heatThreshold(stack2, new ArrayList());
+								if(max > 0 && heat > max || amount <= 0 && max < 0 && heat < max)
+								{
+									f += heat / max / 3;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			if(f > 0)
+			{
+				this.vingette(sr, 0, f / 3, f / 3, f / 3);
+			}
+			else
+			{
+				this.vingette(sr, -f / 3, -f / 3, 0, -f / 3);
+			}
+		}
+	}
+	
+	private void vingette(ScaledResolution sr, float r, float g, float b, float a)
+	{
+		GlStateManager.disableDepth();
+		GlStateManager.depthMask(false);
+		GlStateManager.tryBlendFuncSeparate(0, 769, 1, 0);
+		
+		GlStateManager.color(r, g, b, a);
+		
+		this.mc.getTextureManager().bindTexture(vignetteTexPath);
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+		worldrenderer.startDrawingQuads();
+		worldrenderer.addVertexWithUV(0.0D, sr.getScaledHeight(), -90.0D, 0.0D, 1.0D);
+		worldrenderer.addVertexWithUV(sr.getScaledWidth(), sr.getScaledHeight(), -90.0D, 1.0D, 1.0D);
+		worldrenderer.addVertexWithUV(sr.getScaledWidth(), 0.0D, -90.0D, 1.0D, 0.0D);
+		worldrenderer.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
+		tessellator.draw();
+		GlStateManager.depthMask(true);
+		GlStateManager.enableDepth();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 	}
 }

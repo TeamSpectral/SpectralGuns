@@ -14,7 +14,7 @@ public class ComponentAim extends ComponentGeneric
 {
 	public ComponentAim(ComponentMaterial material)
 	{
-		super(new String2("aim", ""), new String2("aim", ""), 0.8, 1 * 0.24F * 2, Type.AIM, material);
+		super(new String2("aim", ""), new String2("aim", ""), 0.8, 1 * 0.24F * 2, 0.8F, Type.AIM, material);
 		this.requiredTypes = new Type[]{Type.TRIGGER};
 	}
 	

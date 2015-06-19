@@ -144,7 +144,7 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 	
 	public void insertComponents(ItemStack gun)
 	{
-		this.inventory.clearComponentStacks(true);
+		this.inventory.clearComponentStacks(true, 64);
 		for(Component c : ItemGun.getComponents(gun))
 		{
 			ItemStack stack = c.toItemStack(gun);

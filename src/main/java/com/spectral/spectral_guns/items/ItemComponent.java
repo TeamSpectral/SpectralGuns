@@ -1,5 +1,6 @@
 package com.spectral.spectral_guns.items;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -20,7 +21,7 @@ public class ItemComponent extends ItemBase implements IDAble
 	private final static CreativeTabs theTab = M.tabCore;
 	
 	public final static String HEAT = "Heat";
-	public final static String ITEMDAMAGE = "ItemDamage";
+	public final static String ITEMDAMAGE = "Damage";
 	
 	/**
 	 * Crafting components
@@ -68,5 +69,11 @@ public class ItemComponent extends ItemBase implements IDAble
 			break;
 		}
 		tooltip.add(EnumChatFormatting.DARK_GRAY + "Type: " + EnumChatFormatting.WHITE + this.c.type.name().toLowerCase() + EnumChatFormatting.DARK_GRAY + ", Material: " + mat + this.c.material.getDisplayName(this.c.type, this.c) + EnumChatFormatting.RESET);
+	}
+	
+	@Override
+	public int getMaxDamage()
+	{
+		return this.c.durabilityMax(new ItemStack(M.gun), new ArrayList());
 	}
 }

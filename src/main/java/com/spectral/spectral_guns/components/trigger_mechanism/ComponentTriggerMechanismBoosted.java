@@ -2,6 +2,7 @@ package com.spectral.spectral_guns.components.trigger_mechanism;
 
 import java.util.ArrayList;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -11,6 +12,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 
 public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 {
@@ -66,5 +68,25 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 			break;
 		}
 		GameRegistry.addShapelessRecipe(new ItemStack(this.item), new Object[]{Items.redstone, trigger});
+	}
+	
+	@Override
+	public ArrayList<Entity> fire(ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	{
+		for(int i = 0; i < e.size(); ++i)
+		{
+			this.addHeat(10, stack, components);
+		}
+		for(Component c : components)
+		{
+			if(c.type == Type.MAGAZINE)
+			{
+				for(int i = 0; i < e.size(); ++i)
+				{
+					c.addHeat(200, stack, components);
+				}
+			}
+		}
+		return e;
 	}
 }

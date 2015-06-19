@@ -66,17 +66,57 @@ public class ComponentEvents
 	{
 		if(!isGunValid(stack))
 		{
+			ItemGun.setComponents(stack, components);
+			ItemGun.dropAllComponents(player, stack);
+			stack.stackSize = 0;
 			return components;
 		}
 		for(int i = 0; i < components.size(); ++i)
 		{
 			Component component = components.get(i);
 			component.update(stack, player.worldObj, player, slot, isSelected, components);
+		}
+		double h = 0;
+		for(int i = 0; i < components.size(); ++i)
+		{
+			Component c = components.get(i);
+			double cond = c.heatConductiveness(stack, components) / 2;
+			double heat = c.heat(stack, components);
+			h += heat * cond;
+			c.setHeat(heat * (1 - cond), stack, components);
+		}
+		for(int i = 0; i < components.size(); ++i)
+		{
+			Component c = components.get(i);
+			c.addHeat(h / components.size() * c.heatConductiveness(stack, components) / 2, stack, components);
+		}
+		for(int i = 0; i < components.size(); ++i)
+		{
+			Component component = components.get(i);
 			if(!component.isValid(components))
 			{
 				components.remove(i);
 				--i;
 			}
+		}
+		for(int i = 0; i < components.size(); ++i)
+		{
+			Component component = components.get(i);
+			if(component.durabilityDamage(stack, components) > component.durabilityMax(stack, components))
+			{
+				components.remove(i);
+				--i;
+				ItemGun.setComponents(stack, components);
+				ItemGun.dropAllComponents(player, stack);
+				stack.stackSize = 0;
+				return components;
+			}
+		}
+		if(!isGunValid(stack))
+		{
+			ItemGun.setComponents(stack, components);
+			ItemGun.dropAllComponents(player, stack);
+			stack.stackSize = 0;
 		}
 		return components;
 	}

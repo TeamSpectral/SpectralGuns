@@ -102,7 +102,7 @@ public class SlotGun extends Slot
 	{
 		super.onPickupFromSlot(player, stack);
 		ItemGun.setComponents(stack, ((TileEntityGunWorkbench)this.inventory).getComponents());
-		((TileEntityGunWorkbench)this.inventory).clearComponentStacks(false);
+		((TileEntityGunWorkbench)this.inventory).clearComponentStacks(false, 1);
 	}
 	
 	/**

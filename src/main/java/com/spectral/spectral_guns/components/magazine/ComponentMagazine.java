@@ -27,7 +27,7 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	
 	public ComponentMagazine(String id, String name, double heatLoss, float heatThreshold, ComponentMaterial material, int capacity, float kickback, float spread, float fireRate, int projectileCount, float heating)
 	{
-		super(new String2("magazine_" + id, ""), new String2("magazine." + name, ""), heatLoss, heatThreshold, Type.MAGAZINE, material);
+		super(new String2("magazine_" + id, ""), new String2("magazine." + name, ""), heatLoss, heatThreshold, 4.6F, Type.MAGAZINE, material);
 		this.capacity = capacity;
 		this.kickback = kickback;
 		this.spread = spread;

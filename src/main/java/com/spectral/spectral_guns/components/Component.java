@@ -177,25 +177,25 @@ public abstract class Component
 	public enum ComponentMaterial
 	{
 		WOOD(
-				40,
+				140,
 				0.04,
 				3,
 				0.1,
 				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
 		IRON(
-				167,
+				267,
 				3.3,
 				0.5,
 				7,
 				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
 		GOLD(
-				22,
+				122,
 				3.9,
 				1,
 				0.5,
 				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
 		DIAMOND(
-				520,
+				320,
 				0.2,
 				0.1,
 				1,
@@ -308,11 +308,6 @@ public abstract class Component
 	
 	public void setDurabilityDamage(int durability, ItemStack stack, EntityPlayer player, ArrayList<Component> components)
 	{
-		if(durability >= this.item.getMaxDamage())
-		{
-			ItemGun.dropAllComponents(player, stack);
-			stack.setItem(null);
-		}
 		if(durability < 0)
 		{
 			durability = 0;
@@ -329,6 +324,8 @@ public abstract class Component
 	{
 		return this.getTagCompound(stack).getInteger(ItemComponent.ITEMDAMAGE);
 	}
+	
+	public abstract int durabilityMax(ItemStack stack, ArrayList<Component> components);
 	
 	public abstract Item ejectableAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
 	
@@ -437,30 +434,32 @@ public abstract class Component
 		
 		if(true)
 		{
-			ArrayList<Type> rts = this.getRequiredTypes();
-			ArrayList<Type> its = this.getIncapatibleTypes();
-			ArrayList<Type> ets = new ArrayList();
-			for(Component ec : ecs)
-			{
-				if(ec != null && !Stuff.ArraysAndSuch.has(ets, ec.type))
-				{
-					ets.add(ec.type);
-				}
-			}
-			for(Type et : ets)
-			{
-				if(et != null && Stuff.ArraysAndSuch.has(its, et))
-				{
-					return false;
-				}
-			}
-			for(Type rt : rts)
-			{
-				if(rt != null && !Stuff.ArraysAndSuch.has(ets, rt))
-				{
-					return false;
-				}
-			}
+			/*
+			 * ArrayList<Type> rts = this.getRequiredTypes();
+			 * ArrayList<Type> its = this.getIncapatibleTypes();
+			 * ArrayList<Type> ets = new ArrayList();
+			 * for(Component ec : ecs)
+			 * {
+			 * if(ec != null && !Stuff.ArraysAndSuch.has(ets, ec.type))
+			 * {
+			 * ets.add(ec.type);
+			 * }
+			 * }
+			 * for(Type et : ets)
+			 * {
+			 * if(et != null && Stuff.ArraysAndSuch.has(its, et))
+			 * {
+			 * return false;
+			 * }
+			 * }
+			 * for(Type rt : rts)
+			 * {
+			 * if(rt != null && !Stuff.ArraysAndSuch.has(ets, rt))
+			 * {
+			 * return false;
+			 * }
+			 * }
+			 */
 		}
 		
 		if(true)

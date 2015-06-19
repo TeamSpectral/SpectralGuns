@@ -104,7 +104,9 @@ public class ItemGun extends ItemBase implements IDAble
 			tooltip.add(ChatFormatting.WHITE + "Components used:" + ChatFormatting.GRAY + ChatFormatting.RESET);
 			for(int i = 0; i < c.size(); ++i)
 			{
-				tooltip.add(" - " + I18n.format(c.get(i).toItemStack(stack).getUnlocalizedName() + ".name") + ChatFormatting.RESET);
+				ItemStack componentStack = c.get(i).toItemStack(stack);
+				tooltip.add(" - " + I18n.format(componentStack.getUnlocalizedName() + ".name") + ":" + ChatFormatting.RESET);
+				tooltip.add("    D:" + (c.get(i).durabilityMax(stack, c) - c.get(i).durabilityDamage(stack, c)) + "/" + c.get(i).durabilityMax(stack, c) + ", T:" + (int)(c.get(i).heat(stack, c) * 100 / c.get(i).heatThreshold(stack, c)) + "%" + ChatFormatting.RESET);
 			}
 		}
 	}
@@ -288,6 +290,12 @@ public class ItemGun extends ItemBase implements IDAble
 		if(compound.getInteger(DELAYTIMER) > 0)
 		{
 			compound.setInteger(DELAYTIMER, compound.getInteger(DELAYTIMER) - 1);
+		}
+		
+		if(stack.stackSize == 0 && entity instanceof EntityPlayer)
+		{
+			((EntityPlayer)entity).inventory.setInventorySlotContents(slot, null);
+			return;
 		}
 	}
 	

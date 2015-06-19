@@ -22,13 +22,15 @@ public abstract class ComponentGeneric extends Component
 	protected ComponentMaterial[] incapatibleMats;
 	final protected double heatLoss;
 	final protected float heatThreshold;
+	final protected float maxDurability;
 	
-	public ComponentGeneric(String2 id, String2 name, double heatLoss, float heatThreshold, Type type, ComponentMaterial material)
+	public ComponentGeneric(String2 id, String2 name, double heatLoss, float heatThreshold, float maxDurability, Type type, ComponentMaterial material)
 	{
 		super(id, type, material);
 		this.name = name.s1 + "." + material.getDisplayName(type, this) + name.s2;
 		this.heatLoss = heatLoss;
 		this.heatThreshold = heatThreshold;
+		this.maxDurability = maxDurability;
 	}
 	
 	@Override
@@ -186,11 +188,20 @@ public abstract class ComponentGeneric extends Component
 	}
 	
 	@Override
+	public int durabilityMax(ItemStack stack, ArrayList<Component> components)
+	{
+		return (int)(this.material.durability * this.maxDurability);
+	}
+	
+	@Override
 	public void update(ItemStack stack, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
 	{
 		if(this.heat(stack, components) > this.heatThreshold(stack, components) || this.heat(stack, components) < -this.heatThreshold(stack, components))
 		{
-			this.addDurabilityDamage(1, stack, player, components);
+			if(player.ticksExisted % 10 == 1)
+			{
+				this.addDurabilityDamage(1, stack, player, components);
+			}
 		}
 		this.heatMix(stack, player.isInWater() ? -20 : 0, this.heatThreshold(stack, components), 0.1, components);
 		loop:
