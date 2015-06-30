@@ -276,4 +276,10 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 		}
 		return false;
 	}
+	
+	@Override
+	public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+	{
+		
+	}
 }

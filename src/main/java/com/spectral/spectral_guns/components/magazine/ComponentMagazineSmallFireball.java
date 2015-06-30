@@ -119,6 +119,7 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazineStand
 	}
 	
 	@Override
+	public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 	{
 		
 	}

@@ -95,4 +95,10 @@ public class ComponentMagazineShuriken extends ComponentMagazineStandard
 		}
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item), new Object[]{"bMb", "BSP", "bJb", 'b', bar, 'M', magazine, 'B', barrel, 'S', Items.stick, 'P', Item.getItemFromBlock(Blocks.piston), 'J', Item.getItemFromBlock(Blocks.jukebox)}));
 	}
+	
+	@Override
+	public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+	{
+		
+	}
 }

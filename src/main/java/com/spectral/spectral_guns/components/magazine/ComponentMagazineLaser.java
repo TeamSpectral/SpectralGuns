@@ -18,29 +18,25 @@ import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.audio.MovingSoundPublic;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.components.ComponentGeneric;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
 import com.spectral.spectral_guns.items.ItemGun;
 
-public class ComponentMagazineLaser extends ComponentGeneric implements IComponentAmmoItem
+public class ComponentMagazineLaser extends ComponentMagazine
 {
-	public final int capacity;
 	public final LaserColor color;
 	
 	public final static String FIRING = "IsFiring";
 	public final static String CHARGE = "Charge";
-	public final static String AMMO = "Ammo";
 	public final static String TIMER = "Timer";
 	public final static int ammoMultiplier = 25;
 	public final int battery;
 	
 	public ComponentMagazineLaser(ComponentMaterial material, LaserColor color, int capacity, int battery)
 	{
-		super(new String2("magazine_laser", "_" + color.toString().toLowerCase()), new String2("magazine.laser", "." + color.toString().toLowerCase()), 0.4, 3 * 9 * 3, 4.6F, Type.MAGAZINE, material);
+		super(new String2("magazine_laser", "_" + color.toString().toLowerCase()), new String2("magazine.laser", "." + color.toString().toLowerCase()), 0.4, 3 * 9 * 3, material, capacity, 4.6F);
 		this.color = color;
-		this.capacity = capacity;
 		this.battery = battery;
 		this.required = new Component[]{M.barrel_thin_diamond};
 	}
@@ -132,58 +128,15 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 	}
 	
 	@Override
-	public int setAmmo(int slot, int ammo, ItemStack stack, World world, EntityPlayer player)
-	{
-		NBTTagCompound compound = this.getTagCompound(slot, stack);
-		if(!compound.hasKey(AMMO))
-		{
-			compound.setInteger(AMMO, 0);
-		}
-		while(ammo > 0 && compound.getInteger(AMMO) + 1 <= this.capacity * ammoMultiplier)
-		{
-			compound.setInteger(AMMO, compound.getInteger(AMMO) + 1);
-			--ammo;
-		}
-		while(ammo < 0 && compound.getInteger(AMMO) - 1 >= 0)
-		{
-			compound.setInteger(AMMO, compound.getInteger(AMMO) - 1);
-			++ammo;
-		}
-		
-		this.capAmmo(compound);
-		return ammo;
-	}
-	
-	@Override
 	public int capacity(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		return this.capacity * ammoMultiplier;
+		return super.capacity(slot, stack, world, player) * ammoMultiplier;
 	}
 	
 	@Override
 	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
-		return delay + this.battery() / 2 + this.capacity / 32;
-	}
-	
-	@Override
-	public int ammo(int slot, ItemStack stack, World world, EntityPlayer player)
-	{
-		NBTTagCompound compound = this.getTagCompound(slot, stack);
-		this.capAmmo(compound);
-		return compound.getInteger(AMMO);
-	}
-	
-	@Override
-	public boolean isAmmoItem(ItemStack stack)
-	{
-		return stack.getItem() == Items.redstone;
-	}
-	
-	@Override
-	public Item ejectableAmmo(int slot, ItemStack stack, World world, EntityPlayer player)
-	{
-		return Items.redstone;
+		return delay + this.battery() / 2 + this.capacity(slot, stack, world, player) / 32;
 	}
 	
 	@Override
@@ -304,16 +257,9 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 		
 	}
 	
-	protected void capAmmo(NBTTagCompound c)
+	@Override
+	public Item ammoItem()
 	{
-		int a = c.getInteger(AMMO);
-		if(c.getInteger(AMMO) > this.capacity * ammoMultiplier)
-		{
-			c.setInteger(AMMO, this.capacity * ammoMultiplier);
-		}
-		if(c.getInteger(AMMO) < 0)
-		{
-			c.setInteger(AMMO, 0);
-		}
+		return Items.redstone;
 	}
 }

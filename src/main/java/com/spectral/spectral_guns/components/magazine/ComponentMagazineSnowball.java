@@ -115,4 +115,10 @@ public class ComponentMagazineSnowball extends ComponentMagazineStandard
 			this.addHeat(slot, -5, stack);
 		}
 	}
+	
+	@Override
+	public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+	{
+		
+	}
 }
