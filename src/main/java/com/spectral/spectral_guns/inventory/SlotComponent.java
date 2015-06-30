@@ -1,6 +1,6 @@
 package com.spectral.spectral_guns.inventory;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -68,12 +68,12 @@ public class SlotComponent extends Slot
 		{
 			if(stack != null && stack.getItem() instanceof ItemComponent)
 			{
-				ArrayList<Component> cs = ItemGun.getComponents(stackGun);
-				for(int i = 0; i < cs.size(); ++i)
+				HashMap<Integer, Component> cs = ItemGun.getComponents(stackGun);
+				for(Integer slot : cs.keySet())
 				{
-					if(cs.get(i) == ((ItemComponent)stack.getItem()).c)
+					if(cs.get(slot) == ((ItemComponent)stack.getItem()).c)
 					{
-						cs.remove(i);
+						cs.remove(slot);
 						break;
 					}
 				}

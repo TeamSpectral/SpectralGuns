@@ -1,6 +1,7 @@
 package com.spectral.spectral_guns.components;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -17,7 +18,7 @@ import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazine;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineStandard;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
 import com.spectral.spectral_guns.items.ItemGun;
 
@@ -25,23 +26,26 @@ public class ComponentEvents
 {
 	public static boolean isGunValid(ItemStack stack)
 	{
-		ArrayList<Component> cs = ItemGun.getComponents(stack);
+		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
 		return isValid(cs);
 	}
 	
-	public static boolean isValid(ArrayList<Component> cs)
+	public static boolean isValid(HashMap<Integer, Component> cs)
 	{
 		return isValid(cs, true);
 	}
 	
-	public static boolean isValid(ArrayList<Component> cs, boolean b)
+	public static boolean isValid(HashMap<Integer, Component> cs, boolean b)
 	{
 		for(int i = 0; i < cs.size(); ++i)
 		{
 			Component c = cs.get(i);
-			if(!c.isValid(cs))
+			if(c != null)
 			{
-				return false;
+				if(!c.isValid(i, cs))
+				{
+					return false;
+				}
 			}
 		}
 		if(b && !hasRequired(cs))
@@ -51,7 +55,7 @@ public class ComponentEvents
 		return true;
 	}
 	
-	public static boolean hasRequired(ArrayList<Component> cs)
+	public static boolean hasRequired(HashMap<Integer, Component> cs)
 	{
 		ArrayList<Type> ts = ComponentRegister.getComponentTypes(cs);
 		ArrayList<Type> rts = (ArrayList<Type>)ComponentRegister.getRequiredTypes().clone();
@@ -62,116 +66,135 @@ public class ComponentEvents
 		return rts.size() <= 0;
 	}
 	
-	public static ArrayList<Component> updateComponents(ItemStack stack, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
+	public static void updateComponents(ItemStack stack, EntityPlayer player, int slot, boolean isSelected)
 	{
+		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
 		if(!isGunValid(stack))
 		{
-			ItemGun.setComponents(stack, components);
 			ItemGun.dropAllComponents(player, stack);
 			stack.stackSize = 0;
-			return components;
+			return;
 		}
-		for(int i = 0; i < components.size(); ++i)
+		for(Integer i : cs.keySet())
 		{
-			Component component = components.get(i);
-			component.update(stack, player.worldObj, player, slot, isSelected, components);
+			Component c = cs.get(i);
+			if(c != null)
+			{
+				c.update(slot, stack, player.worldObj, player, slot, isSelected);
+			}
 		}
 		double h = 0;
-		for(int i = 0; i < components.size(); ++i)
+		for(Integer i : cs.keySet())
 		{
-			Component c = components.get(i);
-			double cond = c.heatConductiveness(stack, components) / 2;
-			double heat = c.heat(stack, components);
-			h += heat * cond;
-			c.setHeat(heat * (1 - cond), stack, components);
-		}
-		for(int i = 0; i < components.size(); ++i)
-		{
-			Component c = components.get(i);
-			c.addHeat(h / components.size() * c.heatConductiveness(stack, components) / 2, stack, components);
-		}
-		for(int i = 0; i < components.size(); ++i)
-		{
-			Component component = components.get(i);
-			if(!component.isValid(components))
+			Component c = cs.get(i);
+			if(c != null)
 			{
-				components.remove(i);
-				--i;
+				double cond = c.heatConductiveness(i, stack) / 2;
+				double heat = c.heat(i, stack);
+				h += heat * cond;
+				c.setHeat(i, heat * (1 - cond), stack);
 			}
 		}
-		for(int i = 0; i < components.size(); ++i)
+		for(Integer i : cs.keySet())
 		{
-			Component component = components.get(i);
-			if(component.durabilityDamage(stack, components) > component.durabilityMax(stack, components))
+			Component c = cs.get(i);
+			if(c != null)
 			{
-				components.remove(i);
-				--i;
-				ItemGun.setComponents(stack, components);
-				ItemGun.dropAllComponents(player, stack);
-				stack.stackSize = 0;
-				return components;
+				c.addHeat(i, h / cs.size() * c.heatConductiveness(i, stack) / 2, stack);
+			}
+		}
+		for(Integer i : cs.keySet())
+		{
+			Component c = cs.get(i);
+			if(c != null)
+			{
+				if(!c.isValid(i, cs))
+				{
+					cs.remove(i);
+					--i;
+				}
+			}
+		}
+		for(Integer i : cs.keySet())
+		{
+			Component c = cs.get(i);
+			if(c != null)
+			{
+				if(c.durabilityDamage(i, stack) > c.durabilityMax(i, stack))
+				{
+					cs.remove(i);
+					--i;
+					ItemGun.setComponents(stack, cs);
+					ItemGun.dropAllComponents(player, stack);
+					stack.stackSize = 0;
+					return;
+				}
 			}
 		}
 		if(!isGunValid(stack))
 		{
-			ItemGun.setComponents(stack, components);
+			ItemGun.setComponents(stack, cs);
 			ItemGun.dropAllComponents(player, stack);
 			stack.stackSize = 0;
 		}
-		return components;
+		return;
 	}
 	
-	public static boolean addAmmo(int a, ItemStack stack, EntityPlayer player, ArrayList<Component> components)
+	public static boolean addAmmo(int a, ItemStack stack, EntityPlayer player)
 	{
 		int ammo = ItemGun.ammo(stack, player);
 		if(!isGunValid(stack) || ammo + a < 0 || ammo + a > ItemGun.capacity(stack, player))
 		{
 			return false;
 		}
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			Component component = components.get(i);
-			if(component != null)
+			if(slot != null)
 			{
-				ammo = component.setAmmo(a, stack, player.worldObj, player, components);
+				Component component = cs.get(slot);
+				if(component != null)
+				{
+					ammo = component.setAmmo(slot, a, stack, player.worldObj, player);
+				}
 			}
 		}
 		return true;
 	}
 	
-	public static void setAmmo(int ammo, ItemStack stack, EntityPlayer player, ArrayList<Component> components)
+	public static void setAmmo(int ammo, ItemStack stack, EntityPlayer player)
 	{
 		if(!isGunValid(stack))
 		{
 			return;
 		}
 		
-		addAmmo(ammo - ItemGun.ammo(stack, player), stack, player, components);
+		addAmmo(ammo - ItemGun.ammo(stack, player), stack, player);
 	}
 	
-	public static ArrayList<Entity> fireComponents(ItemStack stack, EntityPlayer player, ArrayList<Component> components)
+	public static ArrayList<Entity> fireComponents(ItemStack stack, EntityPlayer player)
 	{
-		if(!addAmmo(-1, stack, player, components) || !isGunValid(stack))
+		if(!addAmmo(-1, stack, player) || !isGunValid(stack))
 		{
 			return null;
 		}
 		
 		ArrayList<Entity> projectiles = new ArrayList<Entity>();
-		
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			Component component = components.get(i);
-			if(component != null && component instanceof ComponentMagazine)
+			Component component = cs.get(slot);
+			if(component != null && component instanceof ComponentMagazineStandard)
 			{
-				projectiles = component.fire(projectiles, stack, player.worldObj, player, components);
+				projectiles = component.fire(slot, projectiles, stack, player.worldObj, player);
 			}
 		}
-		for(int i = 0; i < components.size(); ++i)
+		for(Integer slot : cs.keySet())
 		{
-			Component component = components.get(i);
-			if(component != null && !(component instanceof ComponentMagazine))
+			Component component = cs.get(slot);
+			if(component != null && !(component instanceof ComponentMagazineStandard))
 			{
-				projectiles = component.fire(projectiles, stack, player.worldObj, player, components);
+				projectiles = component.fire(slot, projectiles, stack, player.worldObj, player);
 			}
 		}
 		
@@ -199,12 +222,12 @@ public class ComponentEvents
 				e.motionZ = MathHelper.cos(e.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(e.rotationPitch / 180.0F * (float)Math.PI) * f;
 			}
 		}
-		for(int i2 = 0; i2 < components.size() && projectiles.size() > 0; ++i2)
+		for(Integer slot : cs.keySet())
 		{
-			Component component = components.get(i2);
+			Component component = cs.get(slot);
 			if(component != null)
 			{
-				component.fireSound(projectiles.get(0), stack, player.worldObj, player);
+				component.fireSound(slot, projectiles.get(0), stack, player.worldObj, player);
 			}
 		}
 		
@@ -238,7 +261,7 @@ public class ComponentEvents
 		return projectiles;
 	}
 	
-	public static boolean reload(ItemStack stack, EntityPlayer player, ArrayList<Component> components)
+	public static boolean reload(ItemStack stack, EntityPlayer player)
 	{
 		int amount = amount(stack);
 		
@@ -255,7 +278,7 @@ public class ComponentEvents
 				ItemStack s = inv.getStackInSlot(i);
 				if(s != null && ItemGun.ammoItem(stack, s, player))
 				{
-					if(addAmmo(amount, stack, player, components))
+					if(addAmmo(amount, stack, player))
 					{
 						--s.stackSize;
 						if(s.stackSize <= 0)
@@ -270,7 +293,7 @@ public class ComponentEvents
 		}
 		else
 		{
-			if(addAmmo(amount, stack, player, components))
+			if(addAmmo(amount, stack, player))
 			{
 				player.worldObj.playSoundAtEntity(player, "random.pop", 0.2F, ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 				return true;
@@ -279,12 +302,12 @@ public class ComponentEvents
 		return false;
 	}
 	
-	public static boolean eject(ItemStack stack, EntityPlayer player, ArrayList<Component> components)
+	public static boolean eject(ItemStack stack, EntityPlayer player)
 	{
-		return eject(stack, player, components, new ConsumerComponentEvent()
+		return eject(stack, player, new ConsumerComponentEvent()
 		{
 			@Override
-			public void action(ItemStack gun, EntityPlayer player, ArrayList<Component> components)
+			public void action(ItemStack gun, EntityPlayer player)
 			{
 				if(!player.capabilities.isCreativeMode || !Config.canReloadWithoutAmmoInCreativeMode.get())
 				{
@@ -301,7 +324,7 @@ public class ComponentEvents
 		});
 	}
 	
-	public static boolean eject(ItemStack stack, EntityPlayer player, ArrayList<Component> components, ConsumerComponentEvent func)
+	public static boolean eject(ItemStack stack, EntityPlayer player, ConsumerComponentEvent func)
 	{
 		int amount = amount(stack);
 		
@@ -315,9 +338,9 @@ public class ComponentEvents
 		if(item != null)
 		{
 			InventoryPlayer inv = player.inventory;
-			if(addAmmo(-amount, stack, player, components))
+			if(addAmmo(-amount, stack, player))
 			{
-				func.action(stack, player, components);
+				func.action(stack, player);
 				return true;
 			}
 		}
@@ -337,7 +360,7 @@ public class ComponentEvents
 	{
 		int amount = 0;
 		
-		ArrayList<ComponentMagazineLaser> cs = ArraysAndSuch.allExtending(ItemGun.getComponents(gun), ComponentMagazineLaser.class);
+		ArrayList<ComponentMagazineLaser> cs = ArraysAndSuch.allExtending(ArraysAndSuch.hashMapToArrayList(ItemGun.getComponents(gun)), ComponentMagazineLaser.class);
 		for(int i = 0; i < cs.size(); ++i)
 		{
 			amount += cs.get(i).battery();
@@ -358,7 +381,7 @@ public class ComponentEvents
 			
 		}
 		
-		public abstract void action(ItemStack gun, EntityPlayer player, ArrayList<Component> components);
+		public abstract void action(ItemStack gun, EntityPlayer player);
 	}
 	
 	public abstract static class ConsumerComponentEventVec3 extends ConsumerComponentEvent

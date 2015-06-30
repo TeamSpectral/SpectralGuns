@@ -225,12 +225,14 @@ public class M
 	public static TabGeneric tabCore = new TabGeneric("core")
 	{
 		@Override
+		@SideOnly(Side.CLIENT)
 		public Item getTabIconItem()
 		{
 			return M.gun;
 		}
 		
 		@Override
+		@SideOnly(Side.CLIENT)
 		public ItemStack getIconItemStack()
 		{
 			if(M.proxy.world(0).isRemote)

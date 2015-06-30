@@ -1,6 +1,6 @@
 package com.spectral.spectral_guns.tileentity;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -27,12 +27,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.google.common.collect.Lists;
 import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.inventory.ContainerGunWorkbench;
 import com.spectral.spectral_guns.inventory.SlotGun;
@@ -49,7 +49,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	private ItemStack wrenchStack = null;
 	private final int offset = 2;
 	private ItemStack[] componentStacks = new ItemStack[ComponentRegister.Type.values().length - 1];
-	private ItemStack[] componentMiscStacks = new ItemStack[4];
+	private ItemStack[] componentMiscStacks = new ItemStack[Type.MISC.slots.length];
 	private boolean readFlag = false;
 	public EntityPlayer lastUsing = null;
 	
@@ -65,7 +65,12 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	@Override
 	public int getSizeInventory()
 	{
-		return this.offset + this.componentStacks.length + this.componentMiscStacks.length;
+		return this.offset + this.getComponentSlots();
+	}
+	
+	public int getComponentSlots()
+	{
+		return this.componentStacks.length + this.componentMiscStacks.length;
 	}
 	
 	/**
@@ -434,12 +439,26 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	{
 		if(this.getStackInSlot(index) != null)
 		{
-			if(!(this.getStackInSlot(index).isItemEqual(stack) && this.getStackInSlot(index).isStackable() && this.getStackInSlot(index).stackSize + stack.stackSize <= stack.getMaxStackSize()))
+			if(!Stuff.ItemStacks.canStack(stack, this.getStackInSlot(index)))
 			{
 				return false;
 			}
+			for(int i = 0; i < this.getSizeInventory(); ++i)
+			{
+				if(i != index && this.isItemValidForSlot2(i, stack))
+				{
+					if(this.getStackInSlot(i) == null || Stuff.ItemStacks.canStack(stack, this.getStackInSlot(i)) && this.getStackInSlot(i).stackSize < this.getStackInSlot(index).stackSize)
+					{
+						return false;
+					}
+				}
+			}
 		}
-		
+		return this.isItemValidForSlot2(index, stack);
+	}
+	
+	public boolean isItemValidForSlot2(int index, ItemStack stack)
+	{
 		switch(index)
 		{
 		case 0:
@@ -664,21 +683,29 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	{
 		for(int i = 0; i < this.componentStacks.length; ++i)
 		{
-			if(this.componentStacks[i] != null)
+			ItemStack stack = this.componentStacks[i];
+			if(stack != null && stack.getItem() != null && stack.stackSize > 0)
 			{
 				for(int i2 = 0; i2 < amount; ++i2)
 				{
 					if(drop)
 					{
-						EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, this.componentStacks[i]);
-						entity.setNoPickupDelay();
-						if(!this.getWorld().isRemote)
+						try
 						{
-							this.getWorld().spawnEntityInWorld(entity);
+							EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, stack);
+							entity.setNoPickupDelay();
+							if(!this.getWorld().isRemote)
+							{
+								this.getWorld().spawnEntityInWorld(entity);
+							}
+						}
+						catch(Throwable e)
+						{
+							int i3 = 0;
 						}
 					}
-					this.componentStacks[i].stackSize -= 1;
-					if(this.componentStacks[i].stackSize <= 0)
+					stack.stackSize -= 1;
+					if(stack.stackSize <= 0)
 					{
 						this.componentStacks[i] = null;
 					}
@@ -693,11 +720,18 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 				{
 					if(drop)
 					{
-						EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, this.componentMiscStacks[i]);
-						entity.setNoPickupDelay();
-						if(!this.getWorld().isRemote)
+						try
 						{
-							this.getWorld().spawnEntityInWorld(entity);
+							EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, this.componentMiscStacks[i]);
+							entity.setNoPickupDelay();
+							if(!this.getWorld().isRemote)
+							{
+								this.getWorld().spawnEntityInWorld(entity);
+							}
+						}
+						catch(Throwable e)
+						{
+							
 						}
 					}
 					this.componentMiscStacks[i].stackSize -= 1;
@@ -738,16 +772,25 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 		return this.playersUsing <= 0 && oldState.getBlock() != newSate.getBlock();
 	}
 	
-	public ArrayList<Component> getComponents()
+	public HashMap<Integer, Component> getComponents()
 	{
-		ArrayList<Component> a = Lists.newArrayList();
-		for(ItemStack stack : this.componentStacks)
+		HashMap<Integer, Component> cs = new HashMap();
+		for(int i = 0; i < this.componentStacks.length; ++i)
 		{
+			ItemStack stack = this.componentStacks[i];
 			if(stack != null && stack.getItem() instanceof ItemComponent)
 			{
-				a.add(((ItemComponent)stack.getItem()).c);
+				cs.put(i, ((ItemComponent)stack.getItem()).c);
 			}
 		}
-		return a;
+		for(int i = 0; i < this.componentMiscStacks.length; ++i)
+		{
+			ItemStack stack = this.componentMiscStacks[i];
+			if(stack != null && stack.getItem() instanceof ItemComponent)
+			{
+				cs.put(i + this.componentStacks.length, ((ItemComponent)stack.getItem()).c);
+			}
+		}
+		return cs;
 	}
 }

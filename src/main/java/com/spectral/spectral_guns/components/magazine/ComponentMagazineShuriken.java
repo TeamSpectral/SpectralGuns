@@ -13,7 +13,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
 
-public class ComponentMagazineShuriken extends ComponentMagazine
+public class ComponentMagazineShuriken extends ComponentMagazineStandard
 {
 	public ComponentMagazineShuriken(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
@@ -21,7 +21,7 @@ public class ComponentMagazineShuriken extends ComponentMagazine
 	}
 	
 	@Override
-	protected Entity projectile(ItemStack stack, World world, EntityPlayer player)
+	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		EntityShuriken e = new EntityShuriken(world, player, 2);
 		e.spinVelocity *= 4;
@@ -35,7 +35,7 @@ public class ComponentMagazineShuriken extends ComponentMagazine
 	}
 	
 	@Override
-	protected void fireSound(Entity projectile, ItemStack stack, World world, EntityPlayer player)
+	protected void fireSound(int slot, Entity projectile, ItemStack stack, World world, EntityPlayer player)
 	{
 		world.playSoundAtEntity(player, "tile.piston.out", 0.2F, world.rand.nextFloat() * 0.25F + 0.6F);
 		//world.playSoundAtEntity(player, "random.bow", 0.1F, 1 + 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));

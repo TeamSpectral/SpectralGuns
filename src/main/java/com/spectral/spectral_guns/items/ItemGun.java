@@ -1,6 +1,8 @@
 package com.spectral.spectral_guns.items;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -12,6 +14,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -20,12 +25,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Keyboard;
 
-import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.IDAble;
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
 import com.spectral.spectral_guns.components.Component;
@@ -38,7 +41,11 @@ import com.spectral.spectral_guns.event.HandlerClientFML;
 public class ItemGun extends ItemBase implements IDAble
 {
 	// nbt
-	public static final String COMPONENTS = "Components";
+	public static final String COMPONENTS = "ComponentsList";
+	public static final String COMPONENTS_PRE_v1_3 = "Components";
+	public static final String COMPONENT_SLOT = "SLOT";
+	public static final String COMPONENT_ID = "ID";
+	public static final String COMPONENT_COMPOUND = "COMPOUND";
 	public static final String NAME = "Name";
 	public static final String DELAYTIMER = "DelayTimer";
 	public static final String RECOIL = "RecoilLast";
@@ -97,21 +104,25 @@ public class ItemGun extends ItemBase implements IDAble
 		{
 			tooltip.add(ChatFormatting.WHITE + "Zoom: " + ChatFormatting.GRAY + zoom + "%" + ChatFormatting.RESET);
 		}
-		ArrayList<Component> c = getComponents(stack);
+		HashMap<Integer, Component> c = getComponents(stack);
+		int max = this.getMaxComponentId(c);
 		if(c.size() > 0)
 		{
 			tooltip.add("");
 			tooltip.add(ChatFormatting.WHITE + "Components used:" + ChatFormatting.GRAY + ChatFormatting.RESET);
-			for(int i = 0; i < c.size(); ++i)
+			for(int i = 0; i <= max; ++i)
 			{
-				ItemStack componentStack = c.get(i).toItemStack(stack);
-				tooltip.add(" - " + I18n.format(componentStack.getUnlocalizedName() + ".name") + ":" + ChatFormatting.RESET);
-				tooltip.add("    D:" + (c.get(i).durabilityMax(stack, c) - c.get(i).durabilityDamage(stack, c)) + "/" + c.get(i).durabilityMax(stack, c) + ", T:" + (int)(c.get(i).heat(stack, c) * 100 / c.get(i).heatThreshold(stack, c)) + "%" + ChatFormatting.RESET);
+				if(c.get(i) != null)
+				{
+					ItemStack componentStack = c.get(i).toItemStack(i, stack);
+					tooltip.add(" - " + I18n.format(componentStack.getUnlocalizedName() + ".name") + ":" + ChatFormatting.RESET);
+					tooltip.add("    D:" + (c.get(i).durabilityMax(i, stack) - c.get(i).durabilityDamage(i, stack)) + "/" + c.get(i).durabilityMax(i, stack) + ", T:" + (int)(c.get(i).heat(i, stack) * 100 / c.get(i).heatThreshold(i, stack)) + "%" + ChatFormatting.RESET);
+				}
 			}
 		}
 	}
 	
-	private ArrayList<ItemStack> guns = null;
+	private static ArrayList<HashMap<Integer, Component>> guns = null;
 	
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -120,44 +131,87 @@ public class ItemGun extends ItemBase implements IDAble
 		Minecraft mc = Minecraft.getMinecraft();
 		if(Config.showAllPossibleGunsInTab.get())
 		{
-			if(this.guns == null)
+			this.generateGunCombinations();
+			subItems.addAll(this.guns);
+		}
+		else
+		{
+			this.guns = null;
+			subItems.add(this.getSubItem(mc.thePlayer, item, tab));
+		}
+	}
+	
+	public static void generateGunCombinations()
+	{
+		if(guns == null)
+		{
+			guns = new ArrayList();
+			ArrayList<Component> misc = getComponentsOfType(Type.MISC, true);
+			for(Component misc1 : misc)
 			{
-				this.guns = new ArrayList<ItemStack>();
-				for(Component misc1 : getComponentsOfType(Type.MISC, true))
+				for(Component misc2 : misc)
 				{
-					for(Component misc2 : getComponentsOfType(Type.MISC, true))
+					if(misc2 != null && misc2.maxAmount < 2)
 					{
-						for(Component misc3 : getComponentsOfType(Type.MISC, true))
+						continue;
+					}
+					for(Component misc3 : misc)
+					{
+						if(misc3 != null && misc3.maxAmount < 3)
 						{
-							for(Component misc4 : getComponentsOfType(Type.MISC, true))
+							continue;
+						}
+						for(Component misc4 : misc)
+						{
+							if(misc4 != null && misc4.maxAmount < 4)
 							{
-								for(Component barrel : getComponentsOfType(Type.BARREL, true))
+								continue;
+							}
+							for(Component barrel : getComponentsOfType(Type.BARREL, false))
+							{
+								for(Component magazine : getComponentsOfType(Type.MAGAZINE, false))
 								{
-									for(Component magazine : getComponentsOfType(Type.MAGAZINE, true))
+									for(Component trigger : getComponentsOfType(Type.TRIGGER, false))
 									{
-										for(Component trigger : getComponentsOfType(Type.TRIGGER, true))
+										for(Component grip : getComponentsOfType(Type.GRIP, false))
 										{
-											for(Component grip : getComponentsOfType(Type.GRIP, true))
+											for(Component stock : getComponentsOfType(Type.STOCK, true))
 											{
-												for(Component stock : getComponentsOfType(Type.STOCK, true))
+												for(Component aim : getComponentsOfType(Type.AIM, true))
 												{
-													for(Component aim : getComponentsOfType(Type.AIM, true))
+													ItemStack gun = new ItemStack(M.gun);
+													gun.setTagCompound(new NBTTagCompound());
+													if(misc1 != null)
 													{
-														ItemStack gun = new ItemStack(M.gun);
-														ItemGun.addComponent(gun, misc1);
-														ItemGun.addComponent(gun, misc2);
-														ItemGun.addComponent(gun, misc3);
-														ItemGun.addComponent(gun, misc4);
-														ItemGun.addComponent(gun, barrel);
-														ItemGun.addComponent(gun, magazine);
-														ItemGun.addComponent(gun, trigger);
-														ItemGun.addComponent(gun, grip);
-														ItemGun.addComponent(gun, stock);
-														ItemGun.addComponent(gun, aim);
-														if(ComponentEvents.isGunValid(gun))
-														{
-															this.guns.add(gun);
-														}
+														ItemGun.addComponent(gun, 6, misc1);
+													}
+													if(misc2 != null)
+													{
+														ItemGun.addComponent(gun, 7, misc2);
+													}
+													if(misc3 != null)
+													{
+														ItemGun.addComponent(gun, 8, misc3);
+													}
+													if(misc4 != null)
+													{
+														ItemGun.addComponent(gun, 9, misc4);
+													}
+													ItemGun.addComponent(gun, 0, barrel);
+													ItemGun.addComponent(gun, 1, magazine);
+													ItemGun.addComponent(gun, 2, trigger);
+													ItemGun.addComponent(gun, 3, grip);
+													if(stock != null)
+													{
+														ItemGun.addComponent(gun, 4, stock);
+													}
+													if(aim != null)
+													{
+														ItemGun.addComponent(gun, 5, aim);
+													}
+													if(ComponentEvents.isGunValid(gun))
+													{
+														guns.add(getComponents(gun));
 													}
 												}
 											}
@@ -169,12 +223,6 @@ public class ItemGun extends ItemBase implements IDAble
 					}
 				}
 			}
-			subItems.addAll(this.guns);
-		}
-		else
-		{
-			this.guns = null;
-			subItems.add(this.getSubItem(mc.thePlayer, item, tab));
 		}
 	}
 	
@@ -187,7 +235,7 @@ public class ItemGun extends ItemBase implements IDAble
 			compound(a.get(i));
 			a.get(i).getTagCompound().setInteger(DELAYTIMER, -1);
 			setComponents(a.get(0), getRandomComponents(Item.itemRand));
-			ComponentEvents.setAmmo(capacity(a.get(i), player), a.get(i), player, getComponents(a.get(i)));
+			ComponentEvents.setAmmo(capacity(a.get(i), player), a.get(i), player);
 			return a.get(i);
 		}
 		return null;
@@ -257,11 +305,9 @@ public class ItemGun extends ItemBase implements IDAble
 	{
 		super.onUpdate(stack, world, entity, slot, isSelected);
 		NBTTagCompound compound = stack.getTagCompound();
-		ArrayList<Component> components = getComponents(stack);
-		
 		if(entity instanceof EntityPlayer)
 		{
-			components = ComponentEvents.updateComponents(stack, (EntityPlayer)entity, slot, isSelected, components);
+			ComponentEvents.updateComponents(stack, (EntityPlayer)entity, slot, isSelected);
 		}
 		if(compound.getFloat(RECOIL) > 0.01)
 		{
@@ -306,10 +352,9 @@ public class ItemGun extends ItemBase implements IDAble
 		props.reloadDelay = props.maxReloadDelay;
 		
 		compound(stack);
-		ArrayList<Component> components = getComponents(stack);
 		NBTTagCompound compound = stack.getTagCompound();
 		
-		ArrayList<Entity> e = ComponentEvents.fireComponents(stack, player, components);
+		ArrayList<Entity> e = ComponentEvents.fireComponents(stack, player);
 		
 		if(e == null || e.size() <= 0)
 		{
@@ -329,8 +374,6 @@ public class ItemGun extends ItemBase implements IDAble
 			compound.setInteger(FIRERATETIMER, fireRate(stack, player));
 		}
 		this.resetDelay(stack);
-		
-		setComponents(stack, components);
 	}
 	
 	public void kickBack(ItemStack stack, EntityPlayer player, ArrayList<Entity> e)
@@ -386,142 +429,121 @@ public class ItemGun extends ItemBase implements IDAble
 		player.rotationPitch -= r;
 	}
 	
-	public static void setComponents(ItemStack stack, Component[] cs)
-	{
-		setComponents(stack, ArraysAndSuch.arrayToArrayList(cs));
-	}
-	
-	public static void addComponent(ItemStack stack, Component c)
+	public static void addComponent(ItemStack stack, int slot, Component c)
 	{
 		if(c == null)
 		{
 			return;
 		}
-		ArrayList<Component> cs = getComponents(stack);
+		HashMap<Integer, Component> cs = getComponents(stack);
 		
-		cs.add(c);
+		cs.put(slot, c);
 		setComponents(stack, cs);
 	}
 	
-	public static void setComponents(ItemStack stack, ArrayList<Component> cs)
+	public static void setComponents(ItemStack stack, HashMap<Integer, Component> cs)
 	{
-		ArrayList<String> ids = new ArrayList<String>();
-		
-		for(int i = 0; i < cs.size(); ++i)
+		if(!stack.hasTagCompound())
+		{
+			stack.setTagCompound(new NBTTagCompound());
+		}
+		NBTTagCompound compound = stack.getTagCompound();
+		if(!compound.hasKey(COMPONENTS))
+		{
+			compound.setTag(COMPONENTS, new NBTTagCompound());
+		}
+		NBTTagList oldList = compound.getTagList(COMPONENTS, new NBTTagCompound().getId());
+		NBTTagList list = new NBTTagList();
+		int max = getMaxComponentId(cs);
+		for(int i = 0; i <= max; ++i)
 		{
 			Component c = cs.get(i);
-			boolean b = true;
-			for(int i2 = 0; i2 < ids.size(); ++i2)
+			if(c != null)
 			{
-				if(c.getID() == ids.get(i2))
+				NBTTagCompound cCompound = new NBTTagCompound();
+				for(int i2 = 0; i2 < oldList.tagCount(); ++i2)
 				{
-					b = false;
-					break;
+					NBTTagCompound cCompound2 = oldList.getCompoundTagAt(i);
+					if(cCompound2 != null && cCompound2.hasKey(COMPONENT_SLOT, new NBTTagInt(0).getId()) && cCompound2.hasKey(COMPONENT_ID, new NBTTagString("").getId()))
+					{
+						int slot = cCompound2.getInteger(COMPONENT_SLOT);
+						String id = cCompound2.getString(COMPONENT_ID);
+						if(slot == i && id.equals(c.getID()))
+						{
+							cCompound = (NBTTagCompound)cCompound2.copy();
+						}
+					}
 				}
-			}
-			if(b)
-			{
-				ids.add(c.getID());
+				cCompound.setInteger(COMPONENT_SLOT, i);
+				cCompound.setString(COMPONENT_ID, c.getID());
+				if(!cCompound.hasKey(COMPONENT_COMPOUND, new NBTTagCompound().getId()))
+				{
+					cCompound.setTag(COMPONENT_COMPOUND, new NBTTagCompound());
+				}
+				list.appendTag(cCompound);
 			}
 		}
-		setComponentIDs(stack, ids);
+		compound.setTag(COMPONENTS, list);
 	}
 	
-	public static void setComponentIDs(ItemStack stack, ArrayList<String> components2)
+	public static HashMap<Integer, Component> getComponents(ItemStack stack)
 	{
-		ArrayList<String> components = Lists.newArrayList();
-		ArrayList<String> allIds = Component.ComponentRegister.getIDs();
-		for(String id : allIds)
+		HashMap<Integer, Component> cs = new HashMap();
+		NBTTagCompound compound = stack.getTagCompound();
+		if(compound.hasKey(COMPONENTS))
 		{
-			if(components2.contains(id))
+			NBTTagList list = compound.getTagList(COMPONENTS, new NBTTagCompound().getId());
+			for(int i = 0; i < list.tagCount(); ++i)
 			{
-				components.add(id);
-			}
-		}
-		
-		compound(stack);
-		NBTTagCompound csOld = stack.getTagCompound().getCompoundTag(COMPONENTS);
-		NBTTagCompound cs = new NBTTagCompound();
-		for(int i = 0; i < components.size(); ++i)
-		{
-			if(csOld.hasKey(components.get(i)))
-			{
-				cs.setTag(components.get(i), csOld.getCompoundTag(components.get(i)));
-			}
-			else
-			{
-				cs.setTag(components.get(i), new NBTTagCompound());
-			}
-		}
-		stack.getTagCompound().removeTag(COMPONENTS);
-		stack.getTagCompound().setTag(COMPONENTS, cs);
-	}
-	
-	public static ArrayList<Component> getComponents(ItemStack stack)
-	{
-		ArrayList<String> ids = getComponentIDs(stack);
-		ArrayList<Component> cs = new ArrayList<Component>();
-		for(int i = 0; i < ids.size(); ++i)
-		{
-			String id = ids.get(i);
-			boolean b = true;
-			for(int i2 = 0; i2 < cs.size(); ++i2)
-			{
-				if(cs.get(i2) == ComponentRegister.getComponent(id))
+				if(list.getCompoundTagAt(i) != null)
 				{
-					b = false;
-					break;
+					NBTTagCompound componentCompound = list.getCompoundTagAt(i);
+					if(componentCompound.hasKey(COMPONENT_ID) && componentCompound.hasKey(COMPONENT_ID))
+					{
+						int slot = componentCompound.getInteger(COMPONENT_SLOT);
+						String id = componentCompound.getString(COMPONENT_ID);
+						Component c = Component.ComponentRegister.getComponent(id);
+						if(c != null)
+						{
+							cs.put(slot, c);
+						}
+					}
 				}
-			}
-			if(b && ComponentRegister.getComponent(id) != null)
-			{
-				cs.add(ComponentRegister.getComponent(id));
 			}
 		}
 		return cs;
 	}
 	
-	public static ArrayList<String> getComponentIDs(ItemStack stack)
+	public static int getMaxComponentId(HashMap<Integer, Component> components)
 	{
-		compound(stack);
-		NBTTagCompound compound = stack.getTagCompound();
-		if(compound.hasKey(COMPONENTS))
+		Iterator<Integer> keyIter = components.keySet().iterator();
+		int maxKey = 0;
+		while(keyIter.hasNext())
 		{
-			return getStringsFromNBTList(compound.getCompoundTag(COMPONENTS));
-		}
-		return new ArrayList<String>();
-	}
-	
-	protected static ArrayList<String> getStringsFromNBTList(NBTTagCompound c)
-	{
-		ArrayList<String> s = new ArrayList<String>();
-		ArrayList<String> ids = ComponentRegister.getIDs();
-		
-		for(int i = 0; i < ids.size(); ++i)
-		{
-			if(c.hasKey(ids.get(i)))
+			Integer key = keyIter.next();
+			if(key != null && key > maxKey)
 			{
-				s.add(ids.get(i));
+				maxKey = key;
 			}
 		}
-		return s;
+		return maxKey;
 	}
 	
 	public static int delay(ItemStack stack, EntityPlayer player)
 	{
 		float delay = 0;
-		ArrayList<Component> components = getComponents(stack);
-		ArrayList<Float> a = new ArrayList<Float>();
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		HashMap<Integer, Float> a = new HashMap();
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).delay(0, stack, player.worldObj, player, components);
-			a.add(f);
+			float f = cs.get(slot).delay(slot, 0, stack, player.worldObj, player);
+			a.put(slot, f);
 			delay += f;
-		}
-		for(int i = 0; i < components.size(); ++i)
+		};
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).delay(delay, stack, player.worldObj, player, components);
-			f -= a.get(i);
+			float f = cs.get(slot).delay(slot, delay, stack, player.worldObj, player);
+			f -= a.get(slot);
 			delay = f;
 		}
 		return (int)Math.ceil(delay);
@@ -530,18 +552,18 @@ public class ItemGun extends ItemBase implements IDAble
 	public static float recoil(ItemStack stack, EntityPlayer player)
 	{
 		float recoil = 0;
-		ArrayList<Component> components = getComponents(stack);
-		ArrayList<Float> a = new ArrayList<Float>();
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		HashMap<Integer, Float> a = new HashMap();
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).recoil(0, stack, player.worldObj, player, components);
-			a.add(f);
+			float f = cs.get(slot).recoil(slot, 0, stack, player.worldObj, player);
+			a.put(slot, f);
 			recoil += f;
-		}
-		for(int i = 0; i < components.size(); ++i)
+		};
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).recoil(recoil, stack, player.worldObj, player, components);
-			f -= a.get(i);
+			float f = cs.get(slot).recoil(slot, recoil, stack, player.worldObj, player);
+			f -= a.get(slot);
 			recoil = f;
 		}
 		return recoil;
@@ -550,10 +572,10 @@ public class ItemGun extends ItemBase implements IDAble
 	public static float instability(ItemStack stack, EntityPlayer player)
 	{
 		float instability = 1;
-		ArrayList<Component> components = getComponents(stack);
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			instability = components.get(i).instability(instability, stack, player.worldObj, player, components);
+			instability = cs.get(slot).instability(slot, instability, stack, player.worldObj, player);
 		}
 		return instability;
 	}
@@ -561,10 +583,10 @@ public class ItemGun extends ItemBase implements IDAble
 	public static float spread(ItemStack stack, EntityPlayer player)
 	{
 		float spread = 180;
-		ArrayList<Component> components = getComponents(stack);
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).spread(spread, stack, player.worldObj, player, components);
+			float f = cs.get(slot).spread(slot, spread, stack, player.worldObj, player);
 			if(f < spread)
 			{
 				spread = f;
@@ -584,18 +606,18 @@ public class ItemGun extends ItemBase implements IDAble
 	public static float speed(ItemStack stack, EntityPlayer player)
 	{
 		float speed = 0;
-		ArrayList<Component> components = getComponents(stack);
-		ArrayList<Float> a = new ArrayList<Float>();
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		HashMap<Integer, Float> a = new HashMap();
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).speed(0, stack, player.worldObj, player, components);
-			a.add(f);
+			float f = cs.get(slot).speed(slot, 0, stack, player.worldObj, player);
+			a.put(slot, f);
 			speed += f;
 		}
-		for(int i = 0; i < components.size(); ++i)
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).speed(speed, stack, player.worldObj, player, components);
-			f -= a.get(i);
+			float f = cs.get(slot).speed(slot, speed, stack, player.worldObj, player);
+			f -= a.get(slot);
 			speed = f;
 		}
 		float max = 5;
@@ -609,18 +631,18 @@ public class ItemGun extends ItemBase implements IDAble
 	public static float kickback(ItemStack stack, EntityPlayer player)
 	{
 		float kickback = 0;
-		ArrayList<Component> components = getComponents(stack);
-		ArrayList<Float> a = new ArrayList<Float>();
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		HashMap<Integer, Float> a = new HashMap();
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).kickback(0, stack, player.worldObj, player, components);
-			a.add(f);
+			float f = cs.get(slot).kickback(slot, 0, stack, player.worldObj, player);
+			a.put(slot, f);
 			kickback += f;
 		}
-		for(int i = 0; i < components.size(); ++i)
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).kickback(kickback, stack, player.worldObj, player, components);
-			f -= a.get(i);
+			float f = cs.get(slot).kickback(slot, kickback, stack, player.worldObj, player);
+			f -= a.get(slot);
 			kickback = f;
 		}
 		return kickback / 3;
@@ -628,18 +650,18 @@ public class ItemGun extends ItemBase implements IDAble
 	
 	public static float zoom(ItemStack stack, EntityPlayer player, float zoom)
 	{
-		ArrayList<Component> components = getComponents(stack);
-		ArrayList<Float> a = new ArrayList<Float>();
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		HashMap<Integer, Float> a = new HashMap();
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).zoom(0, stack, player.worldObj, player, components);
-			a.add(f);
+			float f = cs.get(slot).zoom(slot, 0, stack, player.worldObj, player);
+			a.put(slot, f);
 			zoom += f;
 		}
-		for(int i = 0; i < components.size(); ++i)
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).zoom(zoom, stack, player.worldObj, player, components);
-			f -= a.get(i);
+			float f = cs.get(slot).zoom(slot, zoom, stack, player.worldObj, player);
+			f -= a.get(slot);
 			zoom = f;
 		}
 		return zoom;
@@ -648,18 +670,18 @@ public class ItemGun extends ItemBase implements IDAble
 	public static int fireRate(ItemStack stack, EntityPlayer player)
 	{
 		float fireRate = 0;
-		ArrayList<Component> components = getComponents(stack);
-		ArrayList<Float> a = new ArrayList<Float>();
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		HashMap<Integer, Float> a = new HashMap();
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).fireRate(0, stack, player.worldObj, player, components);
-			a.add(f);
+			float f = cs.get(slot).fireRate(slot, 0, stack, player.worldObj, player);
+			a.put(slot, f);
 			fireRate += f;
 		}
-		for(int i = 0; i < components.size(); ++i)
+		for(Integer slot : cs.keySet())
 		{
-			float f = components.get(i).fireRate(fireRate, stack, player.worldObj, player, components);
-			f -= a.get(i);
+			float f = cs.get(slot).fireRate(slot, fireRate, stack, player.worldObj, player);
+			f -= a.get(slot);
 			fireRate = f;
 		}
 		return (int)Math.ceil(fireRate);
@@ -668,10 +690,10 @@ public class ItemGun extends ItemBase implements IDAble
 	public static boolean automatic(ItemStack stack, EntityPlayer player)
 	{
 		boolean b = false;
-		ArrayList<Component> components = getComponents(stack);
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			if(components.get(i).automatic(stack, player.worldObj, player, components))
+			if(cs.get(slot).automatic(slot, stack, player.worldObj, player))
 			{
 				b = true;
 			}
@@ -682,20 +704,20 @@ public class ItemGun extends ItemBase implements IDAble
 	public static int ammo(ItemStack stack, EntityPlayer player)
 	{
 		int ammo = 0;
-		ArrayList<Component> components = getComponents(stack);
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			ammo += components.get(i).ammo(stack, player.worldObj, player, components);
+			ammo += cs.get(slot).ammo(slot, stack, player.worldObj, player);
 		}
 		return ammo;
 	}
 	
 	public static Item ejectableAmmo(ItemStack gun, EntityPlayer player)
 	{
-		ArrayList<Component> components = getComponents(gun);
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(gun);
+		for(Integer slot : cs.keySet())
 		{
-			Item item = components.get(i).ejectableAmmo(gun, player.worldObj, player, components);
+			Item item = cs.get(slot).ejectableAmmo(slot, gun, player.worldObj, player);
 			if(item != null)
 			{
 				return item;
@@ -706,10 +728,10 @@ public class ItemGun extends ItemBase implements IDAble
 	
 	public static boolean ammoItem(ItemStack gun, ItemStack stack, EntityPlayer player)
 	{
-		ArrayList<Component> components = getComponents(gun);
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(gun);
+		for(Integer slot : cs.keySet())
 		{
-			if(components.get(i).isAmmoItem(stack, player.worldObj, player))
+			if(cs.get(slot).isAmmoItem(slot, stack, player.worldObj, player))
 			{
 				return true;
 			}
@@ -720,10 +742,10 @@ public class ItemGun extends ItemBase implements IDAble
 	public static int capacity(ItemStack stack, EntityPlayer player)
 	{
 		int capacity = 0;
-		ArrayList<Component> components = getComponents(stack);
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			capacity += components.get(i).capacity(stack, player.worldObj, player, components);
+			capacity += cs.get(slot).capacity(slot, stack, player.worldObj, player);
 		}
 		return capacity;
 	}
@@ -736,10 +758,10 @@ public class ItemGun extends ItemBase implements IDAble
 	public static int durabilityDamage(ItemStack stack)
 	{
 		int capacity = 0;
-		ArrayList<Component> components = getComponents(stack);
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			capacity += components.get(i).durabilityDamage(stack, components);
+			capacity += cs.get(slot).durabilityDamage(slot, stack);
 		}
 		return capacity;
 	}
@@ -747,35 +769,96 @@ public class ItemGun extends ItemBase implements IDAble
 	public static int durabilityMax(ItemStack stack)
 	{
 		int capacity = 0;
-		ArrayList<Component> components = getComponents(stack);
-		for(int i = 0; i < components.size(); ++i)
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			capacity += ComponentRegister.getItem(components.get(i)).getMaxDamage(components.get(i).toItemStack(stack));
+			capacity += ComponentRegister.getItem(cs.get(slot)).getMaxDamage(cs.get(slot).toItemStack(slot, stack));
 		}
 		return capacity;
 	}
 	
-	public static ArrayList<Component> getRandomComponents(Random rand)
+	public static HashMap<Integer, Component> getRandomComponents(Random rand)
 	{
-		ArrayList<Component> cs = new ArrayList<Component>();
-		while(true)
+		if(guns != null)
 		{
-			for(int i = 0; i < 10 || !ComponentEvents.hasRequired(cs); ++i)
+			ArrayList<HashMap<Integer, Component>> cs = guns;
+			if(cs.size() > 0)
 			{
-				Component c = ComponentRegister.getRandomComponent(rand);
-				ArrayList<Component> cs2 = (ArrayList<Component>)cs.clone();
-				cs2.add(c);
-				if(ComponentEvents.isValid(cs2, false))
-				{
-					cs.add(c);
-				}
-			}
-			if(ComponentEvents.isValid(cs, true))
-			{
-				break;
+				return cs.get(rand.nextInt(cs.size()));
 			}
 		}
-		return cs;
+		ArrayList<Component> misc = getComponentsOfType(Type.MISC, true);
+		Component misc1 = misc.get(rand.nextInt(misc.size()));
+		for(int i = rand.nextInt(misc.size());; i = rand.nextInt(misc.size()))
+		{
+			Component misc2 = misc.get(i);
+			if(misc2 != null && misc2.maxAmount < 2)
+			{
+				continue;
+			}
+			for(i = rand.nextInt(misc.size());; i = rand.nextInt(misc.size()))
+			{
+				Component misc3 = misc.get(i);
+				if(misc3 != null && misc3.maxAmount < 3)
+				{
+					continue;
+				}
+				for(i = rand.nextInt(misc.size());; i = rand.nextInt(misc.size()))
+				{
+					Component misc4 = misc.get(i);
+					if(misc4 != null && misc4.maxAmount < 4)
+					{
+						continue;
+					}
+					ArrayList<Component> barrels = getComponentsOfType(Type.BARREL, false);
+					Component barrel = barrels.get(rand.nextInt(barrels.size()));
+					ArrayList<Component> magazines = getComponentsOfType(Type.MAGAZINE, false);
+					Component magazine = magazines.get(rand.nextInt(magazines.size()));
+					ArrayList<Component> triggers = getComponentsOfType(Type.TRIGGER, false);
+					Component trigger = triggers.get(rand.nextInt(triggers.size()));
+					ArrayList<Component> grips = getComponentsOfType(Type.GRIP, false);
+					Component grip = grips.get(rand.nextInt(grips.size()));
+					ArrayList<Component> stocks = getComponentsOfType(Type.STOCK, true);
+					Component stock = stocks.get(rand.nextInt(stocks.size()));
+					ArrayList<Component> aims = getComponentsOfType(Type.AIM, true);
+					Component aim = aims.get(rand.nextInt(aims.size()));
+					ItemStack gun = new ItemStack(M.gun);
+					gun.setTagCompound(new NBTTagCompound());
+					if(misc1 != null)
+					{
+						ItemGun.addComponent(gun, 6, misc1);
+					}
+					if(misc2 != null)
+					{
+						ItemGun.addComponent(gun, 7, misc2);
+					}
+					if(misc3 != null)
+					{
+						ItemGun.addComponent(gun, 8, misc3);
+					}
+					if(misc4 != null)
+					{
+						ItemGun.addComponent(gun, 9, misc4);
+					}
+					ItemGun.addComponent(gun, 0, barrel);
+					ItemGun.addComponent(gun, 1, magazine);
+					ItemGun.addComponent(gun, 2, trigger);
+					ItemGun.addComponent(gun, 3, grip);
+					if(stock != null)
+					{
+						ItemGun.addComponent(gun, 4, stock);
+					}
+					if(aim != null)
+					{
+						ItemGun.addComponent(gun, 5, aim);
+					}
+					if(ComponentEvents.isGunValid(gun))
+					{
+						return getComponents(gun);
+					}
+				}
+			}
+		}
 	}
 	
 	public static ArrayList<Component> getComponentsOfType(Type type)
@@ -794,7 +877,7 @@ public class ItemGun extends ItemBase implements IDAble
 	public static ArrayList<Component> getComponentsOfType(Type type, boolean withNull)
 	{
 		ArrayList<Component> a = getComponentsOfType(type);
-		if(withNull)
+		if(withNull || a.size() <= 0)
 		{
 			a.add(null);
 		}
@@ -809,12 +892,14 @@ public class ItemGun extends ItemBase implements IDAble
 	
 	public static void dropAllComponents(EntityPlayer player, ItemStack stack)
 	{
-		for(Component c : getComponents(stack))
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
 		{
-			ItemStack drop = c.toItemStack(stack);
+			Component c = cs.get(slot);
+			ItemStack drop = c.toItemStack(slot, stack);
 			player.dropItem(drop, true, false);
 		}
-		setComponents(stack, new ArrayList());
+		setComponents(stack, new HashMap());
 	}
 	
 }

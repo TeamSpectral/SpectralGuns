@@ -79,7 +79,7 @@ public class ComponentTriggerMechanism extends ComponentGeneric
 	}
 	
 	@Override
-	public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+	public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 	{
 		
 	}

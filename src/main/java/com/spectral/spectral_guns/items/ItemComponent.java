@@ -1,6 +1,5 @@
 package com.spectral.spectral_guns.items;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -74,6 +73,6 @@ public class ItemComponent extends ItemBase implements IDAble
 	@Override
 	public int getMaxDamage()
 	{
-		return this.c.durabilityMax(new ItemStack(M.gun), new ArrayList());
+		return this.c.durabilityMax(-1, new ItemStack(M.gun));
 	}
 }

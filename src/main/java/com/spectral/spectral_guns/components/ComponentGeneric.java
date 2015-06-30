@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.items.ItemGun;
 
 public abstract class ComponentGeneric extends Component
 {
@@ -75,137 +76,137 @@ public abstract class ComponentGeneric extends Component
 		return ArraysAndSuch.arrayToArrayList(this.incapatibleMats);
 	}
 	
-	public int setAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components, int ammo)
+	public int setAmmo(ItemStack stack, World world, EntityPlayer player, int ammo)
 	{
 		return ammo;
 	}
 	
 	@Override
-	public ArrayList<Entity> fire(ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public ArrayList<Entity> fire(int slot, ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player)
 	{
 		return projectiles;
 	}
 	
 	@Override
-	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
 		return delay;
 	}
 	
 	@Override
-	public float recoil(float recoil, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
 	{
 		return recoil;
 	}
 	
 	@Override
-	public float instability(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float instability(int slot, float instability, ItemStack stack, World world, EntityPlayer player)
 	{
 		return instability;
 	}
 	
 	@Override
-	public float kickback(float kickback, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float kickback(int slot, float kickback, ItemStack stack, World world, EntityPlayer player)
 	{
 		return kickback;
 	}
 	
 	@Override
-	public float zoom(float zoom, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float zoom(int slot, float zoom, ItemStack stack, World world, EntityPlayer player)
 	{
 		return zoom;
 	}
 	
 	@Override
-	public float fireRate(float rate, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
 		return rate;
 	}
 	
 	@Override
-	public float spread(float spread, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float spread(int slot, float spread, ItemStack stack, World world, EntityPlayer player)
 	{
 		return spread;
 	}
 	
 	@Override
-	public float speed(float speed, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
 		return speed;
 	}
 	
 	@Override
-	protected void fireSound(Entity e, ItemStack stack, World world, EntityPlayer player)
+	protected void fireSound(int slot, Entity e, ItemStack stack, World world, EntityPlayer player)
 	{
 	}
 	
 	@Override
-	public int ammo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public int ammo(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return 0;
 	}
 	
 	@Override
-	public boolean isAmmoItem(ItemStack stack, World world, EntityPlayer player)
+	public boolean isAmmoItem(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return false;
 	}
 	
 	@Override
-	public Item ejectableAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public Item ejectableAmmo(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return null;
 	}
 	
 	@Override
-	public int setAmmo(int ammo, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public int setAmmo(int slot, int ammo, ItemStack stack, World world, EntityPlayer player)
 	{
 		return ammo;
 	}
 	
 	@Override
-	public int capacity(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public int capacity(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return 0;
 	}
 	
 	@Override
-	public boolean automatic(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public boolean automatic(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return false;
 	}
 	
 	@Override
-	public double heatConductiveness(ItemStack stack, ArrayList<Component> components)
+	public double heatConductiveness(int slot, ItemStack stack)
 	{
 		return this.heatLoss;
 	}
 	
 	@Override
-	public float heatThreshold(ItemStack stack, ArrayList<Component> components)
+	public float heatThreshold(int slot, ItemStack stack)
 	{
-		return (float)(this.heatThreshold * (this.heat(stack, components) > 0 ? this.material.heatThresholdMax : this.material.heatThresholdMin));
+		return (float)(this.heatThreshold * (this.heat(slot, stack) > 0 ? this.material.heatThresholdMax : this.material.heatThresholdMin));
 	}
 	
 	@Override
-	public int durabilityMax(ItemStack stack, ArrayList<Component> components)
+	public int durabilityMax(int slot, ItemStack stack)
 	{
 		return (int)(this.material.durability * this.maxDurability);
 	}
 	
 	@Override
-	public void update(ItemStack stack, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
+	public void update(int slot, ItemStack stack, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
-		if(this.heat(stack, components) > this.heatThreshold(stack, components) || this.heat(stack, components) < -this.heatThreshold(stack, components))
+		if(this.heat(slot, stack) > this.heatThreshold(slot, stack) || this.heat(slot, stack) < -this.heatThreshold(slot, stack))
 		{
 			if(player.ticksExisted % 10 == 1)
 			{
-				this.addDurabilityDamage(1, stack, player, components);
+				this.addDurabilityDamage(slot, 1, stack, player);
 			}
 		}
-		this.heatMix(stack, player.isInWater() ? -20 : 0, this.heatThreshold(stack, components), 0.1, components);
+		this.heatMix(slot, stack, player.isInWater() ? -20 : 0, this.heatThreshold(slot, stack), 0.1);
 		loop:
-		for(Component c : components)
+		for(Component c : ItemGun.getComponents(stack).values())
 		{
 			if(c != this)
 			{
@@ -213,7 +214,7 @@ public abstract class ComponentGeneric extends Component
 				{
 					if(type == c.type)
 					{
-						this.heatMix(stack, c, components);
+						this.heatMix(slot, stack, c);
 						continue loop;
 					}
 				}

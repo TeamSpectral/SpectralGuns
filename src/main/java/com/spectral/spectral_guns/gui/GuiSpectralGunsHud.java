@@ -1,7 +1,7 @@
 package com.spectral.spectral_guns.gui;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
@@ -119,13 +119,14 @@ public class GuiSpectralGunsHud extends Gui
 				this.mc.mcProfiler.startSection("components");
 				if(ComponentEvents.isGunValid(stack))
 				{
-					ArrayList<Component> cs = ItemGun.getComponents(stack);
-					for(int i = 0; i < cs.size(); ++i)
+					HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
+					int i = 0;
+					for(Integer slot : cs.keySet())
 					{
-						Component c = cs.get(i);
+						Component c = cs.get(slot);
 						
-						double heat = c.heat(stack, cs);
-						double heatThreshold = (c.heatThreshold(stack, cs) + 10 * ComponentMaterial.IRON.heatThresholdMax) / 10;
+						double heat = c.heat(slot, stack);
+						double heatThreshold = (c.heatThreshold(slot, stack) + 10 * ComponentMaterial.IRON.heatThresholdMax) / 10;
 						double value = heat / heatThreshold / 3;
 						if(value > 1)
 						{
@@ -141,7 +142,8 @@ public class GuiSpectralGunsHud extends Gui
 						{
 							color = new Color(m / 2 - (int)(-value * m / 2), m / 2 - (int)(-value * m / 2), m / 2 + (int)(-value * m / 2));
 						}
-						fontrenderer.drawStringWithShadow(I18n.format(c.toItemStack(stack).getUnlocalizedName() + ".name"), w - 120, h - 10 * (cs.size() - i), color.hashCode());
+						fontrenderer.drawStringWithShadow(I18n.format(c.toItemStack(slot, stack).getUnlocalizedName() + ".name"), w - 120, h - 10 * (cs.size() - i), color.hashCode());
+						++i;
 					}
 				}
 				else
@@ -241,11 +243,12 @@ public class GuiSpectralGunsHud extends Gui
 			ItemStack gun = player.inventory.getStackInSlot(i);
 			if(gun != null && gun.getItem() instanceof ItemGun)
 			{
-				ArrayList<Component> cs = ItemGun.getComponents(gun);
-				for(Component c : cs)
+				HashMap<Integer, Component> cs = ItemGun.getComponents(gun);
+				for(Integer slot : cs.keySet())
 				{
-					double heat = c.heat(gun, cs);
-					double max = c.heatThreshold(gun, cs);
+					Component c = cs.get(slot);
+					double heat = c.heat(slot, gun);
+					double max = c.heatThreshold(slot, gun);
 					if(max > 0 && heat > max)
 					{
 						f += (float)(heat - max) / max / 3;
@@ -263,17 +266,18 @@ public class GuiSpectralGunsHud extends Gui
 				ItemStack gun = player.inventory.getStackInSlot(i);
 				if(gun != null && gun.getItem() instanceof ItemGun)
 				{
-					ArrayList<Component> cs = ItemGun.getComponents(gun);
-					for(Component c : cs)
+					HashMap<Integer, Component> cs = ItemGun.getComponents(gun);
+					for(Integer slot : cs.keySet())
 					{
+						Component c = cs.get(slot);
 						if(c.type == Type.GRIP)
 						{
 							ItemStack stack2 = new ItemStack(M.gun);
 							stack2.setTagCompound(new NBTTagCompound());
-							if(c.heat(gun, cs) * c.heatConductiveness(gun, cs) > c.heatThreshold(gun, cs) || c.heat(gun, cs) > M.grip_iron.heatThreshold(stack2, new ArrayList()) * 2)
+							if(c.heat(slot, gun) * c.heatConductiveness(slot, gun) > c.heatThreshold(slot, gun) || c.heat(slot, gun) > M.grip_iron.heatThreshold(-1, stack2) * 2)
 							{
-								double heat = c.heat(gun, cs);
-								double max = M.grip_iron.heatThreshold(stack2, new ArrayList());
+								double heat = c.heat(slot, gun);
+								double max = M.grip_iron.heatThreshold(-1, stack2);
 								if(max > 0 && heat > max || amount <= 0 && max < 0 && heat < max)
 								{
 									f += heat / max / 3;

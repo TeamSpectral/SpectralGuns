@@ -1,7 +1,5 @@
 package com.spectral.spectral_guns.components.aim;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,7 +7,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
@@ -25,7 +22,7 @@ public class ComponentScopeLaser extends ComponentScope
 	}
 	
 	@Override
-	public void update(ItemStack gun, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
+	public void update(int slot, ItemStack gun, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
 		boolean b = EntityExtendedPlayer.get(player).isZoomHeldDown;
 		if(isSelected && b)

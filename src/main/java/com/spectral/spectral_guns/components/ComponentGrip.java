@@ -1,7 +1,5 @@
 package com.spectral.spectral_guns.components;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -50,47 +48,47 @@ public class ComponentGrip extends ComponentGeneric
 	}
 	
 	@Override
-	public float instability(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float instability(int slot, float instability, ItemStack stack, World world, EntityPlayer player)
 	{
 		return instability * this.instabilityMultiplier;
 	}
 	
 	@Override
-	public float recoil(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float recoil(int slot, float instability, ItemStack stack, World world, EntityPlayer player)
 	{
 		return instability * this.recoilMultiplier;
 	}
 	
 	@Override
-	public float kickback(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float kickback(int slot, float instability, ItemStack stack, World world, EntityPlayer player)
 	{
 		return instability * this.kickbackMultiplier;
 	}
 	
 	@Override
-	public void update(ItemStack gun, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
+	public void update(int slot, ItemStack gun, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
-		super.update(gun, world, player, slot, isSelected, components);
-		if(this.heat(gun, components) * this.heatConductiveness(gun, components) > this.heatThreshold(gun, components) || this.heat(gun, components) > this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax * 2)
+		super.update(slot, gun, world, player, invSlot, isSelected);
+		if(this.heat(slot, gun) * this.heatConductiveness(slot, gun) > this.heatThreshold(slot, gun) || this.heat(slot, gun) > this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax * 2)
 		{
 			if(player.ticksExisted % 20 == 1 && player.getHeldItem() == gun)
 			{
 				player.attackEntityFrom(DamageSource.inFire, 1F);
-				this.addHeat(-1, gun, components);
+				this.addHeat(slot, -1, gun);
 			}
-			if(this.heat(gun, components) * this.heatConductiveness(gun, components) > 800 || this.heat(gun, components) >= this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax * 3)
+			if(this.heat(slot, gun) * this.heatConductiveness(slot, gun) > 800 || this.heat(slot, gun) >= this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax * 3)
 			{
 				if(world.rand.nextFloat() > 6 / 7)
 				{
 					player.setFire(1);
-					this.addHeat(-1, gun, components);
+					this.addHeat(slot, -1, gun);
 				}
 			}
 		}
 	}
 	
 	@Override
-	public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+	public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 	{
 		
 	}

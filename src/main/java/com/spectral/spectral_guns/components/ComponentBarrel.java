@@ -28,7 +28,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	}
 	
 	@Override
-	public float spread(float spread, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float spread(int slot, float spread, ItemStack stack, World world, EntityPlayer player)
 	{
 		if(spread > this.spread)
 		{
@@ -41,7 +41,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	}
 	
 	@Override
-	protected void fireSound(Entity e, ItemStack stack, World world, EntityPlayer player)
+	protected void fireSound(int slot, Entity e, ItemStack stack, World world, EntityPlayer player)
 	{
 		for(int i = 0; i < 3; ++i)
 		{
@@ -60,7 +60,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	}
 	
 	@Override
-	public ArrayList<Entity> fire(ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public ArrayList<Entity> fire(int slot, ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player)
 	{
 		if(this.velocity <= 1 && this.velocity > 0)
 		{
@@ -79,7 +79,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	}
 	
 	@Override
-	public abstract void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags);
+	public abstract void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags);
 	
 	@Override
 	public abstract void registerRecipe();
@@ -92,7 +92,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		}
 		
 		@Override
-		public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+		public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 		{
 			
 		}
@@ -128,7 +128,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		}
 		
 		@Override
-		public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+		public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 		{
 			
 		}
@@ -164,7 +164,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		}
 		
 		@Override
-		public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+		public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 		{
 			
 		}
@@ -200,7 +200,7 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		}
 		
 		@Override
-		public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+		public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 		{
 			
 		}

@@ -1,6 +1,7 @@
 package com.spectral.spectral_guns.components.trigger_mechanism;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.items.ItemGun;
 
 public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 {
@@ -27,25 +29,25 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 	}
 	
 	@Override
-	public float recoil(float recoil, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
 	{
 		return recoil * 4;
 	}
 	
 	@Override
-	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
 		return delay / 2 + this.delay;
 	}
 	
 	@Override
-	public float fireRate(float rate, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
 		return rate / 3;
 	}
 	
 	@Override
-	public float speed(float speed, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
 		return speed * 2;
 	}
@@ -71,19 +73,21 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 	}
 	
 	@Override
-	public ArrayList<Entity> fire(ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public ArrayList<Entity> fire(int slot, ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player)
 	{
 		for(int i = 0; i < e.size(); ++i)
 		{
-			this.addHeat(10, stack, components);
+			this.addHeat(slot, 10, stack);
 		}
-		for(Component c : components)
+		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
+		for(Integer slot2 : cs.keySet())
 		{
+			Component c = cs.get(slot2);
 			if(c.type == Type.MAGAZINE)
 			{
 				for(int i = 0; i < e.size(); ++i)
 				{
-					c.addHeat(200, stack, components);
+					c.addHeat(slot2, 200, stack);
 				}
 			}
 		}

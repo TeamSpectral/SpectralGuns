@@ -1,6 +1,6 @@
 package com.spectral.spectral_guns.inventory;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -60,14 +60,14 @@ public class SlotGun extends Slot
 			}
 			if(player != null)
 			{
-				ArrayList<Component> cs = ItemGun.getComponents(stack);
+				HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
 				for(int i = 0; i < 1000 && ItemGun.ammo(stack, player) > 0; ++i)
 				{
 					vec.add(new Vec3(0, 1.5, 0));
 					ConsumerComponentEventVec3 cce = new ConsumerComponentEventVec3(vec)
 					{
 						@Override
-						public void action(ItemStack gun, EntityPlayer player, ArrayList<Component> components)
+						public void action(ItemStack gun, EntityPlayer player)
 						{
 							Item item = ItemGun.ejectableAmmo(gun, player);
 							ItemStack drop = new ItemStack(item, 1, 0);
@@ -90,7 +90,7 @@ public class SlotGun extends Slot
 							}
 						}
 					};
-					ComponentEvents.eject(stack, player, cs, cce);
+					ComponentEvents.eject(stack, player, cce);
 				}
 				this.container.insertComponents(stack);
 			}

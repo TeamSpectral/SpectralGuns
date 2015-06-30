@@ -1,7 +1,5 @@
 package com.spectral.spectral_guns.components.magazine;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -17,19 +15,19 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.entity.projectile.EntitySmallFireball2;
 import com.spectral.spectral_guns.items.ItemGun;
 
-public final class ComponentMagazineSmallFireball extends ComponentMagazine
+public final class ComponentMagazineSmallFireball extends ComponentMagazineStandard
 {
 	public ComponentMagazineSmallFireball(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
 		super("small_fireball", "fireballSmall", 0.2, 5 * 5 * 8, material, capacity, kickback, 30, fireRate, projectileCount, 86.9F * heating);
+		this.incapatibleMats = new ComponentMaterial[]{ComponentMaterial.WOOD};
 	}
 	
 	@Override
-	protected Entity projectile(ItemStack stack, World world, EntityPlayer player)
+	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return new EntitySmallFireball2(world, player, 0, 0, 0);
 	}
@@ -41,7 +39,7 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazine
 	}
 	
 	@Override
-	protected void fireSound(Entity projectile, ItemStack stack, World world, EntityPlayer player)
+	protected void fireSound(int slot, Entity projectile, ItemStack stack, World world, EntityPlayer player)
 	{
 		float spread = ItemGun.spread(stack, player) + 0.03F;
 		
@@ -115,21 +113,13 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazine
 	}
 	
 	@Override
-	public boolean isValid(ArrayList<Component> ecs)
+	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
-		for(int i = 0; i < ecs.size(); ++i)
-		{
-			if(ecs.get(i).material == ComponentMaterial.WOOD)
-			{
-				return false;
-			}
-		}
-		return super.isValid(ecs);
+		return delay + this.capacity / 32 + 4;
 	}
 	
 	@Override
-	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
 	{
-		return delay + this.capacity / 32 + 4;
+		
 	}
 }

@@ -1,6 +1,7 @@
 package com.spectral.spectral_guns.components.magazine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,6 @@ import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.audio.MovingSoundPublic;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.components.ComponentBarrel.ComponentBarrelThin;
 import com.spectral.spectral_guns.components.ComponentGeneric;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
@@ -51,9 +51,10 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 	}
 	
 	@Override
-	public void update(ItemStack gun, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
+	public void update(int slot, ItemStack gun, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
-		NBTTagCompound compound = this.getTagCompound(gun);
+		this.setAmmo(slot, 1000, gun, world, player);
+		NBTTagCompound compound = this.getTagCompound(slot, gun);
 		if(isSelected)
 		{
 			EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
@@ -72,16 +73,18 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 			float incline = 1.13F / ItemGun.delay(gun, player);
 			compound.setFloat(CHARGE, compound.getFloat(CHARGE) + incline);
 			float heating = 5;
-			this.addHeat(heating, gun, components);
-			for(Component c : components)
+			this.addHeat(slot, heating, gun);
+			HashMap<Integer, Component> cs = ItemGun.getComponents(gun);
+			for(Integer slot2 : cs.keySet())
 			{
+				Component c = cs.get(slot2);
 				if(c.type == Type.BARREL)
 				{
-					c.addHeat(heating / 2, gun, components);
+					c.addHeat(slot2, heating / 2, gun);
 				}
 				else if(c.type == Type.TRIGGER)
 				{
-					c.addHeat(heating / 3, gun, components);
+					c.addHeat(slot2, heating / 3, gun);
 				}
 			}
 		}
@@ -103,7 +106,7 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 			int t = (int)(12 / compound.getFloat(CHARGE));
 			if(t <= 0 || compound.getInteger(TIMER) % t == t - 1)
 			{
-				this.setAmmo(-1, gun, world, player, components);
+				this.setAmmo(slot, -1, gun, world, player);
 			}
 		}
 		if(world.isRemote)
@@ -125,13 +128,13 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 			}
 		}
 		this.capAmmo(compound);
-		super.update(gun, world, player, slot, isSelected, components);
+		super.update(slot, gun, world, player, invSlot, isSelected);
 	}
 	
 	@Override
-	public int setAmmo(int ammo, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public int setAmmo(int slot, int ammo, ItemStack stack, World world, EntityPlayer player)
 	{
-		NBTTagCompound compound = this.getTagCompound(stack);
+		NBTTagCompound compound = this.getTagCompound(slot, stack);
 		if(!compound.hasKey(AMMO))
 		{
 			compound.setInteger(AMMO, 0);
@@ -152,97 +155,72 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 	}
 	
 	@Override
-	public int capacity(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public int capacity(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return this.capacity * ammoMultiplier;
 	}
 	
 	@Override
-	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
 		return delay + this.battery() / 2 + this.capacity / 32;
 	}
 	
 	@Override
-	public boolean isValid(ArrayList<Component> ecs)
+	public int ammo(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		int count = 0;
-		for(int i = 0; i < ecs.size(); ++i)
-		{
-			if(ecs.get(i).type == Type.MAGAZINE)
-			{
-				++count;
-			}
-			if(ecs.get(i).type == Type.BARREL)
-			{
-				if(ecs.get(i).material != ComponentMaterial.DIAMOND || !(ecs.get(i) instanceof ComponentBarrelThin))
-				{
-					return false;
-				}
-			}
-		}
-		if(count > 2)
-		{
-			return false;
-		}
-		return super.isValid(ecs);
-	}
-	
-	@Override
-	public int ammo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
-	{
-		NBTTagCompound compound = this.getTagCompound(stack);
+		NBTTagCompound compound = this.getTagCompound(slot, stack);
 		this.capAmmo(compound);
 		return compound.getInteger(AMMO);
 	}
 	
 	@Override
-	public boolean isAmmoItem(ItemStack stack, World world, EntityPlayer player)
+	public boolean isAmmoItem(ItemStack stack)
 	{
 		return stack.getItem() == Items.redstone;
 	}
 	
 	@Override
-	public Item ejectableAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public Item ejectableAmmo(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return Items.redstone;
 	}
 	
 	@Override
-	public float spread(float spread, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float spread(int slot, float spread, ItemStack stack, World world, EntityPlayer player)
 	{
 		return 0;
 	}
 	
 	@Override
-	public float kickback(float kickback, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float kickback(int slot, float kickback, ItemStack stack, World world, EntityPlayer player)
 	{
 		return 0;
 	}
 	
 	@Override
-	public float recoil(float recoil, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
 	{
 		return 0;
 	}
 	
 	@Override
-	public float speed(float speed, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
-		return 299792458 / 20;
+		return 299792458 / 20; //the speed of light
 	}
 	
 	@Override
-	public float fireRate(float rate, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
 		return 0;
 	}
 	
 	@Override
-	public ArrayList<Entity> fire(ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public ArrayList<Entity> fire(int slot, ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player)
 	{
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
-		this.getTagCompound(stack).setBoolean(FIRING, props.isRightClickHeldDown);
+		this.getTagCompound(slot, stack).setBoolean(FIRING, props.isRightClickHeldDown);
 		e.clear();
 		return e;
 	}
@@ -321,7 +299,7 @@ public class ComponentMagazineLaser extends ComponentGeneric implements ICompone
 	}
 	
 	@Override
-	public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+	public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 	{
 		
 	}

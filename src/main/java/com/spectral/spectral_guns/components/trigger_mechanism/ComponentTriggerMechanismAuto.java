@@ -1,7 +1,5 @@
 package com.spectral.spectral_guns.components.trigger_mechanism;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -9,7 +7,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.components.Component;
 
 public class ComponentTriggerMechanismAuto extends ComponentTriggerMechanism
 {
@@ -24,25 +21,25 @@ public class ComponentTriggerMechanismAuto extends ComponentTriggerMechanism
 	}
 	
 	@Override
-	public boolean automatic(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public boolean automatic(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return true;
 	}
 	
 	@Override
-	public float recoil(float recoil, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
 	{
 		return recoil * 3;
 	}
 	
 	@Override
-	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
 		return delay + this.delay * 1.3F;
 	}
 	
 	@Override
-	public float fireRate(float rate, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
 		return rate / 3;
 	}

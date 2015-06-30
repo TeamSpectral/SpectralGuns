@@ -1,12 +1,9 @@
 package com.spectral.spectral_guns.components.aim;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentGeneric;
 
@@ -19,7 +16,7 @@ public class ComponentAim extends ComponentGeneric
 	}
 	
 	@Override
-	public float zoom(float zoom, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float zoom(int slot, float zoom, ItemStack stack, World world, EntityPlayer player)
 	{
 		return zoom;
 	}
@@ -31,7 +28,7 @@ public class ComponentAim extends ComponentGeneric
 	}
 	
 	@Override
-	public void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
+	public void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags)
 	{
 		
 	}

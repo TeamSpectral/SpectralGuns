@@ -19,11 +19,10 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
 import com.spectral.spectral_guns.items.ItemGun;
 
-public final class ComponentMagazineFood extends ComponentMagazine
+public final class ComponentMagazineFood extends ComponentMagazineStandard
 {
 	protected ItemStack lastUsedStack = null;
 	protected ItemStack firedStack = null;
@@ -35,14 +34,15 @@ public final class ComponentMagazineFood extends ComponentMagazine
 	public ComponentMagazineFood(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
 		super("food", "food", 0.4, 5 * 8 * 8, material, capacity, kickback, 90, fireRate, projectileCount, 5.2F * heating);
+		this.incapatibleMats = new ComponentMaterial[]{ComponentMaterial.DIAMOND};
 	}
 	
 	@Override
-	protected Entity projectile(ItemStack stack, World world, EntityPlayer player)
+	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		if(this.firedStack == null)
 		{
-			this.firedStack = this.getLastItem(stack);
+			this.firedStack = this.getLastItem(slot, stack);
 			this.firedStackTick = world.getTotalWorldTime();
 		}
 		return new EntityFood(world, player, this.firedStack);
@@ -55,7 +55,7 @@ public final class ComponentMagazineFood extends ComponentMagazine
 	}
 	
 	@Override
-	public boolean isAmmoItem(ItemStack stack, World world, EntityPlayer player)
+	public boolean isAmmoItem(ItemStack stack)
 	{
 		if(this.isItemValid(stack, true))
 		{
@@ -68,7 +68,7 @@ public final class ComponentMagazineFood extends ComponentMagazine
 	}
 	
 	@Override
-	protected void fireSound(Entity projectile, ItemStack stack, World world, EntityPlayer player)
+	protected void fireSound(int slot, Entity projectile, ItemStack stack, World world, EntityPlayer player)
 	{
 		if(this.firedStack == null)
 		{
@@ -108,35 +108,22 @@ public final class ComponentMagazineFood extends ComponentMagazine
 	}
 	
 	@Override
-	public boolean isValid(ArrayList<Component> ecs)
+	public int setAmmo(int slot, int ammo, ItemStack stack, World world, EntityPlayer player)
 	{
-		for(int i = 0; i < ecs.size(); ++i)
-		{
-			if(ecs.get(i).material == ComponentMaterial.DIAMOND)
-			{
-				return false;
-			}
-		}
-		return super.isValid(ecs);
-	}
-	
-	@Override
-	public int setAmmo(int ammo, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
-	{
-		int result = super.setAmmo(ammo, stack, world, player, components);
-		this.sortItems(stack);
+		int result = super.setAmmo(slot, ammo, stack, world, player);
+		this.sortItems(slot, stack);
 		return result;
 	}
 	
 	@Override
-	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
 		return delay + this.capacity / 32 + 4;
 	}
 	
-	protected NBTTagList getItemsNBT(ItemStack gun)
+	protected NBTTagList getItemsNBT(int slot, ItemStack gun)
 	{
-		NBTTagCompound compound = this.getTagCompound(gun);
+		NBTTagCompound compound = this.getTagCompound(slot, gun);
 		
 		NBTTagList items = compound.getTagList(ITEMS, new NBTTagCompound().getId());
 		if(items == null)
@@ -164,14 +151,14 @@ public final class ComponentMagazineFood extends ComponentMagazine
 				}
 			}
 		}
-		this.getTagCompound(gun).setTag(ITEMS, items);
+		this.getTagCompound(slot, gun).setTag(ITEMS, items);
 		return items;
 	}
 	
-	protected ArrayList<ItemStack> getItems(ItemStack gun)
+	protected ArrayList<ItemStack> getItems(int slot, ItemStack gun)
 	{
 		ArrayList<ItemStack> a = new ArrayList<ItemStack>();
-		NBTTagList items = this.getItemsNBT(gun);
+		NBTTagList items = this.getItemsNBT(slot, gun);
 		
 		for(int i = 0; i < items.tagCount(); ++i)
 		{
@@ -195,44 +182,44 @@ public final class ComponentMagazineFood extends ComponentMagazine
 				--i;
 			}
 		}
-		this.getTagCompound(gun).setTag(ITEMS, items);
+		this.getTagCompound(slot, gun).setTag(ITEMS, items);
 		
 		return a;
 	}
 	
-	protected ItemStack getLastItem(ItemStack gun)
+	protected ItemStack getLastItem(int slot, ItemStack gun)
 	{
-		NBTTagList items = this.getItemsNBT(gun);
+		NBTTagList items = this.getItemsNBT(slot, gun);
 		if(items.tagCount() > 0)
 		{
 			ItemStack stack = ItemStack.loadItemStackFromNBT(items.getCompoundTagAt(items.tagCount() - 1));
-			this.removeLastItem(gun);
+			this.removeLastItem(slot, gun);
 			return stack;
 		}
 		return new ItemStack(this.ammoItem());
 	}
 	
-	protected void removeFirstItem(ItemStack gun)
+	protected void removeFirstItem(int slot, ItemStack gun)
 	{
-		NBTTagList items = this.getItemsNBT(gun);
+		NBTTagList items = this.getItemsNBT(slot, gun);
 		if(items.tagCount() > 0)
 		{
 			items.removeTag(0);
 		}
-		this.getTagCompound(gun).setTag(ITEMS, items);
+		this.getTagCompound(slot, gun).setTag(ITEMS, items);
 	}
 	
-	protected void removeLastItem(ItemStack gun)
+	protected void removeLastItem(int slot, ItemStack gun)
 	{
-		NBTTagList items = this.getItemsNBT(gun);
+		NBTTagList items = this.getItemsNBT(slot, gun);
 		if(items.tagCount() > 0)
 		{
 			items.removeTag(items.tagCount() - 1);
 		}
-		this.getTagCompound(gun).setTag(ITEMS, items);
+		this.getTagCompound(slot, gun).setTag(ITEMS, items);
 	}
 	
-	protected void addItem(ItemStack gun)
+	protected void addItem(int slot, ItemStack gun)
 	{
 		if(this.lastUsedStack == null)
 		{
@@ -241,7 +228,7 @@ public final class ComponentMagazineFood extends ComponentMagazine
 		if(this.lastUsedStack != null)
 		{
 			this.lastUsedStack.stackSize = 1;
-			NBTTagList items = this.getItemsNBT(gun);
+			NBTTagList items = this.getItemsNBT(slot, gun);
 			if(this.lastUsedStack != null)
 			{
 				NBTTagCompound stack = this.lastUsedStack.writeToNBT(new NBTTagCompound());
@@ -249,23 +236,23 @@ public final class ComponentMagazineFood extends ComponentMagazine
 				{
 					items.appendTag(stack);
 				}
-				this.getTagCompound(gun).setTag(ITEMS, items);
+				this.getTagCompound(slot, gun).setTag(ITEMS, items);
 			}
 		}
 		
 		this.lastUsedStack = null;
 	}
 	
-	protected void sortItems(ItemStack gun)
+	protected void sortItems(int slot, ItemStack gun)
 	{
-		int ammo = this.getTagCompound(gun).getInteger(AMMO);
-		while(this.getItemsNBT(gun).tagCount() > ammo)
+		int ammo = this.getTagCompound(slot, gun).getInteger(AMMO);
+		while(this.getItemsNBT(slot, gun).tagCount() > ammo)
 		{
-			this.removeFirstItem(gun);
+			this.removeFirstItem(slot, gun);
 		}
-		while(this.getItemsNBT(gun).tagCount() < ammo)
+		while(this.getItemsNBT(slot, gun).tagCount() < ammo)
 		{
-			this.addItem(gun);
+			this.addItem(slot, gun);
 		}
 	}
 	

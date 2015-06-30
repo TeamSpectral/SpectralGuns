@@ -51,7 +51,7 @@ public class HandlerClient extends HandlerCommon
 		ArrayList<IComponentAmmoItem> cs = ArraysAndSuch.allExtending(ComponentRegister.getAll(), IComponentAmmoItem.class);
 		for(int i = 0; i < cs.size(); ++i)
 		{
-			if(!cs.get(i).isAmmoItem(event.itemStack, event.entityPlayer.worldObj, event.entityPlayer))
+			if(!cs.get(i).isAmmoItem(event.itemStack))
 			{
 				cs.remove(i);
 				--i;

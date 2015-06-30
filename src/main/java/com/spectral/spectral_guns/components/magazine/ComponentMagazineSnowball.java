@@ -1,10 +1,7 @@
 package com.spectral.spectral_guns.components.magazine;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -18,11 +15,10 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
 import com.spectral.spectral_guns.items.ItemGun;
 
-public class ComponentMagazineSnowball extends ComponentMagazine
+public class ComponentMagazineSnowball extends ComponentMagazineStandard
 {
 	public ComponentMagazineSnowball(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
@@ -30,11 +26,9 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 	}
 	
 	@Override
-	protected Entity projectile(ItemStack stack, World world, EntityPlayer player)
+	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		EntitySnowball e = new EntitySnowball2(world, player);
-		
-		return e;
+		return new EntitySnowball2(world, player);
 	}
 	
 	@Override
@@ -44,7 +38,7 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 	}
 	
 	@Override
-	protected void fireSound(Entity projectile, ItemStack stack, World world, EntityPlayer player)
+	protected void fireSound(int slot, Entity projectile, ItemStack stack, World world, EntityPlayer player)
 	{
 		float spread = ItemGun.spread(stack, player) + 0.03F;
 		
@@ -113,12 +107,12 @@ public class ComponentMagazineSnowball extends ComponentMagazine
 	}
 	
 	@Override
-	public void update(ItemStack stack, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components)
+	public void update(int slot, ItemStack stack, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
-		super.update(stack, world, player, slot, isSelected, components);
-		if(this.ammo(stack, world, player, components) > 0 && this.heat(stack, components) <= 0)
+		super.update(slot, stack, world, player, invSlot, isSelected);
+		if(this.ammo(slot, stack, world, player) > 0 && this.heat(slot, stack) <= 0)
 		{
-			this.addHeat(-5, stack, components);
+			this.addHeat(slot, -5, stack);
 		}
 	}
 }

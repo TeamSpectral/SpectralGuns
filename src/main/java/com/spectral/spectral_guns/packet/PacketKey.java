@@ -116,7 +116,7 @@ public class PacketKey implements IMessage
 					if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemGun)
 					{
 						ItemStack stack = player.getHeldItem();
-						if(ComponentEvents.reload(stack, player, ItemGun.getComponents(stack)))
+						if(ComponentEvents.reload(stack, player))
 						{
 							stack.getTagCompound().setInteger(ItemGun.FIRERATETIMER, 20);
 							props.reloadDelay = props.maxReloadDelay;
@@ -132,7 +132,7 @@ public class PacketKey implements IMessage
 					if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemGun)
 					{
 						ItemStack stack = player.getHeldItem();
-						if(ComponentEvents.eject(stack, player, ItemGun.getComponents(stack)))
+						if(ComponentEvents.eject(stack, player))
 						{
 							props.reloadDelay = props.maxReloadDelay;
 						}

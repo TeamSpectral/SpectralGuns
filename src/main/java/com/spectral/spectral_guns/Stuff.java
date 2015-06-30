@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -373,6 +374,26 @@ public class Stuff
 			}
 			return at;
 		}
+		
+		public static Integer[] intArray(int[] a1)
+		{
+			Integer[] a2 = new Integer[a1.length];
+			for(int i = 0; i < a1.length; ++i)
+			{
+				a2[i] = a1[i];
+			}
+			return a2;
+		}
+		
+		public static int[] intArray(Integer[] a1)
+		{
+			int[] a2 = new int[a1.length];
+			for(int i = 0; i < a1.length; ++i)
+			{
+				a2[i] = a1[i];
+			}
+			return a2;
+		}
 	}
 	
 	/** Get all entities within the area **/
@@ -635,6 +656,16 @@ public class Stuff
 				s = s + c;
 			}
 			return s;
+		}
+	}
+	
+	/** Fat stacks, yo! **/
+	// - sigurd4
+	public static class ItemStacks
+	{
+		public static boolean canStack(ItemStack stack1, ItemStack stack2)
+		{
+			return stack1.isItemEqual(stack2) && stack2.isItemEqual(stack1) && stack1.isStackable() && stack2.isStackable() && stack1.stackSize + stack2.stackSize <= stack1.getMaxStackSize() && stack1.stackSize + stack2.stackSize <= stack2.getMaxStackSize();
 		}
 	}
 }

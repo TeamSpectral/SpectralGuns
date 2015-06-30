@@ -10,6 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,19 +29,20 @@ public abstract class Component
 	{
 		public static enum Type
 		{
-			MISC(false),
-			BARREL(true),
-			MAGAZINE(true),
-			TRIGGER(true),
-			GRIP(true),
-			STOCK(false),
-			AIM(false);
+			MISC(false, new int[]{6, 7, 8, 9}), BARREL(true, 0), MAGAZINE(true, 1), TRIGGER(true, 2), GRIP(true, 3), STOCK(false, 4), AIM(false, 5);
 			
 			final public boolean isRequired;
+			final public int[] slots;
 			
-			private Type(boolean isRequired)
+			private Type(boolean isRequired, int slot)
+			{
+				this(isRequired, new int[]{slot});
+			}
+			
+			private Type(boolean isRequired, int[] slots)
 			{
 				this.isRequired = isRequired;
+				this.slots = slots;
 			}
 		}
 		
@@ -88,13 +92,7 @@ public abstract class Component
 		
 		public static Component getRandomComponent(Random rand)
 		{
-			ArrayList<Component> cs = new ArrayList<Component>();
-			Iterator<Component> values = components.values().iterator();
-			while(values.hasNext())
-			{
-				Component c = values.next();
-				cs.add(c);
-			}
+			ArrayList<Component> cs = getAll();
 			if(cs.size() > 0)
 			{
 				if(cs.size() > 1)
@@ -148,26 +146,21 @@ public abstract class Component
 			return ts;
 		}
 		
-		public static ArrayList<Type> getComponentTypes(ArrayList<Component> cs)
+		public static ArrayList<Type> getComponentTypes(HashMap<Integer, Component> cs)
 		{
-			ArrayList<Type> ts = new ArrayList<Type>();
-			
-			for(int i = 0; i < cs.size(); ++i)
+			ArrayList<Type> ts = new ArrayList();
+			main:
+			for(Integer slot : cs.keySet())
 			{
-				Component c = cs.get(i);
-				boolean b = true;
+				Component c = cs.get(slot);
 				for(int i2 = 0; i2 < ts.size(); ++i2)
 				{
 					if(c.type == ts.get(i2))
 					{
-						b = false;
-						break;
+						continue main;
 					}
 				}
-				if(b)
-				{
-					ts.add(c.type);
-				}
+				ts.add(c.type);
 			}
 			
 			return ts;
@@ -176,30 +169,7 @@ public abstract class Component
 	
 	public enum ComponentMaterial
 	{
-		WOOD(
-				140,
-				0.04,
-				3,
-				0.1,
-				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
-		IRON(
-				267,
-				3.3,
-				0.5,
-				7,
-				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
-		GOLD(
-				122,
-				3.9,
-				1,
-				0.5,
-				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}),
-		DIAMOND(
-				320,
-				0.2,
-				0.1,
-				1,
-				new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});
+		WOOD(140, 0.04, 3, 0.1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), IRON(267, 3.3, 0.5, 7, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), GOLD(122, 3.9, 1, 0.5, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), DIAMOND(320, 0.2, 0.1, 1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});
 		
 		public final Type[] types;
 		public final int durability;
@@ -239,7 +209,7 @@ public abstract class Component
 	
 	public Component(String2 id, Type type, ComponentMaterial material)
 	{
-		String Id = id.s1 + "_" + material.getIDName(type, this) + id.s2;
+		String Id = id.s1 + (type != Type.MISC ? "_" + material.getIDName(type, this) : "") + id.s2;
 		ComponentRegister.components.put(Id, this);
 		this.item = new ItemComponent(this);
 		this.type = type;
@@ -276,132 +246,132 @@ public abstract class Component
 	
 	public abstract ArrayList<ComponentMaterial> getIncapatibleMats();
 	
-	public abstract int setAmmo(int ammo, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract int setAmmo(int slot, int ammo, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract ArrayList<Entity> fire(ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract ArrayList<Entity> fire(int slot, ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player);
 	
-	protected abstract void fireSound(Entity e, ItemStack stack, World world, EntityPlayer player);
+	protected abstract void fireSound(int slot, Entity e, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract float recoil(float recoil, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract float instability(float instability, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract float instability(int slot, float instability, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract float kickback(float kickback, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract float kickback(int slot, float kickback, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract float zoom(float zoom, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract float zoom(int slot, float zoom, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract float fireRate(float rate, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract boolean automatic(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract boolean automatic(int slot, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract float spread(float spread, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract float spread(int slot, float spread, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract float speed(float speed, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract int ammo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract int ammo(int slot, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract boolean isAmmoItem(ItemStack stack, World world, EntityPlayer player);
+	public abstract boolean isAmmoItem(int slot, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract int capacity(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract int capacity(int slot, ItemStack stack, World world, EntityPlayer player);
 	
-	public void setDurabilityDamage(int durability, ItemStack stack, EntityPlayer player, ArrayList<Component> components)
+	public void setDurabilityDamage(int slot, int durability, ItemStack stack, EntityPlayer player)
 	{
 		if(durability < 0)
 		{
 			durability = 0;
 		}
-		this.getTagCompound(stack).setInteger(ItemComponent.ITEMDAMAGE, durability);
+		this.getTagCompound(slot, stack).setInteger(ItemComponent.ITEMDAMAGE, durability);
 	}
 	
-	public void addDurabilityDamage(int heat, ItemStack stack, EntityPlayer player, ArrayList<Component> components)
+	public void addDurabilityDamage(int slot, int heat, ItemStack stack, EntityPlayer player)
 	{
-		this.setDurabilityDamage(heat + this.durabilityDamage(stack, components), stack, player, components);
+		this.setDurabilityDamage(slot, heat + this.durabilityDamage(slot, stack), stack, player);
 	}
 	
-	public int durabilityDamage(ItemStack stack, ArrayList<Component> components)
+	public int durabilityDamage(int slot, ItemStack stack)
 	{
-		return this.getTagCompound(stack).getInteger(ItemComponent.ITEMDAMAGE);
+		return this.getTagCompound(slot, stack).getInteger(ItemComponent.ITEMDAMAGE);
 	}
 	
-	public abstract int durabilityMax(ItemStack stack, ArrayList<Component> components);
+	public abstract int durabilityMax(int slot, ItemStack stack);
 	
-	public abstract Item ejectableAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components);
+	public abstract Item ejectableAmmo(int slot, ItemStack stack, World world, EntityPlayer player);
 	
-	public void setHeat(double heat, ItemStack stack, ArrayList<Component> components)
+	public void setHeat(int slot, double heat, ItemStack stack)
 	{
-		if(heat > this.heatThreshold(stack, components) * 3)
+		if(heat > this.heatThreshold(slot, stack) * 3)
 		{
-			heat = this.heatThreshold(stack, components) * 3;
+			heat = this.heatThreshold(slot, stack) * 3;
 		}
-		if(heat < -this.heatThreshold(stack, components) * 3)
+		if(heat < -this.heatThreshold(slot, stack) * 3)
 		{
-			heat = -this.heatThreshold(stack, components) * 3;
+			heat = -this.heatThreshold(slot, stack) * 3;
 		}
-		this.getTagCompound(stack).setDouble(ItemComponent.HEAT, heat);
+		this.getTagCompound(slot, stack).setDouble(ItemComponent.HEAT, heat);
 	}
 	
-	public void addHeat(double heat, ItemStack stack, ArrayList<Component> components)
+	public void addHeat(int slot, double heat, ItemStack stack)
 	{
-		this.setHeat(heat + this.heat(stack, components), stack, components);
+		this.setHeat(slot, heat + this.heat(slot, stack), stack);
 	}
 	
-	public double heat(ItemStack stack, ArrayList<Component> components)
+	public double heat(int slot, ItemStack stack)
 	{
-		double d = this.getTagCompound(stack).getDouble(ItemComponent.HEAT);
+		double d = this.getTagCompound(slot, stack).getDouble(ItemComponent.HEAT);
 		
 		return d;
 	}
 	
-	public abstract double heatConductiveness(ItemStack stack, ArrayList<Component> components);
+	public abstract double heatConductiveness(int slot, ItemStack stack);
 	
-	public abstract float heatThreshold(ItemStack stack, ArrayList<Component> components);
+	public abstract float heatThreshold(int slot, ItemStack stack);
 	
-	public void heatMix(ItemStack stack, Component c, ArrayList<Component> components)
+	public void heatMix(int slot, ItemStack stack, Component c)
 	{
-		double oldHeat1 = this.heat(stack, components);
-		double oldHeat2 = c.heat(stack, components);
-		double heat1 = this.heat(stack, components);
-		double cond1 = this.heatConductiveness(stack, components) * this.material.heatLoss / 10;
-		double heat2 = c.heat(stack, components);
-		double cond2 = c.heatConductiveness(stack, components) * c.material.heatLoss / 10;
+		double oldHeat1 = this.heat(slot, stack);
+		double oldHeat2 = c.heat(slot, stack);
+		double heat1 = this.heat(slot, stack);
+		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss / 10;
+		double heat2 = c.heat(slot, stack);
+		double cond2 = c.heatConductiveness(slot, stack) * c.material.heatLoss / 10;
 		double distr = heat1 * cond1 + heat2 * cond2;
-		this.setHeat(heat1 * (1 - cond1) + distr / 2, stack, components);
-		c.setHeat(heat2 * (1 - cond2) + distr / 2, stack, components);
+		this.setHeat(slot, heat1 * (1 - cond1) + distr / 2, stack);
+		c.setHeat(slot, heat2 * (1 - cond2) + distr / 2, stack);
 		for(Type type : c.getRequiredTypes())
 		{
 			if(type == this.type)
 			{
-				this.setHeat((this.heat(stack, components) + oldHeat1) / 2, stack, components);
-				c.setHeat((c.heat(stack, components) + oldHeat2) / 2, stack, components);
+				this.setHeat(slot, (this.heat(slot, stack) + oldHeat1) / 2, stack);
+				c.setHeat(slot, (c.heat(slot, stack) + oldHeat2) / 2, stack);
 				break;
 			}
 		}
 	}
 	
-	public void heatMix(ItemStack stack, double c2Heat, double c2Threshold, double c2HeatLoss, ArrayList<Component> components)
+	public void heatMix(int slot, ItemStack stack, double c2Heat, double c2Threshold, double c2HeatLoss)
 	{
-		double heat1 = this.heat(stack, components) * this.heatThreshold(stack, components);
-		double cond1 = this.heatConductiveness(stack, components) * this.material.heatLoss / 10;
+		double heat1 = this.heat(slot, stack) * this.heatThreshold(slot, stack);
+		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss / 10;
 		double heat2 = c2Heat * c2Threshold;
 		double cond2 = c2HeatLoss / 10;
 		double distr = heat1 * cond1 + heat2 * cond2;
-		this.setHeat((heat1 * (1 - cond1) + distr / 2) / c2Threshold, stack, components);
+		this.setHeat(slot, (heat1 * (1 - cond1) + distr / 2) / c2Threshold, stack);
 	}
 	
-	public abstract void update(ItemStack stack, World world, EntityPlayer player, int slot, boolean isSelected, ArrayList<Component> components);
+	public abstract void update(int slot, ItemStack stack, World world, EntityPlayer player, int invSlot, boolean isSelected);
 	
 	public abstract void registerRecipe();
 	
-	public boolean isValid(ArrayList<Component> ecs)
+	public boolean isValid(int slot, HashMap<Integer, Component> ecs)
 	{
 		if(true)
 		{
 			int count = 0;
-			for(int i = 0; i < ecs.size(); ++i)
+			for(Integer cSlot : ecs.keySet())
 			{
-				if(ecs.get(i).type == this.type)
+				if(ecs.get(cSlot).type == this.type)
 				{
 					++count;
 				}
@@ -416,16 +386,16 @@ public abstract class Component
 		{
 			ArrayList<Component> rcs = this.getRequired();
 			ArrayList<Component> ics = this.getIncapatible();
-			for(Component ec : ecs)
+			for(Integer cSlot : ecs.keySet())
 			{
-				if(ec != null && Stuff.ArraysAndSuch.has(ics, ec))
+				if(ecs.get(cSlot) != null && Stuff.ArraysAndSuch.has(ics, ecs.get(cSlot)))
 				{
 					return false;
 				}
 			}
 			for(Component rc : rcs)
 			{
-				if(rc != null && !Stuff.ArraysAndSuch.has(ecs, rc))
+				if(rc != null && !Stuff.ArraysAndSuch.has(Stuff.ArraysAndSuch.hashMapToArrayList(ecs), rc))
 				{
 					return false;
 				}
@@ -467,11 +437,11 @@ public abstract class Component
 			ArrayList<ComponentMaterial> rms = this.getRequiredMats();
 			ArrayList<ComponentMaterial> ims = this.getIncapatibleMats();
 			ArrayList<ComponentMaterial> ems = new ArrayList();
-			for(Component ec : ecs)
+			for(Integer cSlot : ecs.keySet())
 			{
-				if(ec != null && !Stuff.ArraysAndSuch.has(ems, ec.material))
+				if(ecs.get(cSlot) != null && !Stuff.ArraysAndSuch.has(ems, ecs.get(cSlot).material))
 				{
-					ems.add(ec.material);
+					ems.add(ecs.get(cSlot).material);
 				}
 			}
 			for(ComponentMaterial em : ems)
@@ -496,28 +466,39 @@ public abstract class Component
 	 * I do have custom rendered models planned. this will be used. until then,
 	 * ignore this.
 	 **/
-	// - sigurd4
 	@SideOnly(Side.CLIENT)
-	public abstract void renderModel(double x, double y, double z, float rx, float ry, float rz, Comparable... flags);
+	public abstract void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags);
 	
-	public final NBTTagCompound getTagCompound(ItemStack stack)
+	public final NBTTagCompound getTagCompound(int slot, ItemStack stack)
 	{
-		return this.getTagCompound(stack.getTagCompound());
+		return this.getTagCompound(slot, stack.getTagCompound());
 	}
 	
-	public NBTTagCompound getTagCompound(NBTTagCompound compound)
+	public NBTTagCompound getTagCompound(int slot, NBTTagCompound compound)
 	{
 		if(!compound.hasKey(ItemGun.COMPONENTS))
 		{
 			compound.setTag(ItemGun.COMPONENTS, new NBTTagCompound());
 		}
-		NBTTagCompound components = compound.getCompoundTag(ItemGun.COMPONENTS);
-		if(!components.hasKey(this.getID()))
+		NBTTagList components = compound.getTagList(ItemGun.COMPONENTS, new NBTTagCompound().getId());
+		for(int i = 0; i < components.tagCount(); ++i)
 		{
-			return new NBTTagCompound();
+			NBTTagCompound cCompound = components.getCompoundTagAt(i);
+			if(cCompound != null && cCompound.hasKey(ItemGun.COMPONENT_SLOT, new NBTTagInt(0).getId()) && cCompound.hasKey(ItemGun.COMPONENT_ID, new NBTTagString("").getId()))
+			{
+				int cSlot = cCompound.getInteger(ItemGun.COMPONENT_SLOT);
+				String id = cCompound.getString(ItemGun.COMPONENT_ID);
+				if(cSlot == slot)
+				{
+					if(cCompound.hasKey(ItemGun.COMPONENT_COMPOUND, new NBTTagCompound().getId()))
+					{
+						return cCompound.getCompoundTag(ItemGun.COMPONENT_COMPOUND);
+					}
+					break;
+				}
+			}
 		}
-		
-		return components.getCompoundTag(this.getID());
+		return new NBTTagCompound();
 	}
 	
 	public static class String2
@@ -545,9 +526,9 @@ public abstract class Component
 		}
 	}
 	
-	public ItemStack toItemStack(ItemStack gun)
+	public ItemStack toItemStack(int slot, ItemStack gun)
 	{
-		ItemStack stack = ItemStack.loadItemStackFromNBT(gun.getTagCompound().getCompoundTag(ItemGun.COMPONENTS).getCompoundTag(this.getID()));
+		ItemStack stack = ItemStack.loadItemStackFromNBT(this.getTagCompound(slot, gun));
 		if(stack != null)
 		{
 			return stack;

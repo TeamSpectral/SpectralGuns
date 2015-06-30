@@ -1,6 +1,7 @@
 package com.spectral.spectral_guns.components.magazine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +13,7 @@ import net.minecraft.world.World;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentGeneric;
+import com.spectral.spectral_guns.items.ItemGun;
 
 public abstract class ComponentMagazine extends ComponentGeneric implements IComponentAmmoItem
 {
@@ -37,9 +39,9 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	}
 	
 	@Override
-	public int setAmmo(int ammo, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public int setAmmo(int slot, int ammo, ItemStack stack, World world, EntityPlayer player)
 	{
-		NBTTagCompound compound = this.getTagCompound(stack);
+		NBTTagCompound compound = this.getTagCompound(slot, stack);
 		if(!compound.hasKey(AMMO))
 		{
 			compound.setInteger(AMMO, 0);
@@ -100,9 +102,11 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	{
 		return recoil + this.kickback * 5.6F;
 	}
+	public abstract ArrayList<Entity> fire(int slot, ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player);
 	
 	@Override
 	public float speed(float speed, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public boolean isValid(int slot, HashMap<Integer, Component> ecs)
 	{
 		return speed + 1.8F + this.kickback * 3;
 	}
@@ -119,40 +123,32 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 		
 	}
 	
-	@Override
-	public boolean isValid(ArrayList<Component> ecs)
-	{
-		int count = 0;
-		for(int i = 0; i < ecs.size(); ++i)
+		for(Integer cSlot : ecs.keySet())
 		{
-			if(ecs.get(i).type == Type.MAGAZINE)
+			if(cSlot != slot && ecs.get(cSlot).type == Type.MAGAZINE)
 			{
-				++count;
+				return false;
 			}
 		}
-		if(count > 2)
-		{
-			return false;
-		}
-		return super.isValid(ecs);
+		return super.isValid(slot, ecs);
 	}
 	
 	@Override
-	public int ammo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public int ammo(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		NBTTagCompound compound = this.getTagCompound(stack);
+		NBTTagCompound compound = this.getTagCompound(slot, stack);
 		this.capAmmo(compound);
 		return compound.getInteger(AMMO);
 	}
 	
 	@Override
-	public boolean isAmmoItem(ItemStack stack, World world, EntityPlayer player)
+	public boolean isAmmoItem(ItemStack stack)
 	{
 		return stack.getItem() == this.ammoItem();
 	}
 	
 	@Override
-	public Item ejectableAmmo(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public Item ejectableAmmo(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return this.ammoItem();
 	}
@@ -173,13 +169,14 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	}
 	
 	@Override
-	public int capacity(ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public int capacity(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return this.capacity;
 	}
 	
 	@Override
 	public float delay(float delay, ItemStack stack, World world, EntityPlayer player, ArrayList<Component> components)
+	public void heatUp(int slot, ItemStack stack, double modifier)
 	{
 		return delay + this.capacity / 32;
 	}

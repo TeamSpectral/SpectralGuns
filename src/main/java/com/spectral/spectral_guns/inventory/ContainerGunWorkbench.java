@@ -1,5 +1,7 @@
 package com.spectral.spectral_guns.inventory;
 
+import java.util.HashMap;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -145,10 +147,12 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 	public void insertComponents(ItemStack gun)
 	{
 		this.inventory.clearComponentStacks(true, 64);
-		for(Component c : ItemGun.getComponents(gun))
+		HashMap<Integer, Component> cs = ItemGun.getComponents(gun);
+		for(Integer slot : cs.keySet())
 		{
-			ItemStack stack = c.toItemStack(gun);
-			if(!this.mergeItemStack(stack, 0, this.inventory.getSizeInventory() - 1, true))
+			Component c = cs.get(slot);
+			ItemStack stack = c.toItemStack(slot, gun);
+			if(this.mergeItemStack(stack, this.inventory.getSizeInventory() - this.inventory.getComponentSlots() + slot, this.inventory.getSizeInventory() - this.inventory.getComponentSlots() + slot + 1, true) || !this.mergeItemStack(stack, 0, this.inventory.getSizeInventory(), false))
 			{
 				EntityItem entity = new EntityItem(this.inventory.getWorld(), this.inventory.getPos().getX() + 0.5, this.inventory.getPos().getY() + 0.5, this.inventory.getPos().getZ() + 0.5, stack);
 				entity.setNoPickupDelay();
