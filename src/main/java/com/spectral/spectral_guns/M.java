@@ -42,6 +42,7 @@ import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineShuriken;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineSmallFireball;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineSnowball;
+import com.spectral.spectral_guns.components.misc.ComponentOverclocker;
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanism;
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismAuto;
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismBoosted;
@@ -357,6 +358,8 @@ public class M
 	public static final ComponentGrip grip_wood = registerComponent(new ComponentGrip(ComponentMaterial.WOOD, 0.5F, 1.6F, 0.8F));
 	public static final ComponentGrip grip_iron = registerComponent(new ComponentGrip(ComponentMaterial.IRON, 0.3F, 0.9F, 1.2F));
 	public static final ComponentGrip grip_gold = registerComponent(new ComponentGrip(ComponentMaterial.GOLD, 0.1F, 0.7F, 1.4F));
+	
+	public static final ComponentOverclocker overclocker = registerComponent(new ComponentOverclocker());
 	
 	// //BLOCKS:
 	// ores

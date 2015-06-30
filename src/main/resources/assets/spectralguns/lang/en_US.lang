@@ -106,3 +106,5 @@ item.component.scope.wood.laser.green.name=Green Wooden Laser Scope (T1)
 item.component.scope.iron.laser.green.name=Green Iron Laser Scope (T2)
 item.component.scope.gold.laser.green.name=Green Golden Laser Scope (T3)
 item.component.scope.diamond.laser.green.name=Green Diamond Laser Scope (T4)
+
+item.component.addon.overclocker.name=Overclocker
