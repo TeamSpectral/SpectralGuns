@@ -28,7 +28,7 @@ public abstract class ComponentGeneric extends Component
 	public ComponentGeneric(String2 id, String2 name, double heatLoss, float heatThreshold, float maxDurability, Type type, ComponentMaterial material)
 	{
 		super(id, type, material);
-		this.name = name.s1 + "." + material.getDisplayName(type, this) + name.s2;
+		this.name = name.s1 + (type != Type.MISC ? "." + material.getDisplayName(type, this) : "") + name.s2;
 		this.heatLoss = heatLoss;
 		this.heatThreshold = heatThreshold;
 		this.maxDurability = maxDurability;
