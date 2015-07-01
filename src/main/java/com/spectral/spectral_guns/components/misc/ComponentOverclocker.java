@@ -43,26 +43,26 @@ public class ComponentOverclocker extends ComponentAddon
 	@Override
 	public ArrayList<Entity> fire(int slot, ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player)
 	{
-		this.addHeat(slot, 30, stack);
+		this.addHeat(slot, 100, stack);
 		return projectiles;
 	}
 	
 	@Override
 	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
 	{
-		return recoil * 2.2F;
+		return recoil * 1.4F;
 	}
 	
 	@Override
 	public float instability(int slot, float instability, ItemStack stack, World world, EntityPlayer player)
 	{
-		return instability * 1.8F;
+		return instability * 1.5F;
 	}
 	
 	@Override
 	public float kickback(int slot, float kickback, ItemStack stack, World world, EntityPlayer player)
 	{
-		return kickback * 1.2F;
+		return kickback * 1.6F;
 	}
 	
 	@Override

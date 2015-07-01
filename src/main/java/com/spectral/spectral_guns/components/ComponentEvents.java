@@ -18,7 +18,6 @@ import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazine;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
 import com.spectral.spectral_guns.items.ItemGun;
 
@@ -184,7 +183,7 @@ public class ComponentEvents
 		for(Integer slot : cs.keySet())
 		{
 			Component component = cs.get(slot);
-			if(component != null && component instanceof ComponentMagazine)
+			if(component != null)
 			{
 				projectiles = component.fire(slot, projectiles, stack, player.worldObj, player);
 			}
