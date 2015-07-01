@@ -25,7 +25,7 @@ public class ComponentOverclocker extends ComponentAddon
 	@Override
 	public void registerRecipe()
 	{
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item, 1), new Object[]{"HRL", "RGR", "rRC", 'H', Blocks.hopper, 'R', "blockRedstone", 'L', Blocks.lever, 'G', M.gear_diamond, 'r', Items.repeater, 'C', Items.comparator}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item, 1), new Object[]{"HRL", "RCR", "rGc", 'H', Blocks.hopper, 'R', "blockRedstone", 'L', Blocks.lever, 'G', M.gear_diamond, 'r', Items.repeater, 'c', Items.comparator, 'C', Items.clock}));
 	}
 	
 	@Override
