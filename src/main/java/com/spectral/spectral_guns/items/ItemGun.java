@@ -421,11 +421,17 @@ public class ItemGun extends ItemBase implements IDAble
 	public void applyRecoil(ItemStack stack, EntityPlayer player)
 	{
 		compound(stack);
-		float r = recoil(stack, player);
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+		float r = recoil(stack, player);
 		NBTTagCompound compound = stack.getTagCompound();
 		compound.setFloat(RECOIL, compound.getFloat(RECOIL) + r);
-		player.rotationYaw += Randomization.r(Math.sqrt(r) * instability(stack, player) * 2);
+		float i = instability(stack, player);
+		if(props.isZoomHeldDown)
+		{
+			float z = zoom(stack, player, 1);
+			i /= z;
+		}
+		player.rotationYaw += Randomization.r(Math.sqrt(r) * i * 2);
 		player.rotationPitch -= r;
 		float max = -90;
 		if(player.rotationPitch < max)
