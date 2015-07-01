@@ -79,7 +79,7 @@ public class ComponentEvents
 			Component c = cs.get(i);
 			if(c != null)
 			{
-				c.update(slot, stack, player.worldObj, player, slot, isSelected);
+				c.update(i, stack, player.worldObj, player, slot, isSelected);
 			}
 		}
 		double h = 0;
@@ -250,6 +250,19 @@ public class ComponentEvents
 		}
 		
 		return projectiles;
+	}
+	
+	public static void heatUp(ItemStack stack, EntityPlayer player, double modifier)
+	{
+		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
+		for(Integer slot : cs.keySet())
+		{
+			Component c = cs.get(slot);
+			if(c instanceof IComponentHeatOnFire)
+			{
+				((IComponentHeatOnFire)c).heatUp(slot, stack, modifier);
+			}
+		}
 	}
 	
 	public static boolean reload(ItemStack stack, EntityPlayer player)

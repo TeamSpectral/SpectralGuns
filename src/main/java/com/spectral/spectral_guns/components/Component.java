@@ -469,12 +469,12 @@ public abstract class Component
 	@SideOnly(Side.CLIENT)
 	public abstract void renderModel(int slot, double x, double y, double z, float rx, float ry, float rz, Comparable... flags);
 	
-	public final NBTTagCompound getTagCompound(int slot, ItemStack stack)
+	public final NBTTagCompound getComponentCompound(int slot, ItemStack stack)
 	{
-		return this.getTagCompound(slot, stack.getTagCompound());
+		return this.getComponentCompound(slot, stack.getTagCompound());
 	}
 	
-	public NBTTagCompound getTagCompound(int slot, NBTTagCompound compound)
+	public NBTTagCompound getComponentCompound(int slot, NBTTagCompound compound)
 	{
 		if(!compound.hasKey(ItemGun.COMPONENTS))
 		{
@@ -490,13 +490,28 @@ public abstract class Component
 				String id = cCompound.getString(ItemGun.COMPONENT_ID);
 				if(cSlot == slot)
 				{
-					if(cCompound.hasKey(ItemGun.COMPONENT_COMPOUND, new NBTTagCompound().getId()))
+					if(!cCompound.hasKey(ItemGun.COMPONENT_COMPOUND, new NBTTagCompound().getId()))
 					{
-						return cCompound.getCompoundTag(ItemGun.COMPONENT_COMPOUND);
+						cCompound.setTag(ItemGun.COMPONENT_COMPOUND, new NBTTagCompound());
 					}
-					break;
+					return cCompound;
 				}
 			}
+		}
+		return new NBTTagCompound();
+	}
+	
+	public final NBTTagCompound getTagCompound(int slot, ItemStack stack)
+	{
+		return this.getTagCompound(slot, stack.getTagCompound());
+	}
+	
+	public NBTTagCompound getTagCompound(int slot, NBTTagCompound compound)
+	{
+		NBTTagCompound cCompound = this.getComponentCompound(slot, compound);
+		if(cCompound.hasKey(ItemGun.COMPONENT_COMPOUND, new NBTTagCompound().getId()))
+		{
+			return cCompound.getCompoundTag(ItemGun.COMPONENT_COMPOUND);
 		}
 		return new NBTTagCompound();
 	}
@@ -528,11 +543,10 @@ public abstract class Component
 	
 	public ItemStack toItemStack(int slot, ItemStack gun)
 	{
-		ItemStack stack = ItemStack.loadItemStackFromNBT(this.getTagCompound(slot, gun));
-		if(stack != null)
-		{
-			return stack;
-		}
-		return new ItemStack(this.item);
+		NBTTagCompound compound = (NBTTagCompound)this.getTagCompound(slot, gun).copy();
+		ItemStack stack = new ItemStack(this.item, 1, compound.getInteger(ItemComponent.ITEMDAMAGE));
+		compound.removeTag(ItemComponent.ITEMDAMAGE);
+		stack.setTagCompound(compound);
+		return stack;
 	}
 }

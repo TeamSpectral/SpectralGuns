@@ -44,16 +44,14 @@ public class SlotComponent extends Slot
 		if(((TileEntityGunWorkbench)this.inventory).getStackInSlot(0) == null)
 		{
 			ItemStack stackGun = new ItemStack(M.gun);
-			ItemGun.setComponents(stackGun, ((TileEntityGunWorkbench)this.inventory).getComponents());
-			((TileEntityGunWorkbench)this.inventory).setInventorySlotContents(0, stackGun);
-			
+			SlotGun.gunFromComponents((TileEntityGunWorkbench)this.inventory, null, stackGun);
 		}
 		ItemStack stackGun = ((TileEntityGunWorkbench)this.inventory).getStackInSlot(0);
 		if(stack != null && stack.getItem() instanceof ItemComponent)
 		{
 			//ItemGun.addComponent(stackGun, ((ItemComponent)stack.getItem()).c);
 		}
-		if(ItemGun.getComponents(stackGun).size() <= 0 || !ComponentEvents.isGunValid(stackGun))
+		if(stackGun != null && (ItemGun.getComponents(stackGun).size() <= 0 || !ComponentEvents.isGunValid(stackGun)))
 		{
 			((TileEntityGunWorkbench)this.inventory).setInventorySlotContents(0, null);
 		}
@@ -77,9 +75,9 @@ public class SlotComponent extends Slot
 						break;
 					}
 				}
-				ItemGun.setComponents(stackGun, cs);
+				SlotGun.gunFromComponents((TileEntityGunWorkbench)this.inventory, player, stackGun);
 			}
-			if(ItemGun.getComponents(stackGun).size() <= 0 || !ComponentEvents.isGunValid(stackGun))
+			if(stackGun != null && (ItemGun.getComponents(stackGun).size() <= 0 || !ComponentEvents.isGunValid(stackGun)))
 			{
 				((TileEntityGunWorkbench)this.inventory).setInventorySlotContents(0, null);
 			}

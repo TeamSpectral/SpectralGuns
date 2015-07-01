@@ -101,8 +101,31 @@ public class SlotGun extends Slot
 	public void onPickupFromSlot(EntityPlayer player, ItemStack stack)
 	{
 		super.onPickupFromSlot(player, stack);
-		ItemGun.setComponents(stack, ((TileEntityGunWorkbench)this.inventory).getComponents());
 		((TileEntityGunWorkbench)this.inventory).clearComponentStacks(false, 1);
+	}
+	
+	public static void gunFromComponents(TileEntityGunWorkbench inventory, EntityPlayer player, ItemStack stack)
+	{
+		ItemGun.setComponents(stack, inventory.getComponents());
+		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
+		for(Integer slot : cs.keySet())
+		{
+			Component c = cs.get(slot);
+			ItemStack cStack = inventory.getStackInSlot(inventory.getSizeInventory() - inventory.getComponentSlots() + slot);
+			if(cStack != null)
+			{
+				if(cStack.getTagCompound() != null)
+				{
+					c.getComponentCompound(slot, stack).setTag(ItemGun.COMPONENT_COMPOUND, cStack.getTagCompound());
+				}
+				c.setDurabilityDamage(slot, cStack.getItemDamage(), stack, player);
+			}
+		}
+		if(stack != null && (ItemGun.getComponents(stack).size() <= 0 || !ComponentEvents.isGunValid(stack)))
+		{
+			stack = null;
+		}
+		inventory.setInventorySlotContents(0, stack);
 	}
 	
 	/**
@@ -118,7 +141,7 @@ public class SlotGun extends Slot
 			if(stackGun != null)
 			{
 				stackGun = stackGun.copy();
-				ItemGun.setComponents(stackGun, ((TileEntityGunWorkbench)this.inventory).getComponents());
+				gunFromComponents((TileEntityGunWorkbench)this.inventory, playerIn, stackGun);
 				if(ComponentEvents.isGunValid(stackGun))
 				{
 					return true;
@@ -172,9 +195,10 @@ public class SlotGun extends Slot
 		}
 		if(stackGun != null && stackGun.getItem() instanceof ItemGun)
 		{
-			ItemGun.setComponents(stackGun, ((TileEntityGunWorkbench)this.inventory).getComponents());
+			gunFromComponents((TileEntityGunWorkbench)this.inventory, null, stackGun);
+			stackGun = super.getStack();
 		}
-		if(stackGun != null && !ComponentEvents.isGunValid(stackGun))
+		if(stackGun != null && stackGun.stackSize < 1 && !ComponentEvents.isGunValid(stackGun))
 		{
 			stackGun = null;
 		}
