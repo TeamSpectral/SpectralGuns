@@ -1,8 +1,5 @@
 package com.spectral.spectral_guns.components.misc;
 
-import java.util.ArrayList;
-
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -13,8 +10,9 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.components.IComponentHeatOnFire;
 
-public class ComponentOverclocker extends ComponentAddon
+public class ComponentOverclocker extends ComponentAddon implements IComponentHeatOnFire
 {
 	public ComponentOverclocker()
 	{
@@ -41,10 +39,9 @@ public class ComponentOverclocker extends ComponentAddon
 	}
 	
 	@Override
-	public ArrayList<Entity> fire(int slot, ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player)
+	public void heatUp(int slot, ItemStack stack, double modifier)
 	{
-		this.addHeat(slot, 100, stack);
-		return projectiles;
+		this.addHeat(slot, 100 * modifier, stack);
 	}
 	
 	@Override

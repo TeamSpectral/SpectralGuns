@@ -152,7 +152,7 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 		{
 			Component c = cs.get(slot);
 			ItemStack stack = c.toItemStack(slot, gun);
-			if(this.mergeItemStack(stack, this.inventory.getSizeInventory() - this.inventory.getComponentSlots() + slot, this.inventory.getSizeInventory() - this.inventory.getComponentSlots() + slot + 1, true) || !this.mergeItemStack(stack, 0, this.inventory.getSizeInventory(), false))
+			if(!this.mergeItemStack(stack, this.inventory.getSizeInventory() - this.inventory.getComponentSlots() + slot, this.inventory.getSizeInventory() - this.inventory.getComponentSlots() + slot + 1, true) || !this.mergeItemStack(stack, 0, this.inventory.getSizeInventory(), false))
 			{
 				EntityItem entity = new EntityItem(this.inventory.getWorld(), this.inventory.getPos().getX() + 0.5, this.inventory.getPos().getY() + 0.5, this.inventory.getPos().getZ() + 0.5, stack);
 				entity.setNoPickupDelay();

@@ -1,7 +1,6 @@
 package com.spectral.spectral_guns.components.magazine;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +16,7 @@ import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.audio.MovingSoundPublic;
 import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
@@ -49,7 +48,6 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	@Override
 	public void update(int slot, ItemStack gun, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
-		this.setAmmo(slot, 1000, gun, world, player);
 		NBTTagCompound compound = this.getTagCompound(slot, gun);
 		if(isSelected)
 		{
@@ -59,7 +57,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 				compound.setBoolean(FIRING, true);
 			}
 		}
-		if(!isSelected || !EntityExtendedPlayer.get(player).isRightClickHeldDown || compound.getInteger(AMMO) - 1 < 0)
+		if(!isSelected || !EntityExtendedPlayer.get(player).isRightClickHeldDown || this.ammo(slot, gun, world, player) - 1 < 0)
 		{
 			compound.setBoolean(FIRING, false);
 			compound.setInteger(TIMER, 0);
@@ -68,21 +66,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 		{
 			float incline = 1.13F / ItemGun.delay(gun, player);
 			compound.setFloat(CHARGE, compound.getFloat(CHARGE) + incline);
-			float heating = 5;
-			this.addHeat(slot, heating, gun);
-			HashMap<Integer, Component> cs = ItemGun.getComponents(gun);
-			for(Integer slot2 : cs.keySet())
-			{
-				Component c = cs.get(slot2);
-				if(c.type == Type.BARREL)
-				{
-					c.addHeat(slot2, heating / 2, gun);
-				}
-				else if(c.type == Type.TRIGGER)
-				{
-					c.addHeat(slot2, heating / 3, gun);
-				}
-			}
+			ComponentEvents.heatUp(gun, player, compound.getFloat(CHARGE) / 30);
 		}
 		else
 		{
@@ -123,7 +107,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 				((MovingSoundPublic)AudioHandler.getSound(player, "fire.fire")).setVolume(compound.getFloat(CHARGE) / 2);
 			}
 		}
-		this.capAmmo(compound);
+		this.capAmmo(slot, gun, world, player);
 		super.update(slot, gun, world, player, invSlot, isSelected);
 	}
 	

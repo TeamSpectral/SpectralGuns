@@ -1,9 +1,7 @@
 package com.spectral.spectral_guns.components.trigger_mechanism;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -14,9 +12,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.components.IComponentHeatOnFire;
 import com.spectral.spectral_guns.items.ItemGun;
 
-public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
+public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism implements IComponentHeatOnFire
 {
 	protected ComponentTriggerMechanismBoosted(ComponentMaterial material, float delay)
 	{
@@ -73,24 +72,17 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 	}
 	
 	@Override
-	public ArrayList<Entity> fire(int slot, ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player)
+	public void heatUp(int slot, ItemStack stack, double modifier)
 	{
-		for(int i = 0; i < e.size(); ++i)
-		{
-			this.addHeat(slot, 10, stack);
-		}
+		this.addHeat(slot, 60 * modifier, stack);
 		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
 		for(Integer slot2 : cs.keySet())
 		{
 			Component c = cs.get(slot2);
 			if(c.type == Type.MAGAZINE)
 			{
-				for(int i = 0; i < e.size(); ++i)
-				{
-					c.addHeat(slot2, 200, stack);
-				}
+				c.addHeat(slot2, 200, stack);
 			}
 		}
-		return e;
 	}
 }

@@ -13,9 +13,10 @@ import net.minecraft.world.World;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentGeneric;
+import com.spectral.spectral_guns.components.IComponentHeatOnFire;
 import com.spectral.spectral_guns.items.ItemGun;
 
-public abstract class ComponentMagazine extends ComponentGeneric implements IComponentAmmoItem
+public abstract class ComponentMagazine extends ComponentGeneric implements IComponentAmmoItem, IComponentHeatOnFire
 {
 	public final int capacity;
 	public final float heating;
@@ -43,7 +44,7 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 		{
 			compound.setInteger(AMMO, 0);
 		}
-		while(ammo > 0 && compound.getInteger(AMMO) < this.capacity)
+		while(ammo > 0 && compound.getInteger(AMMO) < this.capacity(slot, stack, world, player))
 		{
 			compound.setInteger(AMMO, compound.getInteger(AMMO) + 1);
 			--ammo;
@@ -54,7 +55,7 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 			++ammo;
 		}
 		
-		this.capAmmo(compound);
+		this.capAmmo(slot, stack, world, player);
 		return ammo;
 	}
 	
@@ -78,7 +79,7 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	public int ammo(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		NBTTagCompound compound = this.getTagCompound(slot, stack);
-		this.capAmmo(compound);
+		this.capAmmo(slot, stack, world, player);
 		return compound.getInteger(AMMO);
 	}
 	
@@ -96,12 +97,13 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	
 	public abstract Item ammoItem();
 	
-	protected void capAmmo(NBTTagCompound c)
+	protected void capAmmo(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
+		NBTTagCompound c = this.getTagCompound(slot, stack);
 		int a = c.getInteger(AMMO);
-		if(c.getInteger(AMMO) > this.capacity)
+		if(c.getInteger(AMMO) > this.capacity(slot, stack, world, player))
 		{
-			c.setInteger(AMMO, this.capacity);
+			c.setInteger(AMMO, this.capacity(slot, stack, world, player));
 		}
 		if(c.getInteger(AMMO) < 0)
 		{
@@ -115,6 +117,7 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 		return this.capacity;
 	}
 	
+	@Override
 	public void heatUp(int slot, ItemStack stack, double modifier)
 	{
 		this.addHeat(slot, this.heating * modifier, stack);

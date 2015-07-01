@@ -723,7 +723,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 					{
 						try
 						{
-							EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, this.componentMiscStacks[i]);
+							EntityItem entity = new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5, stack);
 							entity.setNoPickupDelay();
 							if(!this.getWorld().isRemote)
 							{
@@ -738,7 +738,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 					stack.stackSize -= 1;
 					if(stack.stackSize <= 0)
 					{
-						stack = null;
+						this.componentMiscStacks[i] = null;
 					}
 				}
 			}

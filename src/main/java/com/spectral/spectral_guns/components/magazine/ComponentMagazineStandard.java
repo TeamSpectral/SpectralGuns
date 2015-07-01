@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import com.spectral.spectral_guns.components.ComponentEvents;
+
 public abstract class ComponentMagazineStandard extends ComponentMagazine
 {
 	public final float kickback;
@@ -32,7 +34,7 @@ public abstract class ComponentMagazineStandard extends ComponentMagazine
 		{
 			e.add(this.projectile(slot, stack, world, player));
 		}
-		this.heatUp(slot, stack, 1);
+		ComponentEvents.heatUp(stack, player, 1);
 		return e;
 	}
 	
