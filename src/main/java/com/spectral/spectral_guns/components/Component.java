@@ -272,7 +272,7 @@ public abstract class Component
 	
 	public abstract int ammo(int slot, ItemStack stack, World world, EntityPlayer player);
 	
-	public abstract boolean isAmmoItem(int slot, ItemStack stack, World world, EntityPlayer player);
+	public abstract boolean isAmmoItem(ItemStack stack);
 	
 	public abstract int capacity(int slot, ItemStack stack, World world, EntityPlayer player);
 	

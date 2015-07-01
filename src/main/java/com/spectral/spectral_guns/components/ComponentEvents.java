@@ -268,9 +268,9 @@ public class ComponentEvents
 			for(int i = 0; i < inv.getSizeInventory(); ++i)
 			{
 				ItemStack s = inv.getStackInSlot(i);
-				if(s != null && ItemGun.ammoItem(stack, s, player))
+				if(s != null)
 				{
-					if(addAmmo(amount, stack, player))
+					if(ItemGun.ammoItem(stack, s, player) && addAmmo(amount, stack, player))
 					{
 						--s.stackSize;
 						if(s.stackSize <= 0)

@@ -489,6 +489,10 @@ public class ItemGun extends ItemBase implements IDAble
 	public static HashMap<Integer, Component> getComponents(ItemStack stack)
 	{
 		HashMap<Integer, Component> cs = new HashMap();
+		if(!stack.hasTagCompound())
+		{
+			stack.setTagCompound(new NBTTagCompound());
+		}
 		NBTTagCompound compound = stack.getTagCompound();
 		if(compound.hasKey(COMPONENTS))
 		{
@@ -731,7 +735,7 @@ public class ItemGun extends ItemBase implements IDAble
 		HashMap<Integer, Component> cs = getComponents(gun);
 		for(Integer slot : cs.keySet())
 		{
-			if(cs.get(slot).isAmmoItem(slot, stack, player.worldObj, player))
+			if(cs.get(slot).isAmmoItem(stack))
 			{
 				return true;
 			}

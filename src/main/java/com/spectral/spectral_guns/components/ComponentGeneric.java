@@ -147,7 +147,7 @@ public abstract class ComponentGeneric extends Component
 	}
 	
 	@Override
-	public boolean isAmmoItem(int slot, ItemStack stack, World world, EntityPlayer player)
+	public boolean isAmmoItem(ItemStack stack)
 	{
 		return false;
 	}
