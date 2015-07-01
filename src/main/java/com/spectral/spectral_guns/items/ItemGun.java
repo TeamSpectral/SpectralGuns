@@ -427,6 +427,12 @@ public class ItemGun extends ItemBase implements IDAble
 		compound.setFloat(RECOIL, compound.getFloat(RECOIL) + r);
 		player.rotationYaw += Randomization.r(Math.sqrt(r) * instability(stack, player) * 2);
 		player.rotationPitch -= r;
+		float max = -90;
+		if(player.rotationPitch < max)
+		{
+			compound.setFloat(RECOIL, compound.getFloat(RECOIL) - (max - player.rotationPitch));
+			player.rotationPitch = max;
+		}
 	}
 	
 	public static void addComponent(ItemStack stack, int slot, Component c)
