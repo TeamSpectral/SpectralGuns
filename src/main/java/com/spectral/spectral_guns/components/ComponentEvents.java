@@ -217,7 +217,7 @@ public class ComponentEvents
 		for(Integer slot : cs.keySet())
 		{
 			Component component = cs.get(slot);
-			if(component != null)
+			if(component != null && projectiles.size() > 0)
 			{
 				component.fireSound(slot, projectiles.get(0), stack, player.worldObj, player);
 			}

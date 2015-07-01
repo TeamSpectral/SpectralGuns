@@ -35,7 +35,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	
 	public ComponentMagazineLaser(ComponentMaterial material, LaserColor color, int capacity, int battery)
 	{
-		super(new String2("magazine_laser", "_" + color.toString().toLowerCase()), new String2("magazine.laser", "." + color.toString().toLowerCase()), 0.4, 3 * 9 * 3, material, capacity, 4.6F);
+		super(new String2("laser", "_" + color.toString().toLowerCase()), new String2("laser", "." + color.toString().toLowerCase()), 0.4, 3 * 9 * 3, material, capacity, 4.6F);
 		this.color = color;
 		this.battery = battery;
 		this.required = new Component[]{M.barrel_thin_diamond};
