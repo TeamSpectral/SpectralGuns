@@ -701,7 +701,7 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 						}
 						catch(Throwable e)
 						{
-							int i3 = 0;
+							
 						}
 					}
 					stack.stackSize -= 1;
@@ -714,7 +714,8 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 		}
 		for(int i = 0; i < this.componentMiscStacks.length; ++i)
 		{
-			if(this.componentMiscStacks[i] != null)
+			ItemStack stack = this.componentMiscStacks[i];
+			if(stack != null && stack.getItem() != null && stack.stackSize > 0)
 			{
 				for(int i2 = 0; i2 < amount; ++i2)
 				{
@@ -734,10 +735,10 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 							
 						}
 					}
-					this.componentMiscStacks[i].stackSize -= 1;
-					if(this.componentMiscStacks[i].stackSize <= 0)
+					stack.stackSize -= 1;
+					if(stack.stackSize <= 0)
 					{
-						this.componentMiscStacks[i] = null;
+						stack = null;
 					}
 				}
 			}
