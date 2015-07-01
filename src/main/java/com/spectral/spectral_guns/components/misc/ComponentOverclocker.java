@@ -11,6 +11,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.IComponentHeatOnFire;
+import com.spectral.spectral_guns.items.ItemGun;
 
 public class ComponentOverclocker extends ComponentAddon implements IComponentHeatOnFire
 {
@@ -29,7 +30,14 @@ public class ComponentOverclocker extends ComponentAddon implements IComponentHe
 	@Override
 	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
-		return rate * 0.8F;
+		if(ItemGun.automatic(stack, player))
+		{
+			return rate * 0.7F;
+		}
+		else
+		{
+			return rate * 0.9F;
+		}
 	}
 	
 	@Override
@@ -59,7 +67,7 @@ public class ComponentOverclocker extends ComponentAddon implements IComponentHe
 	@Override
 	public float kickback(int slot, float kickback, ItemStack stack, World world, EntityPlayer player)
 	{
-		return kickback * 1.6F;
+		return kickback * 1.2F;
 	}
 	
 	@Override
