@@ -27,8 +27,8 @@ import org.lwjgl.input.Keyboard;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.Config;
-import com.spectral.spectral_guns.IDAble;
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
 import com.spectral.spectral_guns.components.Component;
@@ -38,7 +38,7 @@ import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
 
-public class ItemGun extends ItemBase implements IDAble
+public class ItemGun extends Item
 {
 	// nbt
 	public static final String COMPONENTS = "ComponentsList";
@@ -53,7 +53,7 @@ public class ItemGun extends ItemBase implements IDAble
 	
 	public ItemGun()
 	{
-		super("gun");
+		super();
 		this.setUnlocalizedName("gun");
 		this.setCreativeTab(M.tabCore);
 		this.setMaxDamage(200);
@@ -232,7 +232,7 @@ public class ItemGun extends ItemBase implements IDAble
 		a.add(new ItemStack(item, 1, 0));
 		for(int i = 0; i < a.size();)
 		{
-			compound(a.get(i));
+			Stuff.ItemStacks.compound(a.get(i));
 			a.get(i).getTagCompound().setInteger(DELAYTIMER, -1);
 			setComponents(a.get(0), getRandomComponents(Item.itemRand));
 			ComponentEvents.setAmmo(capacity(a.get(i), player), a.get(i), player);
@@ -244,7 +244,7 @@ public class ItemGun extends ItemBase implements IDAble
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		compound(stack);
+		Stuff.ItemStacks.compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
 		
 		if(M.gun.canShoot(stack, player))
@@ -257,7 +257,6 @@ public class ItemGun extends ItemBase implements IDAble
 	
 	public void resetDelay(ItemStack stack)
 	{
-		compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
 		compound.setInteger(DELAYTIMER, -1);
 	}
@@ -267,7 +266,6 @@ public class ItemGun extends ItemBase implements IDAble
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
 		
 		props.reloadDelay = props.maxReloadDelay;
-		compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
 		int i = delay(stack, player);
 		if(i < 0)
@@ -283,7 +281,6 @@ public class ItemGun extends ItemBase implements IDAble
 	
 	public boolean canShoot(ItemStack stack, EntityPlayer player)
 	{
-		compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
 		if(EntityExtendedPlayer.get(player).reloadDelay > 0)
 		{
@@ -351,7 +348,6 @@ public class ItemGun extends ItemBase implements IDAble
 		
 		props.reloadDelay = props.maxReloadDelay;
 		
-		compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
 		
 		ArrayList<Entity> e = ComponentEvents.fireComponents(stack, player);
@@ -409,7 +405,6 @@ public class ItemGun extends ItemBase implements IDAble
 	
 	public void recoilPerTick(ItemStack stack, Entity player)
 	{
-		compound(stack);
 		NBTTagCompound compound = stack.getTagCompound();
 		float r = compound.getFloat(RECOIL);
 		int i = 3;
@@ -420,7 +415,6 @@ public class ItemGun extends ItemBase implements IDAble
 	
 	public void applyRecoil(ItemStack stack, EntityPlayer player)
 	{
-		compound(stack);
 		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
 		float r = recoil(stack, player);
 		NBTTagCompound compound = stack.getTagCompound();

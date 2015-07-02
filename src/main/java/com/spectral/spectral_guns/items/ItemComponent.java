@@ -10,11 +10,10 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.spectral.spectral_guns.IDAble;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component;
 
-public class ItemComponent extends ItemBase implements IDAble
+public class ItemComponent extends Item
 {
 	public final Component c;
 	private final static CreativeTabs theTab = M.tabCore;
@@ -27,7 +26,7 @@ public class ItemComponent extends ItemBase implements IDAble
 	 */
 	public ItemComponent(Component c)
 	{
-		super("component_" + c.getID());
+		super();
 		this.setCreativeTab(theTab);
 		this.c = c;
 		this.setUnlocalizedName(c.getFancyName());
@@ -40,11 +39,16 @@ public class ItemComponent extends ItemBase implements IDAble
 	}
 	
 	@Override
+	public String getUnlocalizedName(ItemStack stack)
+	{
+		return this.getUnlocalizedName();
+	}
+	
+	@Override
 	public String getUnlocalizedName()
 	{
-		String s = "component." + this.c.getFancyName();
-		super.setUnlocalizedName(s);
-		return super.getUnlocalizedName();
+		String s = this.c.getFancyName();
+		return "item.component." + s;
 	}
 	
 	@Override

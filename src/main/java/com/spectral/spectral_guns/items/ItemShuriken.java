@@ -1,37 +1,31 @@
 package com.spectral.spectral_guns.items;
 
-import com.spectral.spectral_guns.IDAble;
-import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
-
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntitySnowball;
-import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
 import net.minecraft.world.World;
 
-public class ItemShuriken extends ItemBase implements IDAble
+import com.spectral.spectral_guns.Stuff.Randomization;
+import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
+
+public class ItemShuriken extends Item
 {
-	public ItemShuriken(String id)
+	public ItemShuriken()
 	{
-		super(id);
+		super();
 		this.maxStackSize = 32;
 	}
 	
+	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityPlayer player, int timeLeft)
 	{
 		int j = this.getMaxItemUseDuration(stack) - timeLeft;
 		
-		float f = (float)j / 20.0F;
+		float f = j / 20.0F;
 		f = (f * f + f * 2.0F) / 3.0F;
 		
-		if((double)f < 0.1D)
+		if(f < 0.1D)
 		{
 			return;
 		}
@@ -71,21 +65,25 @@ public class ItemShuriken extends ItemBase implements IDAble
 		}
 	}
 	
+	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
 		return stack;
 	}
 	
+	@Override
 	public int getMaxItemUseDuration(ItemStack stack)
 	{
 		return 18000;
 	}
 	
+	@Override
 	public EnumAction getItemUseAction(ItemStack stack)
 	{
 		return EnumAction.BOW;
 	}
 	
+	@Override
 	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
 	{
 		playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));

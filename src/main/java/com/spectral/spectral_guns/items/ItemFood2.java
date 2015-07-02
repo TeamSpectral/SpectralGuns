@@ -1,67 +1,46 @@
 package com.spectral.spectral_guns.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.spectral.spectral_guns.IDAble;
-import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.References;
-import com.spectral.spectral_guns.Stuff;
-
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.StatList;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemFood2 extends ItemFood implements IDAble
+public class ItemFood2 extends ItemFood
 {
 	public final int itemUseDuration;
 	public final EnumAction action;
-	private final String id;
-	
-	public final String getId()
-	{
-		return id;
-	}
 	
 	/**
 	 * Food extending ItemBase
 	 */
-	public ItemFood2(String id, int amount, float saturation, boolean isWolfFood, int duration, EnumAction action)
+	public ItemFood2(int amount, float saturation, boolean isWolfFood, int duration, EnumAction action)
 	{
 		super(amount, saturation, isWolfFood);
 		this.itemUseDuration = duration;
 		this.action = action;
-		this.id = id;
 	}
 	
 	/**
 	 * Food extending ItemBase
 	 */
-	public ItemFood2(String id, int amount, float saturation, boolean isWolfFood, int duration)
+	public ItemFood2(int amount, float saturation, boolean isWolfFood, int duration)
 	{
-		this(id, amount, saturation, isWolfFood, duration, EnumAction.EAT);
+		this(amount, saturation, isWolfFood, duration, EnumAction.EAT);
 	}
 	
 	/**
 	 * Food extending ItemBase
 	 */
-	public ItemFood2(String id, int amount, float saturation, boolean isWolfFood, int duration, CreativeTabs[] tabs)
+	public ItemFood2(int amount, float saturation, boolean isWolfFood, int duration, CreativeTabs[] tabs)
 	{
-		this(id, amount, saturation, isWolfFood, duration);
-		this.setCreativeTabs(tabs);
+		this(amount, saturation, isWolfFood, duration);
 	}
 	
+	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
 		--stack.stackSize;
@@ -72,32 +51,15 @@ public class ItemFood2 extends ItemFood implements IDAble
 		return stack;
 	}
 	
+	@Override
 	public int getMaxItemUseDuration(ItemStack stack)
 	{
-		return itemUseDuration;
-	}
-	
-	public EnumAction getItemUseAction(ItemStack stack)
-	{
-		return action;
+		return this.itemUseDuration;
 	}
 	
 	@Override
-	public CreativeTabs[] getCreativeTabs()
+	public EnumAction getItemUseAction(ItemStack stack)
 	{
-		if(M.creativeTabs.containsKey(this) && M.creativeTabs.get(this) != null)
-		{
-			return M.creativeTabs.get(this);
-		}
-		else
-		{
-			return super.getCreativeTabs();
-		}
-	}
-	
-	public ItemFood2 setCreativeTabs(CreativeTabs[] tabs)
-	{
-		M.creativeTabs.put(this, tabs);
-		return this;
+		return this.action;
 	}
 }

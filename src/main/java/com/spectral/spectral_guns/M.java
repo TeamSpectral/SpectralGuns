@@ -7,10 +7,10 @@ import java.util.Iterator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenHills;
@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -47,7 +48,6 @@ import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerM
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismAuto;
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismBoosted;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
-import com.spectral.spectral_guns.items.ItemBase;
 import com.spectral.spectral_guns.items.ItemAmmo;
 import com.spectral.spectral_guns.items.ItemComponent;
 import com.spectral.spectral_guns.items.ItemFood2;
@@ -177,7 +177,7 @@ public class M
 	public static <T extends Component> T registerComponent(T component)
 	{
 		ItemComponent item = ComponentRegister.getItem(component);
-		registerItem(item, false, new String[]{});
+		registerItem("component_" + component.getID(), item, false, new String[]{});
 		return component;
 	}
 	
@@ -232,31 +232,12 @@ public class M
 		{
 			return M.gun;
 		}
-		
-		@Override
-		@SideOnly(Side.CLIENT)
-		public ItemStack getIconItemStack()
-		{
-			if(M.proxy.world(0).isRemote)
-			{
-				return this.getIconItemStackClient();
-			}
-			else
-			{
-				return M.gun.getSubItem((EntityPlayer)M.proxy.world(0).playerEntities.get(0), M.gun, this);
-			}
-		}
-		
-		@SideOnly(Side.CLIENT)
-		public ItemStack getIconItemStackClient()
-		{
-			return M.gun.getSubItem(Minecraft.getMinecraft().thePlayer, M.gun, this);
-		}
 	};
 	
 	// //ITEMS:
 	// the gun
-	public static ItemGun gun = registerItem(new ItemGun(), false, new String[]{});
+	public static final ItemGun gun = registerItem("gun", new ItemGun(), false, new String[]{});
+	
 	// ammo
 	public static final ItemAmmo snow_ampulla = registerItem("ammo_snow_ampulla", (ItemAmmo)new ItemAmmo(Items.snowball, 1)
 	{
@@ -276,23 +257,23 @@ public class M
 	}.setUnlocalizedName("snowCapsule").setCreativeTab(M.tabCore), false, new String[]{});
 	
 	// other stuff
-	public static final ItemBase iron_nugget = registerItem((ItemBase)new ItemBase("iron_nugget").setUnlocalizedName("ironNugget").setCreativeTab(CreativeTabs.tabMaterials), false, new String[]{"nuggetIron"});
-	public static final ItemBase container = registerItem((ItemBase)new ItemBase("container").setUnlocalizedName("container").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemFood2 food_mush = registerItem((ItemFood2)new ItemFood2("food_mush", 3, 0.1F, false, 42).setUnlocalizedName("foodMush").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemBase gear_wood = registerItem((ItemBase)new ItemBase("gear_wood").setUnlocalizedName("gear.wood").setCreativeTab(M.tabCore), false, new String[]{"gearWood"});
-	public static final ItemBase gear_iron = registerItem((ItemBase)new ItemBase("gear_iron").setUnlocalizedName("gear.iron").setCreativeTab(M.tabCore), false, new String[]{"gearIron"});
-	public static final ItemBase gear_gold = registerItem((ItemBase)new ItemBase("gear_gold").setUnlocalizedName("gear.gold").setCreativeTab(M.tabCore), false, new String[]{"gearGold"});
-	public static final ItemBase gear_diamond = registerItem((ItemBase)new ItemBase("gear_diamond").setUnlocalizedName("gear.diamond").setCreativeTab(M.tabCore), false, new String[]{"gearDiamond"});
-	public static final ItemBase lens_convex = registerItem((ItemBase)new ItemBase("lens_convex").setUnlocalizedName("lens.convex").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemBase lens_concave = registerItem((ItemBase)new ItemBase("lens_concave").setUnlocalizedName("lens.concave").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemBase prism = registerItem((ItemBase)new ItemBase("prism").setUnlocalizedName("prism").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemBase eyepiece = registerItem((ItemBase)new ItemBase("eyepiece").setUnlocalizedName("eyepiece").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemBase ruby = registerItem((ItemBase)new ItemBase("ruby").setUnlocalizedName("ruby").setCreativeTab(CreativeTabs.tabMaterials), true, new String[]{"gemRuby"});
-	public static final ItemBase laser_diode_green = registerItem((ItemBase)new ItemBase("laser_diode_green").setUnlocalizedName("laserDiode.green").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemBase laser_diode_red = registerItem((ItemBase)new ItemBase("laser_diode_red").setUnlocalizedName("laserDiode.red").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemBase laser_diode_green_strong = registerItem((ItemBase)new ItemBase("laser_diode_green_strong").setUnlocalizedName("laserDiode.green.strong").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemBase laser_diode_red_strong = registerItem((ItemBase)new ItemBase("laser_diode_red_strong").setUnlocalizedName("laserDiode.red.strong").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemShuriken shuriken = registerItem((ItemShuriken)new ItemShuriken("shuriken").setUnlocalizedName("shuriken").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final Item iron_nugget = registerItem("iron_nugget", new Item().setUnlocalizedName("ironNugget").setCreativeTab(CreativeTabs.tabMaterials), true, new String[]{"nuggetIron"});
+	public static final Item container = registerItem("container", new Item().setUnlocalizedName("container").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final ItemFood2 food_mush = registerItem("food_mush", (ItemFood2)new ItemFood2(3, 0.1F, false, 42).setUnlocalizedName("foodMush").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final Item gear_wood = registerItem("gear_wood", new Item().setUnlocalizedName("gear.wood").setCreativeTab(M.tabCore), false, new String[]{"gearWood"});
+	public static final Item gear_iron = registerItem("gear_iron", new Item().setUnlocalizedName("gear.iron").setCreativeTab(M.tabCore), false, new String[]{"gearIron"});
+	public static final Item gear_gold = registerItem("gear_gold", new Item().setUnlocalizedName("gear.gold").setCreativeTab(M.tabCore), false, new String[]{"gearGold"});
+	public static final Item gear_diamond = registerItem("gear_diamond", new Item().setUnlocalizedName("gear.diamond").setCreativeTab(M.tabCore), false, new String[]{"gearDiamond"});
+	public static final Item lens_convex = registerItem("lens_convex", new Item().setUnlocalizedName("lens.convex").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final Item lens_concave = registerItem("lens_concave", new Item().setUnlocalizedName("lens.concave").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final Item prism = registerItem("prism", new Item().setUnlocalizedName("prism").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final Item eyepiece = registerItem("eyepiece", new Item().setUnlocalizedName("eyepiece").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final Item ruby = registerItem("ruby", new Item().setUnlocalizedName("ruby").setCreativeTab(CreativeTabs.tabMaterials), true, new String[]{"gemRuby"});
+	public static final Item laser_diode_green = registerItem("laser_diode_green", new Item().setUnlocalizedName("laserDiode.green").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final Item laser_diode_red = registerItem("laser_diode_red", new Item().setUnlocalizedName("laserDiode.red").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final Item laser_diode_green_strong = registerItem("laser_diode_green_strong", new Item().setUnlocalizedName("laserDiode.green.strong").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final Item laser_diode_red_strong = registerItem("laser_diode_red_strong", new Item().setUnlocalizedName("laserDiode.red.strong").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final ItemShuriken shuriken = registerItem("shuriken", (ItemShuriken)new ItemShuriken().setUnlocalizedName("shuriken").setCreativeTab(M.tabCore), false, new String[]{});
 	public static final ItemWrench wrench = registerItem("wrench", (ItemWrench)new ItemWrench().setUnlocalizedName("wrench").setCreativeTab(M.tabCore), false, new String[]{"toolWrench"});
 	
 	// components
