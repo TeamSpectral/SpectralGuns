@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.References.ReferencesGunErrors;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.ComponentEvents;
@@ -28,17 +29,35 @@ public class SlotGun extends Slot
 		this.container = container;
 	}
 	
+	protected TileEntityGunWorkbench inventory()
+	{
+		return (TileEntityGunWorkbench)this.inventory;
+	}
+	
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		ItemStack stackWrench = ((TileEntityGunWorkbench)this.inventory).getStackInSlot(1);
+		ItemStack stackWrench = this.inventory().getStackInSlot(1);
 		if(stackWrench != null && stackWrench.getItem() instanceof ItemWrench && stackWrench.getItemDamage() < stackWrench.getMaxDamage())
 		{
-			if(stack == null || stack.getItem() instanceof ItemGun && ComponentEvents.isGunValid(stack))
+			if(stack == null || stack.getItem() instanceof ItemGun)
 			{
-				return ((TileEntityGunWorkbench)this.inventory).getComponents().size() <= 0;
+				if(ComponentEvents.isGunValid(stack))
+				{
+					if(this.inventory().getComponents().size() <= 0)
+					{
+						return true;
+					}
+					this.inventory().errorMessage(ReferencesGunErrors.COMPONENT_SLOTS_OCCUPIED);
+					return false;
+				}
+				this.inventory().errorMessage(ReferencesGunErrors.INVALID_GUN);
+				return false;
 			}
+			this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("gun", "guns", false));
+			return false;
 		}
+		this.inventory().errorMessage(ReferencesGunErrors.NO_WRENCH);
 		return false;
 	}
 	
@@ -51,7 +70,7 @@ public class SlotGun extends Slot
 		super.putStack(stack);
 		if(stack != null)
 		{
-			TileEntityGunWorkbench tileEntity = (TileEntityGunWorkbench)this.inventory;
+			TileEntityGunWorkbench tileEntity = this.inventory();
 			Vec3 vec = Stuff.Coordinates3D.middle(tileEntity.getPos());
 			EntityPlayer player = tileEntity.lastUsing;
 			if(player == null)
@@ -101,7 +120,7 @@ public class SlotGun extends Slot
 	public void onPickupFromSlot(EntityPlayer player, ItemStack stack)
 	{
 		super.onPickupFromSlot(player, stack);
-		((TileEntityGunWorkbench)this.inventory).clearComponentStacks(false, 1);
+		this.inventory().clearComponentStacks(false, 1);
 	}
 	
 	public static void gunFromComponents(TileEntityGunWorkbench inventory, EntityPlayer player, ItemStack stack)
@@ -134,20 +153,24 @@ public class SlotGun extends Slot
 	@Override
 	public boolean canTakeStack(EntityPlayer playerIn)
 	{
-		ItemStack stackWrench = ((TileEntityGunWorkbench)this.inventory).getStackInSlot(1);
+		ItemStack stackWrench = this.inventory().getStackInSlot(1);
 		if(stackWrench != null && stackWrench.getItem() instanceof ItemWrench && stackWrench.getItemDamage() < stackWrench.getMaxDamage())
 		{
-			ItemStack stackGun = ((TileEntityGunWorkbench)this.inventory).getStackInSlot(0);
+			ItemStack stackGun = this.inventory().getStackInSlot(0);
 			if(stackGun != null)
 			{
 				stackGun = stackGun.copy();
-				gunFromComponents((TileEntityGunWorkbench)this.inventory, playerIn, stackGun);
+				gunFromComponents(this.inventory(), playerIn, stackGun);
 				if(ComponentEvents.isGunValid(stackGun))
 				{
 					return true;
 				}
+				this.inventory().errorMessage(ReferencesGunErrors.INVALID_GUN);
+				return false;
 			}
-		};
+			return false;
+		}
+		this.inventory().errorMessage(ReferencesGunErrors.NO_WRENCH);
 		return false;
 	}
 	
@@ -158,20 +181,20 @@ public class SlotGun extends Slot
 	public void onSlotChanged()
 	{
 		super.onSlotChanged();
-		ItemStack stack = ((TileEntityGunWorkbench)this.inventory).getStackInSlot(1);
+		ItemStack stack = this.inventory().getStackInSlot(1);
 		if(stack != null && stack.getItem() instanceof ItemWrench)
 		{
-			if(((TileEntityGunWorkbench)this.inventory).lastUsing != null)
+			if(this.inventory().lastUsing != null)
 			{
-				boolean b = ((TileEntityGunWorkbench)this.inventory).lastUsing.capabilities.isCreativeMode;
+				boolean b = this.inventory().lastUsing.capabilities.isCreativeMode;
 				if(b)
 				{
-					((TileEntityGunWorkbench)this.inventory).lastUsing.capabilities.isCreativeMode = false;
+					this.inventory().lastUsing.capabilities.isCreativeMode = false;
 				}
-				stack.damageItem(1, ((TileEntityGunWorkbench)this.inventory).lastUsing);
+				stack.damageItem(1, this.inventory().lastUsing);
 				if(b)
 				{
-					((TileEntityGunWorkbench)this.inventory).lastUsing.capabilities.isCreativeMode = true;
+					this.inventory().lastUsing.capabilities.isCreativeMode = true;
 				}
 			}
 			else
@@ -180,7 +203,7 @@ public class SlotGun extends Slot
 			}
 			if(stack.getItemDamage() >= stack.getMaxDamage())
 			{
-				((TileEntityGunWorkbench)this.inventory).setStackInSlot(1, null);
+				this.inventory().setStackInSlot(1, null);
 			}
 		}
 	}
@@ -195,14 +218,14 @@ public class SlotGun extends Slot
 		}
 		if(stackGun != null && stackGun.getItem() instanceof ItemGun)
 		{
-			gunFromComponents((TileEntityGunWorkbench)this.inventory, null, stackGun);
+			gunFromComponents(this.inventory(), null, stackGun);
 			stackGun = super.getStack();
 		}
 		if(stackGun != null && stackGun.stackSize < 1 && !ComponentEvents.isGunValid(stackGun))
 		{
 			stackGun = null;
 		}
-		this.inventory.setInventorySlotContents(this.getSlotIndex(), stackGun);
+		this.inventory().setInventorySlotContents(this.getSlotIndex(), stackGun);
 		return stackGun;
 	}
 }

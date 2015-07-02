@@ -8,8 +8,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.References.ReferencesGunErrors;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.items.ItemComponent;
 import com.spectral.spectral_guns.items.ItemGun;
@@ -26,14 +28,66 @@ public class SlotComponent extends Slot
 		this.type = type;
 	}
 	
+	protected TileEntityGunWorkbench inventory()
+	{
+		return (TileEntityGunWorkbench)this.inventory;
+	}
+	
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		ItemStack stackWrench = ((TileEntityGunWorkbench)this.inventory).getStackInSlot(1);
+		ItemStack stackWrench = this.inventory().getStackInSlot(1);
 		if(stackWrench != null && stackWrench.getItem() instanceof ItemWrench && stackWrench.getItemDamage() < stackWrench.getMaxDamage())
 		{
-			return stack == null || stack.getItem() instanceof ItemComponent && ((ItemComponent)stack.getItem()).c.type == this.type;
+			if(stack == null || stack.getItem() instanceof ItemComponent)
+			{
+				if(stack == null || ((ItemComponent)stack.getItem()).c.type == this.type)
+				{
+					return true;
+				}
+				Type type1 = null;
+				loop:
+				for(Type type : Type.values())
+				{
+					for(int slot : type.slots)
+					{
+						if(slot == this.slotNumber)
+						{
+							type1 = type;
+							break loop;
+						}
+					}
+				}
+				switch(type1)
+				{
+				case AIM:
+					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("aim", "aims", false));
+					break;
+				case BARREL:
+					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("barrel", "barrels", false));
+					break;
+				case GRIP:
+					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("grips", "grip", false));
+					break;
+				case MAGAZINE:
+					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("magazine", "magazines", false));
+					break;
+				case MISC:
+					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("addon", "addons", true));
+					break;
+				case STOCK:
+					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("stock", "stocks", false));
+					break;
+				case TRIGGER:
+					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("trigger", "trigger mechanisms", false));
+					break;
+				}
+				return false;
+			}
+			this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("component", "components", true));
+			return false;
 		}
+		this.inventory().errorMessage(ReferencesGunErrors.NO_WRENCH);
 		return false;
 	}
 	
@@ -41,19 +95,19 @@ public class SlotComponent extends Slot
 	public void putStack(ItemStack stack)
 	{
 		super.putStack(stack);
-		if(((TileEntityGunWorkbench)this.inventory).getStackInSlot(0) == null)
+		if(this.inventory().getStackInSlot(0) == null)
 		{
 			ItemStack stackGun = new ItemStack(M.gun);
-			SlotGun.gunFromComponents((TileEntityGunWorkbench)this.inventory, null, stackGun);
+			SlotGun.gunFromComponents(this.inventory(), null, stackGun);
 		}
-		ItemStack stackGun = ((TileEntityGunWorkbench)this.inventory).getStackInSlot(0);
+		ItemStack stackGun = this.inventory().getStackInSlot(0);
 		if(stack != null && stack.getItem() instanceof ItemComponent)
 		{
 			//ItemGun.addComponent(stackGun, ((ItemComponent)stack.getItem()).c);
 		}
 		if(stackGun != null && (ItemGun.getComponents(stackGun).size() <= 0 || !ComponentEvents.isGunValid(stackGun)))
 		{
-			((TileEntityGunWorkbench)this.inventory).setInventorySlotContents(0, null);
+			this.inventory().setInventorySlotContents(0, null);
 		}
 	}
 	
@@ -61,7 +115,7 @@ public class SlotComponent extends Slot
 	public void onPickupFromSlot(EntityPlayer player, ItemStack stack)
 	{
 		super.onPickupFromSlot(player, stack);
-		ItemStack stackGun = ((TileEntityGunWorkbench)this.inventory).getStackInSlot(0);
+		ItemStack stackGun = this.inventory().getStackInSlot(0);
 		if(stackGun != null)
 		{
 			if(stack != null && stack.getItem() instanceof ItemComponent)
@@ -75,11 +129,11 @@ public class SlotComponent extends Slot
 						break;
 					}
 				}
-				SlotGun.gunFromComponents((TileEntityGunWorkbench)this.inventory, player, stackGun);
+				SlotGun.gunFromComponents(this.inventory(), player, stackGun);
 			}
 			if(stackGun != null && (ItemGun.getComponents(stackGun).size() <= 0 || !ComponentEvents.isGunValid(stackGun)))
 			{
-				((TileEntityGunWorkbench)this.inventory).setInventorySlotContents(0, null);
+				this.inventory().setInventorySlotContents(0, null);
 			}
 		}
 	}

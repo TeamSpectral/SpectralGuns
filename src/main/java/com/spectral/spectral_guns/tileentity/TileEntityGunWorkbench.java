@@ -1,5 +1,6 @@
 package com.spectral.spectral_guns.tileentity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.block.state.IBlockState;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.Stuff;
+import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
@@ -51,6 +53,8 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	private ItemStack[] componentStacks = new ItemStack[ComponentRegister.Type.values().length - 1];
 	private ItemStack[] componentMiscStacks = new ItemStack[Type.MISC.slots.length];
 	private boolean readFlag = false;
+	private String errorMessage = null;
+	private int errorFade = 0;
 	public EntityPlayer lastUsing = null;
 	
 	public static final String GUN_STACK = "GunStack";
@@ -58,6 +62,26 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	public static final String COMPONENT_STACKS = "ComponentStacks";
 	public static final String COMPONENT_MISC_STACKS = "ComponentMiscStacks";
 	public static final String PLAYERS_USING = "PlayersUsing";
+	
+	public String getErrorMessage()
+	{
+		if(this.getErrorFade() > 0)
+		{
+			return this.errorMessage;
+		}
+		return null;
+	}
+	
+	public float getErrorFade()
+	{
+		return this.errorFade / 20F;
+	}
+	
+	public void errorMessage(String errorMessage)
+	{
+		this.errorMessage = errorMessage;
+		this.errorFade = 20;
+	}
 	
 	/**
 	 * Returns the number of slots in the inventory.
@@ -396,6 +420,8 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 			value = (Boolean)this.worldObj.getBlockState(this.pos).getValue(BlockGunWorkbench.ON);
 		}
 		
+		--this.errorFade;
+		
 		if(this.getStackInSlot(1) != null && this.getStackInSlot(1).getItemDamage() >= this.getStackInSlot(1).getMaxDamage())
 		{
 			this.setInventorySlotContents(1, null);
@@ -532,6 +558,41 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 			}
 			break;
 		}
+		}
+		return new int[]{};
+	}
+	
+	public int[] getSlotsForStack(ItemStack stack)
+	{
+		if(stack == null)
+		{
+			ArrayList<Integer> a = new ArrayList();
+			for(int i = 0; i < this.getInventoryStackLimit(); ++i)
+			{
+				a.add(i);
+			}
+			return ArraysAndSuch.intArray(a.toArray(new Integer[a.size()]));
+		}
+		if(stack.getItem() instanceof ItemGun)
+		{
+			return new int[]{0};
+		}
+		if(stack.getItem() instanceof ItemWrench)
+		{
+			return new int[]{1};
+		}
+		if(stack.getItem() instanceof ItemComponent)
+		{
+			Component c = ((ItemComponent)stack.getItem()).c;
+			if(c != null)
+			{
+				int[] slots = c.type.slots.clone();
+				for(int i = 0; i < slots.length; ++i)
+				{
+					slots[i] += this.offset;
+				}
+				return slots;
+			}
 		}
 		return new int[]{};
 	}

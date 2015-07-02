@@ -123,8 +123,9 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 		{
 			float slow = 0.8F;
 			this.player.motionX *= slow;
-			this.player.motionY *= slow;
 			this.player.motionZ *= slow;
+			this.player.setSprinting(false);
+			
 		}
 		this.reloadDelay = Math.min(maxReloadDelay, Math.max(0, this.reloadDelay - 1));
 	}

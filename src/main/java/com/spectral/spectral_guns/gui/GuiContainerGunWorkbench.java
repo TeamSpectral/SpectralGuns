@@ -1,6 +1,9 @@
 package com.spectral.spectral_guns.gui;
 
+import java.awt.Color;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -29,8 +32,21 @@ public class GuiContainerGunWorkbench extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		GlStateManager.pushMatrix();
 		this.fontRendererObj.drawString(this.tileEntity.hasCustomName() ? this.tileEntity.getName() : I18n.format(this.tileEntity.getName() + ".tinkering", new Object[0]), 8, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+		GlStateManager.popMatrix();
+		GlStateManager.pushMatrix();
+		float fade = this.tileEntity.getErrorFade();
+		String message = this.tileEntity.getErrorMessage();
+		if(fade > 0 && message != null)
+		{
+			GlStateManager.scale(2D / 3, 2D / 3, 2D / 3);
+			GlStateManager.enableBlend();
+			Color c = new Color(1, 0, 0, fade);
+			this.fontRendererObj.drawString(message, 8, -10, c.getRGB());
+		}
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

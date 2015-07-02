@@ -8,4 +8,16 @@ public class References
 	public static final String CLIENT_PROXY_CLASS = "com.spectral.spectral_guns.proxy.ProxyClient";
 	public static final String SERVER_PROXY_CLASS = "com.spectral.spectral_guns.proxy.ProxyServer";
 	public static final String GUI_FACTORY_CLASS = "com.spectral.spectral_guns.gui.GuiFactory";
+	
+	public static class ReferencesGunErrors
+	{
+		public static final String NO_WRENCH = "A wrench is required!";
+		public static final String INVALID_GUN = "The gun is invalid!";
+		public static final String COMPONENT_SLOTS_OCCUPIED = "Component slots are already occupied!";
+		
+		public static final String WRONG_SLOT(String singular, String plural, boolean slotPlural)
+		{
+			return "The " + singular + " slot" + (slotPlural ? "s" : "") + " is only for " + plural + "!";
+		}
+	}
 }
