@@ -11,6 +11,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -298,7 +299,7 @@ public class Stuff
 		{
 			for(int i = 0; i < a.size(); ++i)
 			{
-				if(a.get(i) == o)
+				if(a.get(i).equals(o))
 				{
 					return true;
 				}
@@ -667,5 +668,14 @@ public class Stuff
 		{
 			return stack1.isItemEqual(stack2) && stack2.isItemEqual(stack1) && stack1.isStackable() && stack2.isStackable() && stack1.stackSize + stack2.stackSize <= stack1.getMaxStackSize() && stack1.stackSize + stack2.stackSize <= stack2.getMaxStackSize();
 		}
+		
+		public static void compound(ItemStack stack)
+		{
+			if(stack.getTagCompound() == null)
+			{
+				stack.setTagCompound(new NBTTagCompound());
+			}
+		}
+	}
 	}
 }

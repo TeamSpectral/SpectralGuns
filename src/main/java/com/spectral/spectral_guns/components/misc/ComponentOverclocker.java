@@ -61,7 +61,7 @@ public class ComponentOverclocker extends ComponentAddon implements IComponentHe
 	@Override
 	public float instability(int slot, float instability, ItemStack stack, World world, EntityPlayer player)
 	{
-		return instability * 1.5F;
+		return instability * 1.3F;
 	}
 	
 	@Override
