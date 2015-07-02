@@ -23,7 +23,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References;
@@ -62,7 +61,7 @@ public class GuiSpectralGunsHud extends Gui
 	 */
 	public void renderGameOverlay(EntityPlayer player, RenderOrder order, ElementType type)
 	{
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
 		int w = scaledresolution.getScaledWidth();
@@ -75,7 +74,7 @@ public class GuiSpectralGunsHud extends Gui
 		
 		if(this.mc.gameSettings.thirdPersonView == 0 && order == RenderOrder.PRE)
 		{
-			GL11.glEnable(GL11.GL_BLEND);
+			GlStateManager.enableBlend();
 			this.renderSnow(scaledresolution, player);
 		}
 		
@@ -117,6 +116,9 @@ public class GuiSpectralGunsHud extends Gui
 				this.mc.mcProfiler.endSection();
 				
 				this.mc.mcProfiler.startSection("components");
+				GlStateManager.pushMatrix();
+				float scale = 2F / 3;
+				GlStateManager.scale(scale, scale, scale);
 				if(ComponentEvents.isGunValid(stack))
 				{
 					HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
@@ -142,15 +144,20 @@ public class GuiSpectralGunsHud extends Gui
 						{
 							color = new Color(m / 2 - (int)(-value * m / 2), m / 2 - (int)(-value * m / 2), m / 2 + (int)(-value * m / 2));
 						}
-						fontrenderer.drawStringWithShadow(I18n.format(c.toItemStack(slot, stack).getUnlocalizedName() + ".name"), w - 120, h - 10 * (cs.size() - i), color.hashCode());
+						String s = I18n.format(c.toItemStack(slot, stack).getUnlocalizedName() + ".name");
+						int i1 = fontrenderer.getStringWidth(s);
+						fontrenderer.drawStringWithShadow(s, w / scale - i1, (h - 6.6F * (cs.size() - i)) / scale, color.hashCode());
 						++i;
 					}
 				}
 				else
 				{
-					fontrenderer.drawStringWithShadow("GUN IS INVALID!", w - 100, h, 0xFF0000);
+					String s = "GUN IS INVALID!";
+					int i1 = fontrenderer.getStringWidth(s);
+					fontrenderer.drawStringWithShadow(s, w - 100, h, 0xFF0000);
 				}
 				this.mc.mcProfiler.endSection();
+				GlStateManager.popMatrix();
 			}
 			
 			this.mc.mcProfiler.startSection("gunHeatBorder");
@@ -162,9 +169,9 @@ public class GuiSpectralGunsHud extends Gui
 		
 		int line = 0;
 		
-		GL11.glColor4f(1, 1, 1, 1);
+		GlStateManager.color(1, 1, 1, 1);
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	private void renderSnow(ScaledResolution sr, EntityPlayer player)
