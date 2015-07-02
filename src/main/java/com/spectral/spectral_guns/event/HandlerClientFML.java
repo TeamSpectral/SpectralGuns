@@ -1,5 +1,6 @@
 package com.spectral.spectral_guns.event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.client.Minecraft;
@@ -16,6 +17,8 @@ import org.lwjgl.input.Keyboard;
 
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff;
+import com.spectral.spectral_guns.components.aim.ComponentScope;
 import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
 import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.packet.PacketKey;
@@ -144,7 +147,8 @@ public class HandlerClientFML extends HandlerCommonFML
 				ItemStack itemstack = Minecraft.getMinecraft().thePlayer.getHeldItem();
 				if(itemstack.getItem() instanceof ItemGun)
 				{
-					Minecraft.getMinecraft().gameSettings.smoothCamera = Config.smoothZooming.get() && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1);
+					ArrayList<ComponentScope> a = Stuff.ArraysAndSuch.allExtending(Stuff.ArraysAndSuch.hashMapToArrayList(ItemGun.getComponents(itemstack)), ComponentScope.class);
+					Minecraft.getMinecraft().gameSettings.smoothCamera = Config.smoothZooming.get() && a.size() > 0 && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1);
 				}
 			}
 		}
