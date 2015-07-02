@@ -48,6 +48,7 @@ import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerM
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismBoosted;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
 import com.spectral.spectral_guns.items.ItemBase;
+import com.spectral.spectral_guns.items.ItemAmmo;
 import com.spectral.spectral_guns.items.ItemComponent;
 import com.spectral.spectral_guns.items.ItemFood2;
 import com.spectral.spectral_guns.items.ItemGun;
@@ -256,6 +257,23 @@ public class M
 	// //ITEMS:
 	// the gun
 	public static ItemGun gun = registerItem(new ItemGun(), false, new String[]{});
+	// ammo
+	public static final ItemAmmo snow_ampulla = registerItem("ammo_snow_ampulla", (ItemAmmo)new ItemAmmo(Items.snowball, 1)
+	{
+		@Override
+		public void recipe()
+		{
+			GameRegistry.addShapedRecipe(new ItemStack(this, 64), new Object[]{"sss", "sGs", "gCg", 's', Items.snowball, 'g', M.gear_wood, 'C', M.container, 'G', Items.gunpowder});
+		}
+	}.setUnlocalizedName("snowAmpulla").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final ItemAmmo snow_capsule = registerItem("ammo_snow_capsule", (ItemAmmo)new ItemAmmo(Items.snowball, 8)
+	{
+		@Override
+		public void recipe()
+		{
+			GameRegistry.addShapedRecipe(new ItemStack(this, 64), new Object[]{"SSS", "SGS", "gCg", 'S', Blocks.snow, 'g', M.gear_iron, 'C', M.container, 'G', Items.gunpowder});
+		}
+	}.setUnlocalizedName("snowCapsule").setCreativeTab(M.tabCore), false, new String[]{});
 	
 	// other stuff
 	public static final ItemBase iron_nugget = registerItem((ItemBase)new ItemBase("iron_nugget").setUnlocalizedName("ironNugget").setCreativeTab(CreativeTabs.tabMaterials), false, new String[]{"nuggetIron"});

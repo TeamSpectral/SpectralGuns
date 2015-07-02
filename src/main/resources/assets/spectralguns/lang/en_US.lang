@@ -31,6 +31,9 @@ item.gun.name=Spectral Gun
 item.shuriken.name=Shuriken
 item.wrench.name=Wrench
 
+item.ammo.snowAmpulla.name=Snow Ampulla
+item.ammo.snowCapsule.name=Snow Capsule
+
 item.component.magazine.snowball.wood.name=Wooden Snowball Magazine (T1)
 item.component.magazine.snowball.iron.name=Iron Snowball Magazine (T2)
 item.component.magazine.snowball.gold.name=Golden Snowball Magazine (T3)

@@ -736,6 +736,11 @@ public class ItemGun extends ItemBase implements IDAble
 			Item item = cs.get(slot).ejectableAmmo(slot, gun, player.worldObj, player);
 			if(item != null)
 			{
+				ItemAmmo ammo = ItemAmmo.getItemAmmo(item);
+				if(ammo != null)
+				{
+					return ammo;
+				}
 				return item;
 			}
 		}

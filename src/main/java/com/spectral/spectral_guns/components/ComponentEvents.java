@@ -19,6 +19,7 @@ import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
+import com.spectral.spectral_guns.items.ItemAmmo;
 import com.spectral.spectral_guns.items.ItemGun;
 
 public class ComponentEvents
@@ -277,21 +278,64 @@ public class ComponentEvents
 		InventoryPlayer inv = player.inventory;
 		if(!player.capabilities.isCreativeMode || !Config.canReloadWithoutAmmoInCreativeMode.get())
 		{
+			int slot = -1;
+			ItemStack stack2 = null;
 			for(int i = 0; i < inv.getSizeInventory(); ++i)
 			{
 				ItemStack s = inv.getStackInSlot(i);
 				if(s != null)
 				{
-					if(ItemGun.ammoItem(stack, s, player) && addAmmo(amount, stack, player))
+					if(s.getItem() instanceof ItemAmmo)
 					{
-						--s.stackSize;
-						if(s.stackSize <= 0)
+						ItemAmmo item = (ItemAmmo)s.getItem();
+						s.setItem(item.ammo);
+						if(ItemGun.ammoItem(stack, s, player) && ItemGun.ammo(stack, player) + item.multiplier * amount <= ItemGun.capacity(stack, player))
 						{
-							inv.setInventorySlotContents(i, null);
+							if(stack2 == null || !(stack2.getItem() instanceof ItemAmmo) || item.multiplier > ((ItemAmmo)stack2.getItem()).multiplier)
+							{
+								stack2 = s;
+								slot = i;
+							}
 						}
-						player.worldObj.playSoundAtEntity(player, "random.pop", 0.2F, ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-						return true;
+						s.setItem(item);
 					}
+					else
+					{
+						if(stack2 == null && ItemGun.ammoItem(stack, s, player))
+						{
+							if(!ItemAmmo.itemHasItemAmmo(s.getItem()))
+							{
+								stack2 = s;
+								slot = i;
+							}
+						}
+					}
+				}
+			}
+			if(stack2 != null)
+			{
+				boolean flag = false;
+				if(stack2.getItem() instanceof ItemAmmo)
+				{
+					ItemAmmo i = (ItemAmmo)stack2.getItem();
+					stack2.setItem(i.ammo);
+					flag = ItemGun.ammoItem(stack, stack2, player);
+					stack2.setItem(i);
+					amount *= i.multiplier;
+				}
+				else
+				{
+					flag = ItemGun.ammoItem(stack, stack2, player);
+				}
+				if(flag && addAmmo(amount, stack, player))
+				{
+					--stack2.stackSize;
+					if(stack2.stackSize <= 0)
+					{
+						inv.setInventorySlotContents(slot, null);
+					}
+					player.worldObj.playSoundAtEntity(player, "random.pop", 0.2F, ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+					return true;
 				}
 			}
 		}

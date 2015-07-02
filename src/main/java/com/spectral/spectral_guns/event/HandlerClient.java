@@ -19,6 +19,7 @@ import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.magazine.IComponentAmmoItem;
 import com.spectral.spectral_guns.gui.GuiSpectralGunsHud;
 import com.spectral.spectral_guns.gui.GuiSpectralGunsHud.RenderOrder;
+import com.spectral.spectral_guns.items.ItemAmmo;
 import com.spectral.spectral_guns.items.ItemGun;
 
 @SideOnly(Side.CLIENT)
@@ -51,10 +52,24 @@ public class HandlerClient extends HandlerCommon
 		ArrayList<IComponentAmmoItem> cs = ArraysAndSuch.allExtending(ComponentRegister.getAll(), IComponentAmmoItem.class);
 		for(int i = 0; i < cs.size(); ++i)
 		{
-			if(!cs.get(i).isAmmoItem(event.itemStack))
+			if(event.itemStack.getItem() instanceof ItemAmmo)
 			{
-				cs.remove(i);
-				--i;
+				ItemAmmo item = (ItemAmmo)event.itemStack.getItem();
+				event.itemStack.setItem(item.ammo);
+				if(!cs.get(i).isAmmoItem(event.itemStack))
+				{
+					cs.remove(i);
+					--i;
+				}
+				event.itemStack.setItem(item);
+			}
+			else
+			{
+				if(!cs.get(i).isAmmoItem(event.itemStack) || ItemAmmo.itemHasItemAmmo(event.itemStack.getItem()))
+				{
+					cs.remove(i);
+					--i;
+				}
 			}
 		}
 		if(cs.size() > 0)
@@ -65,7 +80,14 @@ public class HandlerClient extends HandlerCommon
 				{
 					if(i == 0)
 					{
-						event.toolTip.add("Ammo for:");
+						if(event.itemStack.getItem() instanceof ItemAmmo)
+						{
+							event.toolTip.add("Ammo(" + ((ItemAmmo)event.itemStack.getItem()).multiplier + ") for:");
+						}
+						else
+						{
+							event.toolTip.add("Ammo(1) for:");
+						}
 					}
 					event.toolTip.add(" - " + I18n.format(((Component)cs.get(i)).item.getUnlocalizedName() + ".name"));
 				}
