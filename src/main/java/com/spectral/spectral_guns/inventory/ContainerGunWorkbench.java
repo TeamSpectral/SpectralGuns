@@ -113,9 +113,38 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 					return null;
 				}
 			}
-			else if(!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory() - 1, false))
+			else
 			{
-				return null;
+				boolean b = false;
+				int[] slots = this.inventory.getSlotsForStack(itemstack1);
+				loop:
+				for(int tSlot : slots)
+				{
+					ItemStack stack1 = this.getSlot(tSlot).getStack();
+					if(stack1 != null)
+					{
+						for(int tSlot2 : slots)
+						{
+							ItemStack stack2 = this.getSlot(tSlot2).getStack();
+							if(tSlot != tSlot2)
+							{
+								if(stack2 == null && stack1.stackSize < stack1.stackSize)
+								{
+									break loop;
+								}
+							}
+						}
+					}
+					if(this.mergeItemStack(itemstack1, tSlot, tSlot + 1, false))
+					{
+						b = true;
+						break;
+					}
+				}
+				if(!b)
+				{
+					return null;
+				}
 			}
 			
 			if(itemstack1.stackSize == 0)
