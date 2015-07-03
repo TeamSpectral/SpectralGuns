@@ -406,6 +406,10 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 				damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
 			}
 			
+			if(pos.entityHit instanceof EntityLivingBase)
+			{
+				((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;
+			}
 			if(pos.entityHit.attackEntityFrom(damagesource, (float)k / 2))
 			{
 				if(pos.entityHit instanceof EntityLivingBase)

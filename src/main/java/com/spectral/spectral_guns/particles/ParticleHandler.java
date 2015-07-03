@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -56,14 +55,6 @@ public class ParticleHandler
 				p.motionX = 0;
 				p.motionY = 0;
 				p.motionZ = 0;
-				if(world.isRemote)
-				{
-					RenderManager rm = Minecraft.getMinecraft().getRenderManager();
-					if(p.getDistance(rm.viewerPosX, rm.viewerPosY, rm.viewerPosZ) > 64)
-					{
-						return null;
-					}
-				}
 				return p;
 			}
 			

@@ -43,10 +43,7 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 {
 	public enum LaserColor
 	{
-		RED(1, 0, 0, EnumDyeColor.RED),
-		GREEN(0, 1, 0, EnumDyeColor.GREEN),
-		CYAN(0, 1, 1, EnumDyeColor.CYAN),
-		VIOLET(85 / 255, 0, 1, EnumDyeColor.PURPLE);
+		RED(1, 0, 0, EnumDyeColor.RED), GREEN(0, 1, 0, EnumDyeColor.GREEN), CYAN(0, 1, 1, EnumDyeColor.CYAN), VIOLET(85 / 255, 0, 1, EnumDyeColor.PURPLE);
 		
 		public final float r;
 		public final float g;
@@ -111,7 +108,8 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 		
 		for(int i = 0; i < this.distance() * 5 && pos == null && Coordinates3D.distance(new Vec3(x, y, z)) < this.distance() / 2; ++i)
 		{
-			pos2 = this.worldObj.rayTraceBlocks(new Vec3(this.posX + x, this.posY + y, this.posZ + z), new Vec3(this.posX + x + this.motionX, this.posY + y + this.motionY, this.posZ + z + this.motionZ), true, false, false);
+			Vec3 mot = this.motion(new Vec3(this.posX + x, this.posY + y, this.posZ + z));
+			pos2 = this.worldObj.rayTraceBlocks(new Vec3(this.posX + x, this.posY + y, this.posZ + z), new Vec3(this.posX + x + mot.xCoord, this.posY + y + mot.yCoord, this.posZ + z + mot.zCoord), true, false, false);
 			
 			List<Entity> es = EntitiesInArea.getEntitiesOnAxis(this.worldObj, new Vec3(this.posX, this.posY, this.posZ), new Vec3(this.posX + x, this.posY + y, this.posZ + z), 0.1);
 			for(int i2 = 0; i2 < es.size(); ++i2)
@@ -167,11 +165,11 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 			}
 			else
 			{
-				x += this.motionX;
-				y += this.motionY;
-				z += this.motionZ;
+				x += mot.xCoord;
+				y += mot.yCoord;
+				z += mot.zCoord;
 			}
-			if(this.posY + y > this.worldObj.getActualHeight() || this.posY + y < 0 || !this.worldObj.isAreaLoaded(new BlockPos(this.posX + x, this.posY + y, this.posZ + z), new BlockPos(this.posX + x + this.motionX, this.posY + y + this.motionY, this.posZ + z + this.motionZ)))
+			if(this.posY + y > this.worldObj.getActualHeight() || this.posY + y < 0 || !this.worldObj.isAreaLoaded(new BlockPos(this.posX + x, this.posY + y, this.posZ + z), new BlockPos(this.posX + x + mot.xCoord, this.posY + y + mot.yCoord, this.posZ + z + mot.zCoord)))
 			{
 				break;
 			}
@@ -212,10 +210,10 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 	{
 		this.shooter = e;
 		Coordinates3D.throwThing(this.shooter, this, this.strenght);
-		Coordinates3D.velocity(this, Coordinates3D.stabilize(Coordinates3D.velocity(this), 0.5));
-		this.posX += this.motionX / 32;
-		this.posY += this.motionY / 32;
-		this.posZ += this.motionZ / 32;
+		Coordinates3D.velocity(this, Coordinates3D.stabilize(Coordinates3D.velocity(this), 1));
+		this.posX += this.motionX;
+		this.posY += this.motionY;
+		this.posZ += this.motionZ;
 		this.posY += this.Yoffset;
 	}
 	
@@ -494,6 +492,39 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 		if(compound != null)
 		{
 			this.readEntityFromNBT(compound);
+		}
+	}
+	
+	private Vec3 motion(Vec3 pos)
+	{
+		double dist = this.worldObj.getClosestPlayer(pos.xCoord, pos.yCoord, pos.zCoord, -1).getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
+		if(dist < 32)
+		{
+			return new Vec3(this.motionX / 4, this.motionY / 4, this.motionZ / 4);
+		}
+		else if(dist < 64)
+		{
+			return new Vec3(this.motionX / 2, this.motionY / 2, this.motionZ / 2);
+		}
+		else if(dist < 128)
+		{
+			return new Vec3(this.motionX, this.motionY, this.motionZ);
+		}
+		else if(dist < 256)
+		{
+			return new Vec3(this.motionX * 2, this.motionY * 2, this.motionZ * 2);
+		}
+		else if(dist < 512)
+		{
+			return new Vec3(this.motionX * 4, this.motionY * 4, this.motionZ * 4);
+		}
+		else if(dist < 1024)
+		{
+			return new Vec3(this.motionX * 8, this.motionY * 8, this.motionZ * 8);
+		}
+		else
+		{
+			return new Vec3(this.motionX * 16, this.motionY * 16, this.motionZ * 16);
 		}
 	}
 }

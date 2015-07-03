@@ -28,7 +28,14 @@ public class ComponentMagazineSnowball extends ComponentMagazineStandard
 	@Override
 	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		return new EntitySnowball2(world, player);
+		return new EntitySnowball2(world, player)
+		{
+			@Override
+			public boolean isInRangeToRenderDist(double distance)
+			{
+				return super.isInRangeToRenderDist(distance / 16);
+			}
+		};
 	}
 	
 	@Override

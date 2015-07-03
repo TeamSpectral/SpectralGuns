@@ -29,7 +29,14 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazineStand
 	@Override
 	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		return new EntitySmallFireball2(world, player, 0, 0, 0);
+		return new EntitySmallFireball2(world, player, 0, 0, 0)
+		{
+			@Override
+			public boolean isInRangeToRenderDist(double distance)
+			{
+				return super.isInRangeToRenderDist(distance / 16);
+			}
+		};
 	}
 	
 	@Override
