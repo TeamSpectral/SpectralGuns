@@ -48,7 +48,6 @@ public class ItemGun extends Item
 	public static final String COMPONENT_COMPOUND = "COMPOUND";
 	public static final String NAME = "Name";
 	public static final String DELAYTIMER = "DelayTimer";
-	public static final String RECOIL = "RecoilLast";
 	public static final String FIRERATETIMER = "FireRateTimer";
 	
 	public ItemGun()
@@ -245,13 +244,11 @@ public class ItemGun extends Item
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		Stuff.ItemStacks.compound(stack);
-		NBTTagCompound compound = stack.getTagCompound();
-		
-		if(M.gun.canShoot(stack, player))
+		ExtendedPlayer props = ExtendedPlayer.get(player);
+		if(this.canShoot(stack, player) && !props.isRightClickHeldDownLast)
 		{
-			M.gun.setDelay(stack, player);
+			this.setDelay(stack, player);
 		}
-		
 		return stack;
 	}
 	
@@ -304,13 +301,11 @@ public class ItemGun extends Item
 		NBTTagCompound compound = stack.getTagCompound();
 		if(entity instanceof EntityPlayer)
 		{
+			ExtendedPlayer props = ExtendedPlayer.get((EntityPlayer)entity);
 			ComponentEvents.updateComponents(stack, (EntityPlayer)entity, slot, isSelected);
-		}
-		if(compound.getFloat(RECOIL) > 0.01)
-		{
-			if(entity instanceof EntityPlayer)
+			if(this.canShoot(stack, (EntityPlayer)entity) && isSelected && props.isRightClickHeldDownLast && props.isRightClickHeldDown)
 			{
-				this.recoilPerTick(stack, entity);
+				this.setDelay(stack, (EntityPlayer)entity);
 			}
 		}
 		if(compound.getInteger(FIRERATETIMER) > 0)
@@ -320,12 +315,12 @@ public class ItemGun extends Item
 		
 		if(entity instanceof EntityPlayer)
 		{
-			if(compound.getInteger(DELAYTIMER) == 0)
+			if(compound.getInteger(DELAYTIMER) == 0 && compound.getInteger(FIRERATETIMER) <= 0)
 			{
 				this.fire(stack, world, (EntityPlayer)entity);
 			}
 		}
-		if(!(entity instanceof EntityPlayer) || this.canShoot(stack, (EntityPlayer)entity))
+		if(isSelected && !(entity instanceof EntityPlayer) || this.canShoot(stack, (EntityPlayer)entity))
 		{
 			this.resetDelay(stack);
 		}
@@ -403,36 +398,49 @@ public class ItemGun extends Item
 		}
 	}
 	
-	public void recoilPerTick(ItemStack stack, Entity player)
+	public static void recoilPerTick(EntityPlayer player)
 	{
-		NBTTagCompound compound = stack.getTagCompound();
-		float r = compound.getFloat(RECOIL);
-		int i = 3;
-		player.rotationPitch += r - r * (i - 1) / i;
+		ExtendedPlayer props = ExtendedPlayer.get(player);
+		double i = 20;
+		i = (i - 1) / i;
 		
-		compound.setFloat(RECOIL, r * (i - 1) / i);
+		double oldPitch = props.recoilPitch;
+		props.recoilPitch *= i;
+		player.rotationPitch -= props.recoilPitch - oldPitch;
+		
+		double oldYaw = props.recoilYaw;
+		props.recoilYaw *= i;
+		player.rotationYaw -= props.recoilYaw - oldYaw;
 	}
 	
 	public void applyRecoil(ItemStack stack, EntityPlayer player)
 	{
+		double oldYaw = player.rotationYaw;
+		double oldPitch = player.rotationPitch;
 		ExtendedPlayer props = ExtendedPlayer.get(player);
-		float r = recoil(stack, player);
+		float r = recoil(stack, player) * 2;
 		NBTTagCompound compound = stack.getTagCompound();
-		compound.setFloat(RECOIL, compound.getFloat(RECOIL) + r);
 		float i = instability(stack, player);
 		if(props.isZoomHeldDown)
 		{
 			float z = zoom(stack, player, 1);
 			i /= z;
+			i *= 2 / 3;
 		}
-		player.rotationYaw += Randomization.r(Math.sqrt(r) * i * 2);
-		player.rotationPitch -= r;
-		float max = -90;
-		if(player.rotationPitch < max)
+		
+		player.rotationYaw += Randomization.r(Math.sqrt(r) * i);
+		player.rotationPitch -= r + Randomization.r(Math.sqrt(r) * i);
+		float max = 90;
+		if(player.rotationPitch < -max)
 		{
-			compound.setFloat(RECOIL, compound.getFloat(RECOIL) - (max - player.rotationPitch));
+			player.rotationPitch = -max;
+		}
+		if(player.rotationPitch > max)
+		{
 			player.rotationPitch = max;
 		}
+		props.recoilYaw += oldYaw - player.rotationYaw + Randomization.r(Math.sqrt(r) * i) / 3;
+		props.recoilPitch += oldPitch - player.rotationPitch + Randomization.r(Math.sqrt(r) * i) / 3;
 	}
 	
 	public static void addComponent(ItemStack stack, int slot, Component c)

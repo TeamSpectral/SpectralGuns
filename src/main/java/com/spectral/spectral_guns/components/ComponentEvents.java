@@ -19,6 +19,7 @@ import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.items.ItemAmmo;
 import com.spectral.spectral_guns.items.ItemGun;
 
@@ -179,6 +180,8 @@ public class ComponentEvents
 			return null;
 		}
 		
+		ExtendedPlayer props = ExtendedPlayer.get(player);
+		
 		ArrayList<Entity> projectiles = new ArrayList<Entity>();
 		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
 		for(Integer slot : cs.keySet())
@@ -193,9 +196,9 @@ public class ComponentEvents
 		float spread = ItemGun.spread(stack, player);
 		float speed = ItemGun.speed(stack, player);
 		
-		if(stack.getTagCompound().getInteger(ItemGun.RECOIL) > 0)
+		if(props.recoilPitch > 0)
 		{
-			spread *= 1 + stack.getTagCompound().getInteger(ItemGun.RECOIL);
+			spread *= 1 + props.recoilPitch;
 		}
 		
 		for(int i = 0; i < projectiles.size(); ++i)
