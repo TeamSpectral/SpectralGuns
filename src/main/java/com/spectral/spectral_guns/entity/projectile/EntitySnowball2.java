@@ -111,7 +111,10 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 		
 		if(pos.entityHit != null)
 		{
-			pos.entityHit.velocityChanged = false;
+			if(pos.entityHit instanceof EntityLivingBase)
+			{
+				((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;
+			}
 			pos.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), damage);
 			if(pos.entityHit instanceof EntityLivingBase)
 			{

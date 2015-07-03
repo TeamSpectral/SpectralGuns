@@ -81,7 +81,15 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 			
 			if(pos.entityHit != null)
 			{
+				if(pos.entityHit instanceof EntityLivingBase)
+				{
+					((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;
+				}
 				flag = pos.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 2.0F);
+				if(pos.entityHit instanceof EntityLivingBase)
+				{
+					((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;
+				}
 				flag = flag || pos.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), 3.0F);
 				
 				if(flag)
