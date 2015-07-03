@@ -84,11 +84,11 @@ public class HandlerClientFML extends HandlerCommonFML
 		if(Minecraft.getMinecraft().thePlayer != null)
 		{
 			// use for keys to hit once
-			if(this.keypress(WeaponReload) && !WeaponEject.isKeyDown())
+			if(this.keypress(WeaponReload) && !WeaponEject.isKeyDown() && Minecraft.getMinecraft().inGameHasFocus)
 			{
 				M.network.sendToServer(new PacketKey(Key.RELOAD));
 			}
-			if(this.keypress(WeaponEject) && !WeaponReload.isKeyDown())
+			if(this.keypress(WeaponEject) && !WeaponReload.isKeyDown() && Minecraft.getMinecraft().inGameHasFocus)
 			{
 				M.network.sendToServer(new PacketKey(Key.EJECT));
 			}
@@ -101,7 +101,7 @@ public class HandlerClientFML extends HandlerCommonFML
 		if(Minecraft.getMinecraft().thePlayer != null)
 		{
 			// use for keys to hold down
-			if(Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown())
+			if(Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown() && Minecraft.getMinecraft().inGameHasFocus)
 			{
 				this.sendKey(Key.RIGHTCLICK);
 				if(ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
@@ -117,15 +117,15 @@ public class HandlerClientFML extends HandlerCommonFML
 					ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(false);
 				}
 			}
-			if(this.keyhold(WeaponReload, 8) && !WeaponEject.isKeyDown())
+			if(this.keyhold(WeaponReload, 8) && !WeaponEject.isKeyDown() && Minecraft.getMinecraft().inGameHasFocus)
 			{
 				this.sendKey(Key.RELOAD);
 			}
-			if(this.keyhold(WeaponEject, 8) && !WeaponReload.isKeyDown())
+			if(this.keyhold(WeaponEject, 8) && !WeaponReload.isKeyDown() && Minecraft.getMinecraft().inGameHasFocus)
 			{
 				this.sendKey(Key.EJECT);
 			}
-			if(WeaponZoom.isKeyDown())
+			if(WeaponZoom.isKeyDown() && Minecraft.getMinecraft().inGameHasFocus)
 			{
 				this.sendKey(Key.ZOOM);
 				if(ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
@@ -148,7 +148,7 @@ public class HandlerClientFML extends HandlerCommonFML
 				if(itemstack.getItem() instanceof ItemGun)
 				{
 					ArrayList<ComponentScope> a = Stuff.ArraysAndSuch.allExtending(Stuff.ArraysAndSuch.hashMapToArrayList(ItemGun.getComponents(itemstack)), ComponentScope.class);
-					Minecraft.getMinecraft().gameSettings.smoothCamera = Config.smoothZooming.get() && a.size() > 0 && EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1);
+					Minecraft.getMinecraft().gameSettings.smoothCamera = Config.smoothZooming.get() && a.size() > 0 && ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1 && Minecraft.getMinecraft().inGameHasFocus);
 				}
 			}
 		}
