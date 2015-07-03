@@ -51,7 +51,7 @@ public class EntityLargeFireball2 extends EntityLargeFireball implements IEntity
 			}
 			
 			boolean flag = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
-			this.worldObj.newExplosion(this.shootingEntity, this.posX, this.posY, this.posZ, (float)this.explosionPower, flag, flag);
+			this.worldObj.newExplosion(this.shootingEntity, this.posX, this.posY, this.posZ, this.explosionPower, flag, flag);
 			this.setDead();
 		}
 	}

@@ -282,10 +282,10 @@ public class M
 		return ComponentRegister.getItem(c);
 	}
 	
-	public static final ComponentMagazineSnowball magazine_snowball_wood = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.WOOD, 16, 0.2F, 5F, 1, 1));
-	public static final ComponentMagazineSnowball magazine_snowball_iron = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.IRON, 20, 0.4F, 8F, 6, 2));
-	public static final ComponentMagazineSnowball magazine_snowball_gold = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.GOLD, 24, 0.6F, 11F, 13, 4));
-	public static final ComponentMagazineSnowball magazine_snowball_diamond = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.DIAMOND, 28, 0.9F, 14F, 21, 8));
+	public static final ComponentMagazineSnowball magazine_snowball_wood = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.WOOD, 16, 0.2F, 2F, 1, 1));
+	public static final ComponentMagazineSnowball magazine_snowball_iron = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.IRON, 20, 0.4F, 4F, 6, 2));
+	public static final ComponentMagazineSnowball magazine_snowball_gold = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.GOLD, 24, 0.6F, 6F, 13, 4));
+	public static final ComponentMagazineSnowball magazine_snowball_diamond = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.DIAMOND, 28, 0.9F, 8F, 21, 8));
 	
 	public static final ComponentMagazineSmallFireball magazine_small_fireball_iron = registerComponent(new ComponentMagazineSmallFireball(ComponentMaterial.IRON, 6, 0.35F, 33F, 1, 1));
 	public static final ComponentMagazineSmallFireball magazine_small_fireball_gold = registerComponent(new ComponentMagazineSmallFireball(ComponentMaterial.GOLD, 10, 0.7F, 43F, 3, 2));

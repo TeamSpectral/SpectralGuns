@@ -29,7 +29,7 @@ public class ComponentScope extends ComponentGeneric
 	@Override
 	public float zoom(int slot, float zoom, ItemStack stack, World world, EntityPlayer player)
 	{
-		return zoom * this.zoom;
+		return zoom * ((this.zoom - 1) * 1.4F + 1);
 	}
 	
 	@Override

@@ -47,7 +47,7 @@ public class ComponentTriggerMechanismAuto extends ComponentTriggerMechanism imp
 	@Override
 	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
-		return rate / 3;
+		return rate / 4;
 	}
 	
 	@SuppressWarnings("incomplete-switch")

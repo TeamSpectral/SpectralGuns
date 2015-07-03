@@ -81,7 +81,7 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 		
 		if(pos.entityHit != null && pos.entityHit.canBeCollidedWith() && pos.entityHit != this.getThrower())
 		{
-			double d = Coordinates3D.distance(Coordinates3D.velocity(this)) * (MathWithMultiple.distance(this.height, this.width) * (0.2 + this.rand.nextDouble() * 0.3)) * 3F;
+			double d = Coordinates3D.distance(Coordinates3D.velocity(this)) * (MathWithMultiple.distance(this.height, this.width) * (0.2 + this.rand.nextDouble() * 0.3));
 			if(pos.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), this.rand.nextFloat() * this.rand.nextFloat() * (float)d))
 			{
 				if(pos.entityHit instanceof EntityLivingBase)

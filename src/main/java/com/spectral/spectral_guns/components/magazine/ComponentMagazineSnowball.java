@@ -110,9 +110,9 @@ public class ComponentMagazineSnowball extends ComponentMagazineStandard
 	public void update(int slot, ItemStack stack, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
 		super.update(slot, stack, world, player, invSlot, isSelected);
-		if(this.ammo(slot, stack, world, player) > 0 && this.heat(slot, stack) <= 0)
+		if(this.ammo(slot, stack, world, player) > 0 && this.heat(slot, stack) <= 100)
 		{
-			this.addHeat(slot, -5, stack);
+			this.addHeat(slot, -1, stack);
 		}
 	}
 	

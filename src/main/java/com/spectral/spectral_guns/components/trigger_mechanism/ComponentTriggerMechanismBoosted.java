@@ -36,13 +36,13 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism 
 	@Override
 	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
-		return delay / 2 + this.delay;
+		return delay / 2 + this.delay / 2;
 	}
 	
 	@Override
 	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
-		return rate / 3;
+		return rate / 2;
 	}
 	
 	@Override

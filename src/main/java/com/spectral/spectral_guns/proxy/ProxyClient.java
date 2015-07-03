@@ -75,7 +75,7 @@ public class ProxyClient extends ProxyCommon
 	
 	private void entityRender(RenderManager rm, RenderItem ri)
 	{
-		RenderingRegistry.registerEntityRenderingHandler(EntitySmallFireball2.class, new RenderFireball(rm, 1.3F));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySmallFireball2.class, new RenderFireball(rm, 0.3F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFood.class, new RenderFood(rm, ri));
 		RenderingRegistry.registerEntityRenderingHandler(EntityShuriken.class, new RenderShuriken(rm, ri));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLaser.class, new RenderNull(rm));

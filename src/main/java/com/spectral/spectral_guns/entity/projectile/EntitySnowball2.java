@@ -101,7 +101,7 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 			}
 		}
 		
-		damage *= this.damage;
+		damage *= this.damage / 2;
 		damage -= 0.5F;
 		
 		if(damage < 0)
