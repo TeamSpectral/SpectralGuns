@@ -532,6 +532,11 @@ public class ItemGun extends Item
 		return cs;
 	}
 	
+	public static <T extends Component> ArrayList<T> getComponentsOf(ItemStack gun, Class<T> clazz)
+	{
+		return Stuff.ArraysAndSuch.allExtending(Stuff.ArraysAndSuch.hashMapToArrayList(ItemGun.getComponents(gun)), clazz);
+	}
+	
 	public static int getMaxComponentId(HashMap<Integer, Component> components)
 	{
 		Iterator<Integer> keyIter = components.keySet().iterator();

@@ -13,9 +13,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
+import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.components.magazine.IComponentAmmoItem;
 import com.spectral.spectral_guns.gui.GuiSpectralGunsHud;
 import com.spectral.spectral_guns.gui.GuiSpectralGunsHud.RenderOrder;
@@ -80,14 +82,7 @@ public class HandlerClient extends HandlerCommon
 				{
 					if(i == 0)
 					{
-						if(event.itemStack.getItem() instanceof ItemAmmo)
-						{
-							event.toolTip.add("Ammo(" + ((ItemAmmo)event.itemStack.getItem()).multiplier + ") for:");
-						}
-						else
-						{
-							event.toolTip.add("Ammo(1) for:");
-						}
+						event.toolTip.add("Ammo(" + ComponentEvents.amount(new ItemStack(M.gun), event.itemStack) + ") for:");
 					}
 					event.toolTip.add(" - " + I18n.format(((Component)cs.get(i)).item.getUnlocalizedName() + ".name"));
 				}

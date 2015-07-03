@@ -40,11 +40,6 @@ public class ComponentMagazineLaser extends ComponentMagazine
 		this.required = new Component[]{M.barrel_thin_diamond};
 	}
 	
-	public int battery()
-	{
-		return 25;
-	}
-	
 	@Override
 	public void update(int slot, ItemStack gun, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
@@ -120,7 +115,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	@Override
 	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
-		return delay + this.battery() / 2 + this.capacity(slot, stack, world, player) / 32;
+		return delay + ammoMultiplier / 2 + this.capacity(slot, stack, world, player) / 32;
 	}
 	
 	@Override

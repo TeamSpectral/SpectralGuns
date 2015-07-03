@@ -8,16 +8,18 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 import com.spectral.spectral_guns.Config;
-import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.items.ItemAmmo;
@@ -271,9 +273,9 @@ public class ComponentEvents
 	
 	public static boolean reload(ItemStack stack, EntityPlayer player)
 	{
-		int amount = amount(stack);
+		int amount = 1;
 		
-		if(!isGunValid(stack) || ItemGun.ammo(stack, player) + amount > ItemGun.capacity(stack, player))
+		if(!isGunValid(stack) || ItemGun.ammo(stack, player) + amount * amount(stack, new ItemStack(ItemGun.ejectableAmmo(stack, player))) > ItemGun.capacity(stack, player))
 		{
 			return false;
 		}
@@ -324,12 +326,12 @@ public class ComponentEvents
 					stack2.setItem(i.ammo);
 					flag = ItemGun.ammoItem(stack, stack2, player);
 					stack2.setItem(i);
-					amount *= i.multiplier;
 				}
 				else
 				{
 					flag = ItemGun.ammoItem(stack, stack2, player);
 				}
+				amount *= amount(stack, stack2);
 				if(flag && addAmmo(amount, stack, player))
 				{
 					--stack2.stackSize;
@@ -377,21 +379,24 @@ public class ComponentEvents
 	
 	public static boolean eject(ItemStack stack, EntityPlayer player, ConsumerComponentEvent func)
 	{
-		int amount = amount(stack);
+		int amount = 1;
+		Item item = ItemGun.ejectableAmmo(stack, player);
+		amount *= amount(stack, new ItemStack(item));
 		
 		if(!isGunValid(stack) || ItemGun.ammo(stack, player) - amount < 0)
 		{
 			return false;
 		}
 		
-		Item item = ItemGun.ejectableAmmo(stack, player);
-		
 		if(item != null)
 		{
 			InventoryPlayer inv = player.inventory;
 			if(addAmmo(-amount, stack, player))
 			{
-				func.action(stack, player);
+				if(!player.worldObj.isRemote)
+				{
+					func.action(stack, player);
+				}
 				return true;
 			}
 		}
@@ -407,19 +412,35 @@ public class ComponentEvents
 		}
 	}
 	
-	public static int amount(ItemStack gun)
+	public static int amount(ItemStack gun, ItemStack ammo)
 	{
-		int amount = 0;
+		int amount = 1;
 		
-		ArrayList<ComponentMagazineLaser> cs = ArraysAndSuch.allExtending(ArraysAndSuch.hashMapToArrayList(ItemGun.getComponents(gun)), ComponentMagazineLaser.class);
-		for(int i = 0; i < cs.size(); ++i)
+		ItemAmmo itemAmmo = null;
+		
+		if(ammo.getItem() instanceof ItemAmmo)
 		{
-			amount += cs.get(i).battery();
+			itemAmmo = (ItemAmmo)ammo.getItem();
+			amount *= itemAmmo.multiplier;
+			ammo.setItem(itemAmmo.ammo);
+		}
+		if(ammo.getItem() == Items.redstone)
+		{
+			amount *= ComponentMagazineLaser.ammoMultiplier;
+		}
+		if(ammo.getItem() instanceof ItemFood)
+		{
+			amount *= ComponentMagazineFood.ammoMultiplier;
 		}
 		
 		if(amount < 1)
 		{
 			amount = 1;
+		}
+		
+		if(itemAmmo != null)
+		{
+			ammo.setItem(itemAmmo);
 		}
 		
 		return amount;

@@ -27,6 +27,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	protected ItemStack lastUsedStack = null;
 	protected ItemStack firedStack = null;
 	protected long firedStackTick = 0;
+	public final static int ammoMultiplier = 4;
 	
 	// nbt
 	public static final String ITEMS = "Items";
