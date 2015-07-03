@@ -30,7 +30,7 @@ import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentMaterial;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentEvents;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
 import com.spectral.spectral_guns.items.ItemGun;
 
@@ -176,7 +176,7 @@ public class GuiSpectralGunsHud extends Gui
 	
 	private void renderSnow(ScaledResolution sr, EntityPlayer player)
 	{
-		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+		ExtendedPlayer props = ExtendedPlayer.get(player);
 		int i = 5;
 		float f = 4;
 		if(props != null)

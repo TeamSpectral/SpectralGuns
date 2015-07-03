@@ -9,8 +9,9 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import com.spectral.spectral_guns.References;
+import com.spectral.spectral_guns.items.ItemGun;
 
-public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityAdditionalSpawnData
+public class ExtendedPlayer implements IExtendedEntityProperties, IEntityAdditionalSpawnData
 {
 	public float snow = 0;
 	public boolean isRightClickHeldDown = false;
@@ -24,9 +25,12 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 	public boolean isRightClickHeldDownLast = false;
 	public boolean isZoomHeldDown = false;
 	public int reloadDelay = 0;
+	public double recoilPitch = 0;
+	public double recoilYaw = 0;
 	
 	public final static String PROP = References.MODID;
 	public final static String SNOW = "Snow";
+	public final static String RECOIL = "Recoil";
 	public final static String RIGHTCLICK = "RightClick";
 	public final static String RIGHTCLICKLAST = "RightClickLast";
 	public final static String ZOOM = "Zoom";
@@ -34,7 +38,7 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 	
 	private final EntityPlayer player;
 	
-	public EntityExtendedPlayer(EntityPlayer player)
+	public ExtendedPlayer(EntityPlayer player)
 	{
 		this.player = player;
 	}
@@ -43,9 +47,9 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 	 * Returns ExtendedPlayer properties for player
 	 * This method is for convenience only; it will make your code look nicer
 	 */
-	public static final EntityExtendedPlayer get(EntityPlayer player)
+	public static final ExtendedPlayer get(EntityPlayer player)
 	{
-		return (EntityExtendedPlayer)player.getExtendedProperties(PROP);
+		return (ExtendedPlayer)player.getExtendedProperties(PROP);
 	}
 	
 	/**
@@ -55,7 +59,7 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 	 */
 	public static final void register(EntityPlayer player)
 	{
-		player.registerExtendedProperties(EntityExtendedPlayer.PROP, new EntityExtendedPlayer(player));
+		player.registerExtendedProperties(ExtendedPlayer.PROP, new ExtendedPlayer(player));
 	}
 	
 	@Override
@@ -78,6 +82,7 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 		if(b)
 		{
 			this.snow = properties.getFloat(SNOW);
+			this.recoilPitch = properties.getDouble(RECOIL);
 		}
 		this.capSnow();
 	}
@@ -113,6 +118,7 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 		if(b)
 		{
 			properties.setFloat(SNOW, this.snow);
+			properties.setDouble(RECOIL, this.recoilPitch);
 		}
 	}
 	
@@ -122,12 +128,16 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 		if(this.isZoomHeldDown)
 		{
 			float slow = 0.8F;
-			this.player.motionX *= slow;
-			this.player.motionZ *= slow;
+			this.player.moveForward *= slow;
+			this.player.moveStrafing *= slow;
 			this.player.setSprinting(false);
 			
 		}
 		this.reloadDelay = Math.min(maxReloadDelay, Math.max(0, this.reloadDelay - 1));
+		if(this.recoilPitch > 0.01)
+		{
+			ItemGun.recoilPerTick(this.player);
+		}
 	}
 	
 	public void updateSnow()
@@ -168,6 +178,7 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 		buf.writeBoolean(this.isRightClickHeldDownLast);
 		buf.writeBoolean(this.isZoomHeldDown);
 		buf.writeInt(this.reloadDelay);
+		buf.writeDouble(this.recoilPitch);
 	}
 	
 	/**
@@ -185,5 +196,6 @@ public class EntityExtendedPlayer implements IExtendedEntityProperties, IEntityA
 		this.isRightClickHeldDownLast = buf.readBoolean();
 		this.isZoomHeldDown = buf.readBoolean();
 		this.reloadDelay = buf.readInt();
+		this.recoilPitch = buf.readDouble();
 	}
 }

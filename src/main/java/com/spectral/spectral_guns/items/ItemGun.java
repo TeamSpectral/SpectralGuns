@@ -35,7 +35,7 @@ import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentEvents;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
 
 public class ItemGun extends Item
@@ -263,7 +263,7 @@ public class ItemGun extends Item
 	
 	public void setDelay(ItemStack stack, EntityPlayer player)
 	{
-		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+		ExtendedPlayer props = ExtendedPlayer.get(player);
 		
 		props.reloadDelay = props.maxReloadDelay;
 		NBTTagCompound compound = stack.getTagCompound();
@@ -282,7 +282,7 @@ public class ItemGun extends Item
 	public boolean canShoot(ItemStack stack, EntityPlayer player)
 	{
 		NBTTagCompound compound = stack.getTagCompound();
-		if(EntityExtendedPlayer.get(player).reloadDelay > 0)
+		if(ExtendedPlayer.get(player).reloadDelay > 0)
 		{
 			return false;
 		}
@@ -290,7 +290,7 @@ public class ItemGun extends Item
 		{
 			return false;
 		}
-		if(EntityExtendedPlayer.get(player).isRightClickHeldDownLast && !automatic(stack, player))
+		if(ExtendedPlayer.get(player).isRightClickHeldDownLast && !automatic(stack, player))
 		{
 			return false;
 		}
@@ -344,7 +344,7 @@ public class ItemGun extends Item
 	
 	public void fire(ItemStack stack, World world, EntityPlayer player)
 	{
-		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+		ExtendedPlayer props = ExtendedPlayer.get(player);
 		
 		props.reloadDelay = props.maxReloadDelay;
 		
@@ -378,7 +378,7 @@ public class ItemGun extends Item
 		double y = -Math.sin((player.rotationPitch / 180.0F - 180.0F) * Math.PI);
 		double z = Math.cos((player.rotationYaw / 180.0F - 180.0F) * Math.PI) * MathHelper.cos(player.rotationPitch / 180.0F * (float)Math.PI);
 		double k = kickback(stack, player);
-		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+		ExtendedPlayer props = ExtendedPlayer.get(player);
 		if(props.isZoomHeldDown)
 		{
 			k *= 0.4;
@@ -415,7 +415,7 @@ public class ItemGun extends Item
 	
 	public void applyRecoil(ItemStack stack, EntityPlayer player)
 	{
-		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+		ExtendedPlayer props = ExtendedPlayer.get(player);
 		float r = recoil(stack, player);
 		NBTTagCompound compound = stack.getTagCompound();
 		compound.setFloat(RECOIL, compound.getFloat(RECOIL) + r);

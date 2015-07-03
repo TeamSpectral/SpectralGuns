@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.EntitiesInArea;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 
 public class EntitySnowball2 extends EntitySnowball implements IEntityAdditionalSpawnData
 {
@@ -124,7 +124,7 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 			
 			if(pos.entityHit instanceof EntityPlayer)
 			{
-				EntityExtendedPlayer propsP = EntityExtendedPlayer.get((EntityPlayer)pos.entityHit);
+				ExtendedPlayer propsP = ExtendedPlayer.get((EntityPlayer)pos.entityHit);
 				for(int i2 = 0; i2 < (int)Math.ceil(this.damage); ++i2)
 				{
 					propsP.snowball();

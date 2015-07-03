@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.spectral.spectral_guns.components.ComponentEvents;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.items.ItemGun;
 
 public class PacketKey implements IMessage
@@ -89,7 +89,7 @@ public class PacketKey implements IMessage
 			{
 				return null;
 			}
-			EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+			ExtendedPlayer props = ExtendedPlayer.get(player);
 			Key k = Key.get(message.i);
 			switch(k)
 			{

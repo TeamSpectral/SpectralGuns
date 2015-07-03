@@ -17,7 +17,7 @@ import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.audio.MovingSoundPublic;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.ComponentEvents;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
 import com.spectral.spectral_guns.items.ItemGun;
@@ -51,13 +51,13 @@ public class ComponentMagazineLaser extends ComponentMagazine
 		NBTTagCompound compound = this.getTagCompound(slot, gun);
 		if(isSelected)
 		{
-			EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+			ExtendedPlayer props = ExtendedPlayer.get(player);
 			if(props.isRightClickHeldDown && props.reloadDelay <= 0)
 			{
 				compound.setBoolean(FIRING, true);
 			}
 		}
-		if(!isSelected || !EntityExtendedPlayer.get(player).isRightClickHeldDown || this.ammo(slot, gun, world, player) - 1 < 0)
+		if(!isSelected || !ExtendedPlayer.get(player).isRightClickHeldDown || this.ammo(slot, gun, world, player) - 1 < 0)
 		{
 			compound.setBoolean(FIRING, false);
 			compound.setInteger(TIMER, 0);
@@ -156,7 +156,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	@Override
 	public ArrayList<Entity> fire(int slot, ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player)
 	{
-		EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+		ExtendedPlayer props = ExtendedPlayer.get(player);
 		this.getTagCompound(slot, stack).setBoolean(FIRING, props.isRightClickHeldDown);
 		e.clear();
 		return e;

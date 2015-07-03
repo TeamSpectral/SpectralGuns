@@ -19,7 +19,7 @@ import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.components.aim.ComponentScope;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.packet.PacketKey;
 import com.spectral.spectral_guns.packet.PacketKey.Key;
@@ -104,17 +104,17 @@ public class HandlerClientFML extends HandlerCommonFML
 			if(Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown())
 			{
 				this.sendKey(Key.RIGHTCLICK);
-				if(EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+				if(ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 				{
-					EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(true);
+					ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(true);
 				}
 			}
 			else
 			{
 				this.sendKey(Key.NOTRIGHTCLICK);
-				if(EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+				if(ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 				{
-					EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(false);
+					ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).setRightClick(false);
 				}
 			}
 			if(this.keyhold(WeaponReload, 8) && !WeaponEject.isKeyDown())
@@ -128,17 +128,17 @@ public class HandlerClientFML extends HandlerCommonFML
 			if(WeaponZoom.isKeyDown())
 			{
 				this.sendKey(Key.ZOOM);
-				if(EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+				if(ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 				{
-					EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = true;
+					ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = true;
 				}
 			}
 			else
 			{
 				this.sendKey(Key.NOTZOOM);
-				if(EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
+				if(ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer) != null)
 				{
-					EntityExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = false;
+					ExtendedPlayer.get(Minecraft.getMinecraft().thePlayer).isZoomHeldDown = false;
 				}
 			}
 			

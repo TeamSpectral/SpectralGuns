@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
 import com.spectral.spectral_guns.items.ItemGun;
 
@@ -22,14 +22,14 @@ public class HandlerCommon extends HandlerBase
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{
-		if(event.entity instanceof EntityPlayer && EntityExtendedPlayer.get((EntityPlayer)event.entity) == null)
+		if(event.entity instanceof EntityPlayer && ExtendedPlayer.get((EntityPlayer)event.entity) == null)
 		{
-			EntityExtendedPlayer.register((EntityPlayer)event.entity);
+			ExtendedPlayer.register((EntityPlayer)event.entity);
 		}
 		
-		if(event.entity instanceof EntityPlayer && event.entity.getExtendedProperties(EntityExtendedPlayer.PROP) == null)
+		if(event.entity instanceof EntityPlayer && event.entity.getExtendedProperties(ExtendedPlayer.PROP) == null)
 		{
-			event.entity.registerExtendedProperties(EntityExtendedPlayer.PROP, new EntityExtendedPlayer((EntityPlayer)event.entity));
+			event.entity.registerExtendedProperties(ExtendedPlayer.PROP, new ExtendedPlayer((EntityPlayer)event.entity));
 		}
 	}
 	
@@ -44,7 +44,7 @@ public class HandlerCommon extends HandlerBase
 	{
 		if(event.entity instanceof EntityPlayer)
 		{
-			EntityExtendedPlayer propsP = EntityExtendedPlayer.get((EntityPlayer)event.entity);
+			ExtendedPlayer propsP = ExtendedPlayer.get((EntityPlayer)event.entity);
 			Entity e = event.source.getEntity();
 			if(e instanceof EntitySnowball)
 			{
@@ -70,7 +70,7 @@ public class HandlerCommon extends HandlerBase
 			if(player.getHeldItem() != null)
 			{
 				ItemStack itemstack = player.getHeldItem();
-				EntityExtendedPlayer props = EntityExtendedPlayer.get(player);
+				ExtendedPlayer props = ExtendedPlayer.get(player);
 				if(itemstack.getItem() instanceof ItemGun && props.isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1))
 				{
 					event.newfov = 1;

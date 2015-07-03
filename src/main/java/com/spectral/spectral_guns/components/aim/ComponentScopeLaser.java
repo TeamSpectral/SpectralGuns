@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
 
@@ -24,7 +24,7 @@ public class ComponentScopeLaser extends ComponentScope
 	@Override
 	public void update(int slot, ItemStack gun, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
-		boolean b = EntityExtendedPlayer.get(player).isZoomHeldDown;
+		boolean b = ExtendedPlayer.get(player).isZoomHeldDown;
 		if(isSelected && b)
 		{
 			EntityLaser e = new EntityLaser(world, player, 0.1, this.color, 0.1);

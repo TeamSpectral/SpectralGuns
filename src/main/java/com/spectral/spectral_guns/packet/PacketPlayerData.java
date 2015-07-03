@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 
 public class PacketPlayerData implements IMessage
 {
@@ -33,7 +33,7 @@ public class PacketPlayerData implements IMessage
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		EntityExtendedPlayer.get(this.player).writeSpawnData(buf);
+		ExtendedPlayer.get(this.player).writeSpawnData(buf);
 	}
 	
 	public static class Handler implements IMessageHandler<PacketPlayerData, IMessage>
@@ -45,7 +45,7 @@ public class PacketPlayerData implements IMessage
 		@Override
 		public IMessage onMessage(PacketPlayerData message, MessageContext context)
 		{
-			EntityExtendedPlayer.get(message.player).readSpawnData(message.buf);
+			ExtendedPlayer.get(message.player).readSpawnData(message.buf);
 			return null;
 		}
 	}

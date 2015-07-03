@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References;
-import com.spectral.spectral_guns.entity.extended.EntityExtendedPlayer;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.packet.PacketPlayerData;
 
 public class HandlerCommonFML extends HandlerBase
@@ -25,7 +25,7 @@ public class HandlerCommonFML extends HandlerBase
 	@SubscribeEvent
 	public void playerUpdateEvent(PlayerTickEvent event)
 	{
-		EntityExtendedPlayer props = EntityExtendedPlayer.get(event.player);
+		ExtendedPlayer props = ExtendedPlayer.get(event.player);
 		
 		if(event.side == Side.SERVER)
 		{
