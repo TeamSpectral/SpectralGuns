@@ -45,7 +45,14 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 			this.firedStack = this.getLastItem(slot, stack);
 			this.firedStackTick = world.getTotalWorldTime();
 		}
-		return new EntityFood(world, player, this.firedStack);
+		return new EntityFood(world, player, this.firedStack)
+		{
+			@Override
+			public boolean isInRangeToRenderDist(double distance)
+			{
+				return super.isInRangeToRenderDist(distance / 16);
+			}
+		};
 	}
 	
 	@Override
