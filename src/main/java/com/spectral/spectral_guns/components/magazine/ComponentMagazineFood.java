@@ -84,7 +84,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 		}
 		float spread = ItemGun.spread(stack, player) + 0.03F;
 		
-		for(int i = 0; i < 64 && world.isRemote; ++i)
+		for(int i = 0; i < 64 && world.isRemote && projectile != null; ++i)
 		{
 			Vec3 m = Coordinates3D.stabilize(new Vec3((float)projectile.motionX + Randomization.r(spread), (float)projectile.motionY + Randomization.r(spread), (float)projectile.motionZ + Randomization.r(spread)), ItemGun.speed(stack, player) / 4 * world.rand.nextFloat());
 			world.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, projectile.posX, projectile.posY, projectile.posZ, m.xCoord, m.yCoord, m.zCoord, new int[]{Item.getIdFromItem(world.rand.nextInt(3) == 0 ? this.firedStack.getItem() : this.ammoItem())});
