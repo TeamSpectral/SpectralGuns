@@ -333,34 +333,88 @@ public abstract class Component
 	
 	public void heatMix(int slot, ItemStack stack, Component c)
 	{
-		double oldHeat1 = this.heat(slot, stack);
-		double oldHeat2 = c.heat(slot, stack);
 		double heat1 = this.heat(slot, stack);
+		double heat1Old = heat1;
 		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss / 10;
 		double heat2 = c.heat(slot, stack);
+		double heat2Old = heat2;
 		double cond2 = c.heatConductiveness(slot, stack) * c.material.heatLoss / 10;
-		double distr = heat1 * cond1 + heat2 * cond2;
-		this.setHeat(slot, heat1 * (cond1 > 0 ? 1 - cond1 : cond1 - 1) + distr / 2, stack);
-		c.setHeat(slot, heat2 * (cond2 > 0 ? 1 - cond2 : cond2 - 1) + distr / 2, stack);
+		
+		if(cond1 > 1)
+		{
+			cond1 = 1;
+		}
+		if(cond2 > 1)
+		{
+			cond2 = 1;
+		}
+		
+		double distr1 = heat1 * cond1;
+		double distr2 = heat2 * cond2;
+		double distr = (distr1 + distr2) / 2;
+		heat1 += distr - distr1;
+		heat2 += distr - distr2;
+		
+		if(heat1 != 0 && heat2 != 0)
+		{
+			double w = (heat1Old + heat2Old) / (heat1 + heat2);
+			if(w != 1)
+			{
+				heat1 /= w;
+				heat2 /= w;
+			}
+		}
+		
 		for(Type type : c.getRequiredTypes())
 		{
 			if(type == this.type)
 			{
-				this.setHeat(slot, (this.heat(slot, stack) + oldHeat1) / 2, stack);
-				c.setHeat(slot, (c.heat(slot, stack) + oldHeat2) / 2, stack);
+				heat1 = (heat1 + heat1Old) / 2;
+				heat2 = (heat2 + heat2Old) / 2;
 				break;
 			}
 		}
+		
+		this.setHeat(slot, heat1, stack);
+		c.setHeat(slot, heat2, stack);
+	}
+	
+	public void heatMix(int slot, ItemStack stack, double c2Heat, double c2Threshold, double c2HeatLoss, double change)
+	{
+		double oldHeat1 = this.heat(slot, stack);
+		this.heatMix(slot, stack, c2Heat, c2Threshold, c2HeatLoss);
+		this.setHeat(slot, (this.heat(slot, stack) * change + oldHeat1 / change) / 2, stack);
 	}
 	
 	public void heatMix(int slot, ItemStack stack, double c2Heat, double c2Threshold, double c2HeatLoss)
 	{
-		double heat1 = this.heat(slot, stack) * this.heatThreshold(slot, stack);
+		double heat1 = this.heat(slot, stack);
+		double heat1Old = heat1;
 		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss / 10;
-		double heat2 = c2Heat * c2Threshold;
-		double cond2 = c2HeatLoss / 10;
-		double distr = heat1 * cond1 + heat2 * cond2;
-		this.setHeat(slot, (heat1 * (cond1 > 0 ? 1 - cond1 : cond1 - 1) + distr / 2) / c2Threshold, stack);
+		double heat2 = c2Heat;
+		double heat2Old = heat2;
+		double cond2 = c2HeatLoss;
+		
+		if(cond1 > 1)
+		{
+			cond1 = 1;
+		}
+		if(cond2 > 1)
+		{
+			cond2 = 1;
+		}
+		
+		double distr1 = heat1 * cond1;
+		double distr2 = heat2 * cond2;
+		double distr = (distr1 + distr2) / 2;
+		heat1 += distr - distr1;
+		heat2 += distr - distr2;
+		
+		double w = Math.sqrt(heat1Old * heat1Old + heat2Old * heat2Old);
+		heat1 /= w;
+		heat2 /= w;
+		
+		this.setHeat(slot, heat1, stack);
 	}
 	
 	public abstract void update(int slot, ItemStack stack, World world, EntityPlayer player, int invSlot, boolean isSelected);

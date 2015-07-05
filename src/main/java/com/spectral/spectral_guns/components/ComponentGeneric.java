@@ -204,7 +204,6 @@ public abstract class ComponentGeneric extends Component
 				this.addDurabilityDamage(slot, 1, stack, player);
 			}
 		}
-		this.heatMix(slot, stack, player.isInWater() ? -20 : 0, this.heatThreshold(slot, stack), 0.1);
 		loop:
 		for(Component c : ItemGun.getComponents(stack).values())
 		{
@@ -219,6 +218,15 @@ public abstract class ComponentGeneric extends Component
 					}
 				}
 			}
+		}
+		this.heatMix(slot, stack, player.isInWater() ? -20 : 0, 1, 0.0001, 0.51);
+		if(this.heat(slot, stack) > 0)
+		{
+			this.addHeat(slot, -0.01, stack);
+		}
+		else if(this.heat(slot, stack) < 0)
+		{
+			this.addHeat(slot, 0.01, stack);
 		}
 	}
 }
