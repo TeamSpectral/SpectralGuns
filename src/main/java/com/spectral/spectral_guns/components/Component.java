@@ -320,7 +320,10 @@ public abstract class Component
 	public double heat(int slot, ItemStack stack)
 	{
 		double d = this.getTagCompound(slot, stack).getDouble(ItemComponent.HEAT);
-		
+		if(Double.isNaN(d))
+		{
+			d = 0;
+		}
 		return d;
 	}
 	
