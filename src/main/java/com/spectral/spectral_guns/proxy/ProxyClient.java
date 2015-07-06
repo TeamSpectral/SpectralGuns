@@ -17,6 +17,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
@@ -60,6 +61,12 @@ public class ProxyClient extends ProxyCommon
 	public World world(int dimension)
 	{
 		return Minecraft.getMinecraft().theWorld;
+	}
+	
+	@Override
+	public Side side()
+	{
+		return Side.CLIENT;
 	}
 	
 	@Override

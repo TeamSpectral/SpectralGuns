@@ -6,6 +6,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.spectral.spectral_guns.event.HandlerServer;
 import com.spectral.spectral_guns.event.HandlerServerFML;
@@ -31,5 +32,11 @@ public class ProxyServer extends ProxyCommon
 	public World world(int dimension)
 	{
 		return MinecraftServer.getServer().worldServers[dimension];
+	}
+	
+	@Override
+	public Side side()
+	{
+		return Side.SERVER;
 	}
 }

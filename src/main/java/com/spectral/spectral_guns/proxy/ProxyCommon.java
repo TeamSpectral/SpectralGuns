@@ -74,6 +74,8 @@ public abstract class ProxyCommon
 	
 	public abstract World world(int dimension);
 	
+	public abstract Side side();
+	
 	public EntityPlayer player()
 	{
 		return null;
