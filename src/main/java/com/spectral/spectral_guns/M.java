@@ -268,6 +268,34 @@ public class M
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 64), new Object[]{"SSS", "SGS", "gCg", 'S', Blocks.snow, 'g', "gearIron", 'C', M.container, 'G', Items.gunpowder}));
 		}
 	}.setUnlocalizedName("snowCapsule").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final ItemAmmo fireball_bolt = registerItem("ammo_fireball_bolt", (ItemAmmo)new ItemAmmo(1)
+	{
+		@Override
+		public Item ammo()
+		{
+			return Items.fire_charge;
+		}
+		
+		@Override
+		public void recipe()
+		{
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 64), new Object[]{"GIG", "FLF", "gBg", 'G', "gearIron", 'I', "blockIron", 'F', Items.fire_charge, 'L', Items.lava_bucket, 'g', Items.gunpowder, 'B', M.barrel_normal_iron}));
+		}
+	}.setUnlocalizedName("fireballBolt").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final ItemAmmo mush_can = registerItem("ammo_mush_can", (ItemAmmo)new ItemAmmo(2)
+	{
+		@Override
+		public Item ammo()
+		{
+			return M.food_mush;
+		}
+		
+		@Override
+		public void recipe()
+		{
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), new Object[]{"FFF", "FFF", "iCi", 'F', "food", 'i', "ingotIron", 'C', M.container}));
+		}
+	}.setUnlocalizedName("mushCan").setCreativeTab(M.tabCore), false, new String[]{});
 	
 	// other stuff
 	public static final Item iron_nugget = registerItem("iron_nugget", new Item().setUnlocalizedName("ironNugget").setCreativeTab(CreativeTabs.tabMaterials), true, new String[]{"nuggetIron"});

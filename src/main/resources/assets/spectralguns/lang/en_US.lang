@@ -33,6 +33,8 @@ item.wrench.name=Wrench
 
 item.ammo.snowAmpulla.name=Snow Ampulla
 item.ammo.snowCapsule.name=Snow Capsule
+item.ammo.fireballBolt.name=Fireball Bolt
+item.ammo.mushCan.name=Can of Food Mush
 
 item.component.magazine.snowball.wood.name=Wooden Snowball Magazine (T1)
 item.component.magazine.snowball.iron.name=Iron Snowball Magazine (T2)
