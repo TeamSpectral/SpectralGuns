@@ -8,6 +8,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References.ReferencesGunErrors;
@@ -70,6 +71,7 @@ public class SlotGun extends Slot
 		super.putStack(stack);
 		if(stack != null)
 		{
+			this.damageWrench();
 			TileEntityGunWorkbench tileEntity = this.inventory();
 			Vec3 vec = Stuff.Coordinates3D.middle(tileEntity.getPos());
 			EntityPlayer player = tileEntity.lastUsing;
@@ -121,6 +123,7 @@ public class SlotGun extends Slot
 	{
 		super.onPickupFromSlot(player, stack);
 		this.inventory().clearComponentStacks(false, 1);
+		this.damageWrench();
 	}
 	
 	public static void gunFromComponents(TileEntityGunWorkbench inventory, EntityPlayer player, ItemStack stack)
@@ -174,36 +177,34 @@ public class SlotGun extends Slot
 		return false;
 	}
 	
-	/**
-	 * Called when the stack in a Slot changes
-	 */
-	@Override
-	public void onSlotChanged()
+	public void damageWrench()
 	{
-		super.onSlotChanged();
-		ItemStack stack = this.inventory().getStackInSlot(1);
-		if(stack != null && stack.getItem() instanceof ItemWrench)
+		if(M.proxy.side() == Side.SERVER)
 		{
-			if(this.inventory().lastUsing != null)
+			ItemStack stack = this.inventory().getStackInSlot(1);
+			if(stack != null && stack.getItem() instanceof ItemWrench)
 			{
-				boolean b = this.inventory().lastUsing.capabilities.isCreativeMode;
-				if(b)
+				if(this.inventory().lastUsing != null)
 				{
-					this.inventory().lastUsing.capabilities.isCreativeMode = false;
+					boolean b = this.inventory().lastUsing.capabilities.isCreativeMode;
+					if(b)
+					{
+						this.inventory().lastUsing.capabilities.isCreativeMode = false;
+					}
+					stack.damageItem(1, this.inventory().lastUsing);
+					if(b)
+					{
+						this.inventory().lastUsing.capabilities.isCreativeMode = true;
+					}
 				}
-				stack.damageItem(1, this.inventory().lastUsing);
-				if(b)
+				else
 				{
-					this.inventory().lastUsing.capabilities.isCreativeMode = true;
+					stack.setItemDamage(stack.getItemDamage() + 1);
 				}
-			}
-			else
-			{
-				stack.setItemDamage(stack.getItemDamage() + 1);
-			}
-			if(stack.getItemDamage() >= stack.getMaxDamage())
-			{
-				this.inventory().setStackInSlot(1, null);
+				if(stack.getItemDamage() >= stack.getMaxDamage())
+				{
+					this.inventory().setStackInSlot(1, null);
+				}
 			}
 		}
 	}
