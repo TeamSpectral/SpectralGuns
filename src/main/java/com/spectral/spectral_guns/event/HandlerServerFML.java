@@ -6,11 +6,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.SERVER)
-public class HandlerServerFML extends HandlerCommonFML
+public class HandlerServerFML extends HandlerBase
 {
 	// fml events for server only here!
 	
-	@Override
 	@SubscribeEvent
 	public void playerUpdateEvent(PlayerTickEvent event)
 	{
