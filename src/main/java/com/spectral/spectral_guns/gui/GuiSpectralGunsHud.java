@@ -1,6 +1,7 @@
 package com.spectral.spectral_guns.gui;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -30,6 +32,7 @@ import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentMaterial;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentEvents;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
 import com.spectral.spectral_guns.items.ItemGun;
@@ -86,6 +89,42 @@ public class GuiSpectralGunsHud extends Gui
 			{
 				int line = 1;
 				ItemStack stack = player.getHeldItem();
+				
+				this.mc.mcProfiler.startSection("ammoTypeRender");
+				if(ItemGun.ammo(stack, player) > 0)
+				{
+					GlStateManager.pushMatrix();
+					GlStateManager.enableAlpha();
+					line += 4;
+					Item item = ItemGun.ejectableAmmo(stack, player, false);
+					
+					ArrayList<ComponentMagazineFood> foodMagazines = ItemGun.getComponentsOf(stack, ComponentMagazineFood.class);
+					if(foodMagazines.size() > 0)
+					{
+						ArrayList<ItemStack> stacks = foodMagazines.get(0).getItems(1, stack);
+						if(stacks.size() > 0)
+						{
+							ItemStack stack2 = stacks.get(stacks.size() - 1);
+							if(stack2 != null)
+							{
+								item = stack2.getItem();
+							}
+						}
+					}
+					
+					GlStateManager.translate(20, h - 20, 0);
+					double scale = 40;
+					GlStateManager.rotate(player.ticksExisted * 2, 0, 1, 0);
+					GlStateManager.scale(scale, -scale, scale);
+					
+					this.mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+					this.mc.getRenderItem().renderItemModel(new ItemStack(item));
+					
+					GlStateManager.disableAlpha();
+					GlStateManager.popMatrix();
+				}
+				this.mc.mcProfiler.endSection();
+				
 				this.mc.mcProfiler.startSection("ammoStats");
 				if(true)
 				{
@@ -274,6 +313,8 @@ public class GuiSpectralGunsHud extends Gui
 	
 	private void gunHeatBorder(ScaledResolution sr, EntityPlayer player)
 	{
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
 		float f = 0;
 		int amount = 0;
 		for(int i = 0; i < player.inventory.getSizeInventory(); ++i)
@@ -335,6 +376,7 @@ public class GuiSpectralGunsHud extends Gui
 				this.vingette(sr, -f / 3, -f / 3, 0, -f / 3);
 			}
 		}
+		GlStateManager.popMatrix();
 	}
 	
 	private void vingette(ScaledResolution sr, float r, float g, float b, float a)

@@ -737,16 +737,24 @@ public class ItemGun extends Item
 	
 	public static Item ejectableAmmo(ItemStack gun, EntityPlayer player)
 	{
+		return ejectableAmmo(gun, player, true);
+	}
+	
+	public static Item ejectableAmmo(ItemStack gun, EntityPlayer player, boolean itemAmmo)
+	{
 		HashMap<Integer, Component> cs = getComponents(gun);
 		for(Integer slot : cs.keySet())
 		{
 			Item item = cs.get(slot).ejectableAmmo(slot, gun, player.worldObj, player);
 			if(item != null)
 			{
-				ItemAmmo ammo = ItemAmmo.getItemAmmo(item);
-				if(ammo != null)
+				if(itemAmmo)
 				{
-					return ammo;
+					ItemAmmo ammo = ItemAmmo.getItemAmmo(item);
+					if(ammo != null)
+					{
+						return ammo;
+					}
 				}
 				return item;
 			}
