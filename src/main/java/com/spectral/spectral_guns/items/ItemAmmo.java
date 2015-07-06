@@ -9,12 +9,10 @@ import com.spectral.spectral_guns.M.Id;
 
 public abstract class ItemAmmo extends Item
 {
-	public final Item ammo;
 	public final int multiplier;
 	
-	public ItemAmmo(Item ammo, int multiplier)
+	public ItemAmmo(int multiplier)
 	{
-		this.ammo = ammo;
 		this.multiplier = multiplier;
 	}
 	
@@ -23,6 +21,8 @@ public abstract class ItemAmmo extends Item
 	{
 		return super.setUnlocalizedName("ammo." + unlocalizedName);
 	}
+	
+	public abstract Item ammo();
 	
 	public abstract void recipe();
 	
@@ -40,7 +40,7 @@ public abstract class ItemAmmo extends Item
 			if(M.getItem(id) instanceof ItemAmmo)
 			{
 				ItemAmmo item2 = (ItemAmmo)M.getItem(id);
-				if(item2.ammo == item && item2.multiplier == 1)
+				if(item2.ammo() == item && item2.multiplier == 1)
 				{
 					return item2;
 				}

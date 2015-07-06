@@ -293,7 +293,7 @@ public class ComponentEvents
 					if(s.getItem() instanceof ItemAmmo)
 					{
 						ItemAmmo item = (ItemAmmo)s.getItem();
-						s.setItem(item.ammo);
+						s.setItem(item.ammo());
 						if(ItemGun.ammoItem(stack, s, player) && ItemGun.ammo(stack, player) + item.multiplier * amount <= ItemGun.capacity(stack, player))
 						{
 							if(stack2 == null || !(stack2.getItem() instanceof ItemAmmo) || item.multiplier > ((ItemAmmo)stack2.getItem()).multiplier)
@@ -323,7 +323,7 @@ public class ComponentEvents
 				if(stack2.getItem() instanceof ItemAmmo)
 				{
 					ItemAmmo i = (ItemAmmo)stack2.getItem();
-					stack2.setItem(i.ammo);
+					stack2.setItem(i.ammo());
 					flag = ItemGun.ammoItem(stack, stack2, player);
 					stack2.setItem(i);
 				}
@@ -422,7 +422,7 @@ public class ComponentEvents
 		{
 			itemAmmo = (ItemAmmo)ammo.getItem();
 			amount *= itemAmmo.multiplier;
-			ammo.setItem(itemAmmo.ammo);
+			ammo.setItem(itemAmmo.ammo());
 		}
 		if(ammo.getItem() == Items.redstone)
 		{

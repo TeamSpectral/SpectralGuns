@@ -239,16 +239,28 @@ public class M
 	public static final ItemGun gun = registerItem("gun", new ItemGun(), false, new String[]{});
 	
 	// ammo
-	public static final ItemAmmo snow_ampulla = registerItem("ammo_snow_ampulla", (ItemAmmo)new ItemAmmo(Items.snowball, 1)
+	public static final ItemAmmo snow_ampulla = registerItem("ammo_snow_ampulla", (ItemAmmo)new ItemAmmo(1)
 	{
+		@Override
+		public Item ammo()
+		{
+			return Items.snowball;
+		}
+		
 		@Override
 		public void recipe()
 		{
 			GameRegistry.addShapedRecipe(new ItemStack(this, 64), new Object[]{"sss", "sGs", "gCg", 's', Items.snowball, 'g', M.gear_wood, 'C', M.container, 'G', Items.gunpowder});
 		}
 	}.setUnlocalizedName("snowAmpulla").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemAmmo snow_capsule = registerItem("ammo_snow_capsule", (ItemAmmo)new ItemAmmo(Items.snowball, 8)
+	public static final ItemAmmo snow_capsule = registerItem("ammo_snow_capsule", (ItemAmmo)new ItemAmmo(8)
 	{
+		@Override
+		public Item ammo()
+		{
+			return Items.snowball;
+		}
+		
 		@Override
 		public void recipe()
 		{

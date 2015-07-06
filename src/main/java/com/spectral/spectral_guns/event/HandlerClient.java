@@ -57,7 +57,7 @@ public class HandlerClient extends HandlerCommon
 			if(event.itemStack.getItem() instanceof ItemAmmo)
 			{
 				ItemAmmo item = (ItemAmmo)event.itemStack.getItem();
-				event.itemStack.setItem(item.ammo);
+				event.itemStack.setItem(item.ammo());
 				if(!cs.get(i).isAmmoItem(event.itemStack))
 				{
 					cs.remove(i);
