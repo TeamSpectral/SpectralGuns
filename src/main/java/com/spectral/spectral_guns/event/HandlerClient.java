@@ -3,17 +3,20 @@ package com.spectral.spectral_guns.event;
 import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
@@ -45,6 +48,24 @@ public class HandlerClient extends HandlerCommon
 					event.setCanceled(true);
 				}
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void RenderLivingEventSpecials(RenderLivingEvent.Pre event)
+	{
+		if(event.entity instanceof EntityPlayer && event.renderer instanceof RenderPlayer)
+		{
+			EntityPlayer player = (EntityPlayer)event.entity;
+			RenderPlayer renderer = (RenderPlayer)event.renderer;
+			if(player.getHeldItem() != null)
+			{
+				if(player.getHeldItem().getItem() instanceof ItemGun)
+				{
+					renderer.getPlayerModel().aimedBow = true;
+				}
+			}
+			Stuff.Render.setPlayerRenderer(player, renderer);
 		}
 	}
 	

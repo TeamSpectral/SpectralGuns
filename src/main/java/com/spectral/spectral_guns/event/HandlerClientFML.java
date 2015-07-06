@@ -5,10 +5,8 @@ import java.util.HashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -54,20 +52,6 @@ public class HandlerClientFML extends HandlerBase
 		ClientRegistry.registerKeyBinding(WeaponReload);
 		ClientRegistry.registerKeyBinding(WeaponZoom);
 		ClientRegistry.registerKeyBinding(WeaponEject);
-	}
-	
-	@SubscribeEvent
-	public void playerRenderEvent(RenderPlayerEvent event)
-	{
-		EntityPlayer player = (EntityPlayer)event.entity;
-		if(player.getHeldItem() != null)
-		{
-			if(player.getHeldItem().getItem() instanceof ItemGun)
-			{
-				event.renderer.getPlayerModel().aimedBow = true;
-			}
-		}
-		Stuff.Render.setPlayerRenderer(event.entityPlayer, event.renderer);
 	}
 	
 	@SubscribeEvent

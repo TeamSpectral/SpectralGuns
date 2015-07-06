@@ -6,7 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -677,5 +680,26 @@ public class Stuff
 			}
 		}
 	}
+	
+	/** Everything related to showing stuff on the screen **/
+	// - sigurd4
+	public static final class Render
+	{
+		public static HashMap<EntityPlayer, RenderPlayer> playerRenders = new HashMap();
+		
+		public static ModelBiped getModel(EntityPlayer player, ModelBiped model)
+		{
+			RenderPlayer rp = playerRenders.get(player);
+			if(rp != null)
+			{
+				model.setModelAttributes(rp.getPlayerModel());
+			}
+			return model;
+		}
+		
+		public static void setPlayerRenderer(EntityPlayer player, RenderPlayer renderer)
+		{
+			playerRenders.put(player, renderer);
+		}
 	}
 }
