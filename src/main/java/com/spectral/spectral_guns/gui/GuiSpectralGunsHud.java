@@ -135,15 +135,46 @@ public class GuiSpectralGunsHud extends Gui
 							value = 1;
 						}
 						int m = 255;
-						Color color = new Color(m / 2, m / 2, m / 2);
+						int r;
+						int g;
+						int b;
 						if(value > 0)
 						{
-							color = new Color(m / 2 + (int)(value * m / 2), m / 2 - (int)(value * m / 2), m / 2 - (int)(value * m / 2));
+							r = m / 2 + (int)(value * m / 2);
+							g = m / 2 - (int)(value * m / 2);
+							b = m / 2 - (int)(value * m / 2);
 						}
 						else
 						{
-							color = new Color(m / 2 - (int)(-value * m / 2), m / 2 - (int)(-value * m / 2), m / 2 + (int)(-value * m / 2));
+							r = m / 2 - (int)(-value * m / 2);
+							g = m / 2 - (int)(-value * m / 2);
+							b = m / 2 + (int)(-value * m / 2);
 						}
+						if(r > m)
+						{
+							r = m;
+						}
+						if(g > m)
+						{
+							g = m;
+						}
+						if(b > m)
+						{
+							b = m;
+						}
+						if(r < 0)
+						{
+							r = 0;
+						}
+						if(g < 0)
+						{
+							g = 0;
+						}
+						if(b < 0)
+						{
+							b = 0;
+						}
+						Color color = new Color(r, g, b);
 						String s = I18n.format(c.toItemStack(slot, stack).getUnlocalizedName() + ".name");
 						int i1 = fontrenderer.getStringWidth(s);
 						fontrenderer.drawStringWithShadow(s, w / scale - i1, (h - 6.6F * (cs.size() - i)) / scale, color.hashCode());
