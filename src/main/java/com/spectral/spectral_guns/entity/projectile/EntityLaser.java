@@ -211,9 +211,9 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 		this.shooter = e;
 		Coordinates3D.throwThing(this.shooter, this, this.strenght);
 		Coordinates3D.velocity(this, Coordinates3D.stabilize(Coordinates3D.velocity(this), 1));
-		this.posX += this.motionX;
-		this.posY += this.motionY;
-		this.posZ += this.motionZ;
+		this.posX += this.motionX / 2;
+		this.posY += this.motionY / 2;
+		this.posZ += this.motionZ / 2;
 		this.posY += this.Yoffset;
 	}
 	

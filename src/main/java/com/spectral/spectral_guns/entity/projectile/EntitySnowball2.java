@@ -27,7 +27,7 @@ import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 
 public class EntitySnowball2 extends EntitySnowball implements IEntityAdditionalSpawnData
 {
-	public int damage = 1;
+	public int damage = 2;
 	
 	public EntitySnowball2(World world)
 	{
@@ -102,11 +102,17 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 		}
 		
 		damage *= this.damage / 2;
-		damage -= 0.5F;
 		
 		if(damage < 0)
 		{
 			damage = 0;
+		}
+		
+		damage *= this.rand.nextFloat() * this.rand.nextFloat() * this.rand.nextFloat() * this.rand.nextFloat();
+		
+		if(damage < 1)
+		{
+			damage = this.rand.nextFloat() <= damage ? 1 : damage;
 		}
 		
 		if(pos.entityHit != null)

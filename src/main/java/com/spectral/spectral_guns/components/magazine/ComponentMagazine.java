@@ -127,11 +127,11 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 			Component c = cs.get(slot2);
 			if(c.type == Type.BARREL)
 			{
-				c.addHeat(slot2, this.heating / 2 * modifier, stack);
+				c.addHeat(slot2, this.heating * modifier, stack);
 			}
 			else if(c.type == Type.TRIGGER)
 			{
-				c.addHeat(slot2, this.heating / 3 * modifier, stack);
+				c.addHeat(slot2, this.heating / 4 * modifier, stack);
 			}
 		}
 	}

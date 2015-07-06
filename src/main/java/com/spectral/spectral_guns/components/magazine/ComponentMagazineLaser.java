@@ -115,7 +115,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	@Override
 	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
 	{
-		return delay + ammoMultiplier / 2 + this.capacity(slot, stack, world, player) / 32;
+		return delay + this.battery / 2 + this.capacity(slot, stack, world, player) / 32;
 	}
 	
 	@Override

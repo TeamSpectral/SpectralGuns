@@ -46,6 +46,12 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazineStand
 	}
 	
 	@Override
+	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
+	{
+		return super.speed(slot, speed, stack, world, player) * 5;
+	}
+	
+	@Override
 	protected void fireSound(int slot, Entity projectile, ItemStack stack, World world, EntityPlayer player)
 	{
 		float spread = ItemGun.spread(stack, player) + 0.03F;

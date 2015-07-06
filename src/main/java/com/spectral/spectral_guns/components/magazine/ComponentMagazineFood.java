@@ -39,6 +39,21 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	}
 	
 	@Override
+	public int projectileCount(ItemStack stack, World world, EntityPlayer player)
+	{
+		float f = super.projectileCount(stack, world, player) * (1 + ItemGun.spread(stack, player) * 10);
+		int i = (int)Math.floor(f);
+		f = f - i;
+		return i + (world.rand.nextFloat() <= f ? 1 : 0);
+	}
+	
+	@Override
+	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
+	{
+		return super.speed(slot, speed, stack, world, player) / 2.8F;
+	}
+	
+	@Override
 	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		if(this.firedStack == null)

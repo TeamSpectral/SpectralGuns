@@ -27,14 +27,19 @@ public abstract class ComponentMagazineStandard extends ComponentMagazine
 	
 	protected abstract Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player);
 	
+	public int projectileCount(ItemStack stack, World world, EntityPlayer player)
+	{
+		return this.projectileCount;
+	}
+	
 	@Override
 	public ArrayList<Entity> fire(int slot, ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player)
 	{
-		for(int i = 0; i < this.projectileCount; ++i)
+		for(int i = 0; i < this.projectileCount(stack, world, player); ++i)
 		{
 			e.add(this.projectile(slot, stack, world, player));
 		}
-		ComponentEvents.heatUp(stack, player, 1);
+		ComponentEvents.heatUp(stack, player, 0.5);
 		return e;
 	}
 	

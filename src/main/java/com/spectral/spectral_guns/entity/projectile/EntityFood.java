@@ -63,11 +63,10 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 	public void onUpdate()
 	{
 		super.onUpdate();
-		ItemStack stack = this.getItemStack();
-		Item item = stack.getItem();
+		Item item = this.getItem();
 		for(int i = 0; i < 1 && this.worldObj.isRemote; ++i)
 		{
-			this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, -this.motionX / 15 + Randomization.r(0.1), -this.motionY / 15 + Randomization.r(0.1), -this.motionZ / 15 + Randomization.r(0.1), new int[]{Item.getIdFromItem(this.worldObj.rand.nextInt(3) == 0 ? item : M.food_mush)});
+			this.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, true, this.posX, this.posY, this.posZ, -this.motionX / 15 + Randomization.r(0.1), -this.motionY / 15 + Randomization.r(0.1), -this.motionZ / 15 + Randomization.r(0.1), new int[]{Item.getIdFromItem(this.worldObj.rand.nextInt(6) != 1 ? item : M.food_mush)});
 		}
 	}
 	
@@ -81,7 +80,22 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 		
 		if(pos.entityHit != null && pos.entityHit.canBeCollidedWith() && pos.entityHit != this.getThrower())
 		{
-			double d = Coordinates3D.distance(Coordinates3D.velocity(this)) * (MathWithMultiple.distance(this.height, this.width) * (0.2 + this.rand.nextDouble() * 0.3));
+			double d = Coordinates3D.distance(Coordinates3D.velocity(this)) * (MathWithMultiple.distance(this.height, this.width) * (0.2 + this.rand.nextDouble() * 0.3)) * 3;
+			if(this.getThrower() != null)
+			{
+				EntityLivingBase thr = this.getThrower();
+				double dist = Coordinates3D.distance(new Vec3(this.posX - thr.posX, this.posY - thr.posY - thr.height - thr.getYOffset(), this.posZ - thr.posZ)) / 3;
+				if(dist > 1.2)
+				{
+					dist = 1.2;
+				}
+				d /= dist;
+			}
+			
+			if(d < 1)
+			{
+				d = this.rand.nextFloat() <= d ? 1 : d;
+			}
 			
 			if(pos.entityHit instanceof EntityLivingBase)
 			{

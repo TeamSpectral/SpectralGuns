@@ -26,6 +26,15 @@ public class ComponentMagazineSnowball extends ComponentMagazineStandard
 	}
 	
 	@Override
+	public int projectileCount(ItemStack stack, World world, EntityPlayer player)
+	{
+		float f = super.projectileCount(stack, world, player) * (1 + ItemGun.spread(stack, player) * 20);
+		int i = (int)Math.floor(f);
+		f = f - i;
+		return i + (world.rand.nextFloat() <= f ? 1 : 0);
+	}
+	
+	@Override
 	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return new EntitySnowball2(world, player)
@@ -36,6 +45,12 @@ public class ComponentMagazineSnowball extends ComponentMagazineStandard
 				return super.isInRangeToRenderDist(distance / 16);
 			}
 		};
+	}
+	
+	@Override
+	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
+	{
+		return super.speed(slot, speed, stack, world, player) / 6;
 	}
 	
 	@Override
@@ -119,7 +134,7 @@ public class ComponentMagazineSnowball extends ComponentMagazineStandard
 		super.update(slot, stack, world, player, invSlot, isSelected);
 		if(this.ammo(slot, stack, world, player) > 0 && this.heat(slot, stack) <= 100)
 		{
-			this.addHeat(slot, -1, stack);
+			this.addHeat(slot, -0.3F, stack);
 		}
 	}
 	

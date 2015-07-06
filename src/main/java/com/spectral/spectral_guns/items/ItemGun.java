@@ -707,7 +707,7 @@ public class ItemGun extends Item
 			f -= a.get(slot);
 			fireRate = f;
 		}
-		return (int)Math.ceil(fireRate);
+		return Math.round(fireRate);
 	}
 	
 	public static boolean automatic(ItemStack stack, EntityPlayer player)

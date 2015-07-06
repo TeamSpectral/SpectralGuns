@@ -74,14 +74,14 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism 
 	@Override
 	public void heatUp(int slot, ItemStack stack, double modifier)
 	{
-		this.addHeat(slot, 60 * modifier, stack);
+		this.addHeat(slot, 30 * modifier, stack);
 		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
 		for(Integer slot2 : cs.keySet())
 		{
 			Component c = cs.get(slot2);
 			if(c.type == Type.MAGAZINE)
 			{
-				c.addHeat(slot2, 200, stack);
+				c.addHeat(slot2, 100 * modifier, stack);
 			}
 		}
 	}
