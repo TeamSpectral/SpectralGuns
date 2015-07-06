@@ -26,6 +26,7 @@ public class HandlerCommonFML extends HandlerBase
 	public void playerUpdateEvent(PlayerTickEvent event)
 	{
 		ExtendedPlayer props = ExtendedPlayer.get(event.player);
+		props.update();
 		
 		if(event.side == Side.SERVER)
 		{
@@ -48,8 +49,6 @@ public class HandlerCommonFML extends HandlerBase
 				playerDeathData.put(event.player, playerData);
 			}
 		}
-		
-		props.update();
 	}
 	
 	@SubscribeEvent
