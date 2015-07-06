@@ -1,11 +1,6 @@
 package com.spectral.spectral_guns.entity.projectile;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +17,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
-import com.spectral.spectral_guns.Stuff.EntitiesInArea;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 
 public class EntitySnowball2 extends EntitySnowball implements IEntityAdditionalSpawnData
@@ -42,33 +36,6 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 	public EntitySnowball2(World world, double x, double y, double z)
 	{
 		super(world, x, y, z);
-	}
-	
-	@Override
-	public void onUpdate()
-	{
-		super.onUpdate();
-		List<Entity> es = EntitiesInArea.getEntitiesWithinCube(this, this.width, true);
-		ArrayList<EntitySnowball2> a = new ArrayList<EntitySnowball2>();
-		for(int i = 0; i < es.size(); ++i)
-		{
-			if(es.get(i) instanceof EntitySnowball2)
-			{
-				a.add((EntitySnowball2)es.get(i));
-			}
-		}
-		if(a.size() > 3)
-		{
-			if(this.rand.nextBoolean())
-			{
-				this.setDead();
-				a.get(this.rand.nextInt(a.size() - 1)).damage += this.damage * 2 / 3;
-			}
-			else
-			{
-				a.get(this.rand.nextInt(a.size() - 1)).setDead();
-			}
-		}
 	}
 	
 	@Override
