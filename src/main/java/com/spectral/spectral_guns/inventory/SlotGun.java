@@ -73,6 +73,14 @@ public class SlotGun extends Slot
 		super.putStack(stack);
 		if(stack != null)
 		{
+			if(stack.hasDisplayName())
+			{
+				this.container.gunName = stack.getDisplayName();
+			}
+			else
+			{
+				this.container.gunName = null;
+			}
 			this.damageWrench();
 			TileEntityGunWorkbench tileEntity = this.inventory();
 			Vec3 vec = Stuff.Coordinates3D.middle(tileEntity.getPos());
