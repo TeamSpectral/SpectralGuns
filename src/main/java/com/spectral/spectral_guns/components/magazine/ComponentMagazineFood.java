@@ -252,21 +252,24 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 		{
 			this.lastUsedStack = new ItemStack(this.ammoItem());
 		}
-		if(this.lastUsedStack != null)
+		int amount = ComponentEvents.amount(gun, this.lastUsedStack);
+		for(int i = 0; i < amount; ++i)
 		{
-			this.lastUsedStack.stackSize = 1;
-			NBTTagList items = this.getItemsNBT(slot, gun);
 			if(this.lastUsedStack != null)
 			{
-				NBTTagCompound stack = this.lastUsedStack.writeToNBT(new NBTTagCompound());
-				if(stack != null)
+				this.lastUsedStack.stackSize = 1;
+				NBTTagList items = this.getItemsNBT(slot, gun);
+				if(this.lastUsedStack != null)
 				{
-					items.appendTag(stack);
+					NBTTagCompound stack = this.lastUsedStack.writeToNBT(new NBTTagCompound());
+					if(stack != null)
+					{
+						items.appendTag(stack);
+					}
+					this.getTagCompound(slot, gun).setTag(ITEMS, items);
 				}
-				this.getTagCompound(slot, gun).setTag(ITEMS, items);
 			}
 		}
-		
 		this.lastUsedStack = null;
 	}
 	
