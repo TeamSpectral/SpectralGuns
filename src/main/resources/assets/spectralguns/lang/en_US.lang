@@ -1,6 +1,7 @@
 itemGroup.spectralGuns.core=Spectral Guns
 
 container.gunTable.tinkering=Gun Assembly Station
+container.gunTable.gunName=Name
 
 key.categories.spectral.guns=Spectral Guns
 key.WeaponEject=Eject

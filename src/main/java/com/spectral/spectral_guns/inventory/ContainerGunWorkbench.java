@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
@@ -22,6 +24,7 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 {
 	private final TileEntityGunWorkbench inventory;
 	private int playersUsing;
+	public String gunName;
 	
 	public ContainerGunWorkbench(InventoryPlayer playerInventory, TileEntityGunWorkbench containerInventory)
 	{
@@ -30,19 +33,19 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 		this.addSlotToContainer(new SlotGun(this, containerInventory, 0, 18, 22));
 		this.addSlotToContainer(new SlotWrench(containerInventory, 1, 18, 51));
 		
-		this.addSlotToContainer(new SlotComponent(containerInventory, 2, 70, 40, Type.BARREL));
-		this.addSlotToContainer(new SlotComponent(containerInventory, 3, 88, 40, Type.MAGAZINE));
-		this.addSlotToContainer(new SlotComponent(containerInventory, 4, 106, 40, Type.TRIGGER));
-		this.addSlotToContainer(new SlotComponent(containerInventory, 5, 97, 58, Type.GRIP));
-		this.addSlotToContainer(new SlotComponent(containerInventory, 6, 115, 58, Type.STOCK));
-		this.addSlotToContainer(new SlotComponent(containerInventory, 7, 79, 22, Type.AIM));
+		this.addSlotToContainer(new SlotComponent(this, containerInventory, 2, 70, 36, Type.BARREL));
+		this.addSlotToContainer(new SlotComponent(this, containerInventory, 3, 88, 36, Type.MAGAZINE));
+		this.addSlotToContainer(new SlotComponent(this, containerInventory, 4, 106, 36, Type.TRIGGER));
+		this.addSlotToContainer(new SlotComponent(this, containerInventory, 5, 97, 54, Type.GRIP));
+		this.addSlotToContainer(new SlotComponent(this, containerInventory, 6, 115, 54, Type.STOCK));
+		this.addSlotToContainer(new SlotComponent(this, containerInventory, 7, 79, 18, Type.AIM));
 		
 		for(int i = 0; i < 4; ++i)
 		{
-			this.addSlotToContainer(new SlotComponent(containerInventory, 8 + i, 150, i * 18 + 7, Type.MISC));
+			this.addSlotToContainer(new SlotComponent(this, containerInventory, 8 + i, 150, i * 18 + 7, Type.MISC));
 		}
 		
-		Stuff.GuiStuff.addPlayerInventorySlots(this, playerInventory, 0, 0);
+		Stuff.GuiStuff.addPlayerInventorySlots(this, playerInventory, 0, 30);
 		this.inventory.markDirty();
 	}
 	
@@ -55,7 +58,6 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 	{
 		super.addCraftingToCrafters(listener);
 		listener.func_175173_a(this, this.inventory);
-		// TODO
 	}
 	
 	/**
@@ -197,5 +199,26 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 	public Slot addSlotToContainer2(Slot slotIn)
 	{
 		return super.addSlotToContainer(slotIn);
+	}
+	
+	public void updateItemName(String newName)
+	{
+		this.gunName = newName;
+		
+		if(this.getSlot(0).getHasStack())
+		{
+			ItemStack itemstack = this.getSlot(0).getStack();
+			
+			if(StringUtils.isBlank(newName))
+			{
+				itemstack.clearCustomName();
+			}
+			else
+			{
+				itemstack.setStackDisplayName(this.gunName);
+			}
+			
+			SlotGun.gunFromComponents(this.inventory, this, this.inventory.lastUsing, itemstack);
+		}
 	}
 }

@@ -3,7 +3,6 @@ package com.spectral.spectral_guns.inventory;
 import java.util.HashMap;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -20,12 +19,14 @@ import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
 public class SlotComponent extends Slot
 {
+	public final ContainerGunWorkbench container;
 	public final ComponentRegister.Type type;
 	
-	public SlotComponent(IInventory inventoryIn, int index, int xPosition, int yPosition, ComponentRegister.Type type)
+	public SlotComponent(ContainerGunWorkbench container, TileEntityGunWorkbench inventoryIn, int index, int xPosition, int yPosition, ComponentRegister.Type type)
 	{
 		super(inventoryIn, index, xPosition, yPosition);
 		this.type = type;
+		this.container = container;
 	}
 	
 	protected TileEntityGunWorkbench inventory()
@@ -98,7 +99,7 @@ public class SlotComponent extends Slot
 		if(this.inventory().getStackInSlot(0) == null)
 		{
 			ItemStack stackGun = new ItemStack(M.gun);
-			SlotGun.gunFromComponents(this.inventory(), null, stackGun);
+			SlotGun.gunFromComponents(this.inventory(), this.container, null, stackGun);
 		}
 		ItemStack stackGun = this.inventory().getStackInSlot(0);
 		if(stack != null && stack.getItem() instanceof ItemComponent)
@@ -129,7 +130,7 @@ public class SlotComponent extends Slot
 						break;
 					}
 				}
-				SlotGun.gunFromComponents(this.inventory(), player, stackGun);
+				SlotGun.gunFromComponents(this.inventory(), this.container, player, stackGun);
 			}
 			if(stackGun != null && (ItemGun.getComponents(stackGun).size() <= 0 || !ComponentEvents.isGunValid(stackGun)))
 			{

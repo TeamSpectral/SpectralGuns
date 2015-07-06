@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.relauncher.Side;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References.ReferencesGunErrors;
 import com.spectral.spectral_guns.Stuff;
@@ -126,7 +128,7 @@ public class SlotGun extends Slot
 		this.damageWrench();
 	}
 	
-	public static void gunFromComponents(TileEntityGunWorkbench inventory, EntityPlayer player, ItemStack stack)
+	public static void gunFromComponents(TileEntityGunWorkbench inventory, ContainerGunWorkbench container, EntityPlayer player, ItemStack stack)
 	{
 		ItemGun.setComponents(stack, inventory.getComponents());
 		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
@@ -147,6 +149,20 @@ public class SlotGun extends Slot
 		{
 			stack = null;
 		}
+		if(stack != null && container.gunName != null)
+		{
+			if(StringUtils.isBlank(container.gunName))
+			{
+				if(stack.hasDisplayName())
+				{
+					stack.clearCustomName();
+				}
+			}
+			else if(!container.gunName.equals(stack.getDisplayName()))
+			{
+				stack.setStackDisplayName(container.gunName);
+			}
+		}
 		inventory.setInventorySlotContents(0, stack);
 	}
 	
@@ -163,7 +179,7 @@ public class SlotGun extends Slot
 			if(stackGun != null)
 			{
 				stackGun = stackGun.copy();
-				gunFromComponents(this.inventory(), playerIn, stackGun);
+				gunFromComponents(this.inventory(), this.container, playerIn, stackGun);
 				if(ComponentEvents.isGunValid(stackGun))
 				{
 					return true;
@@ -219,7 +235,7 @@ public class SlotGun extends Slot
 		}
 		if(stackGun != null && stackGun.getItem() instanceof ItemGun)
 		{
-			gunFromComponents(this.inventory(), null, stackGun);
+			gunFromComponents(this.inventory(), this.container, null, stackGun);
 			stackGun = super.getStack();
 		}
 		if(stackGun != null && stackGun.stackSize < 1 && !ComponentEvents.isGunValid(stackGun))
