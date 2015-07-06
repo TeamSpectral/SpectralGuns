@@ -9,7 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -193,6 +195,20 @@ public abstract class ProxyCommon
 							OreDictionary.registerOre(id.oreDictNames[i], (Item)item);
 						}
 					}
+				}
+			}
+		}
+		Iterator ids2 = Item.itemRegistry.getKeys().iterator();
+		while(ids2.hasNext())
+		{
+			Object o = ids2.next();
+			if(o instanceof ResourceLocation)
+			{
+				ResourceLocation id = (ResourceLocation)o;
+				Object item = Item.itemRegistry.getObject(id);
+				if(item instanceof ItemFood)
+				{
+					OreDictionary.registerOre("food", (ItemFood)item);
 				}
 			}
 		}

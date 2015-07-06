@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.Stuff.HashMapStuff;
 import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
@@ -250,7 +251,7 @@ public class M
 		@Override
 		public void recipe()
 		{
-			GameRegistry.addShapedRecipe(new ItemStack(this, 64), new Object[]{"sss", "sGs", "gCg", 's', Items.snowball, 'g', M.gear_wood, 'C', M.container, 'G', Items.gunpowder});
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 64), new Object[]{"sss", "sGs", "gCg", 's', Items.snowball, 'g', "gearWood", 'C', M.container, 'G', Items.gunpowder}));
 		}
 	}.setUnlocalizedName("snowAmpulla").setCreativeTab(M.tabCore), false, new String[]{});
 	public static final ItemAmmo snow_capsule = registerItem("ammo_snow_capsule", (ItemAmmo)new ItemAmmo(8)
@@ -264,17 +265,17 @@ public class M
 		@Override
 		public void recipe()
 		{
-			GameRegistry.addShapedRecipe(new ItemStack(this, 64), new Object[]{"SSS", "SGS", "gCg", 'S', Blocks.snow, 'g', M.gear_iron, 'C', M.container, 'G', Items.gunpowder});
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 64), new Object[]{"SSS", "SGS", "gCg", 'S', Blocks.snow, 'g', "gearIron", 'C', M.container, 'G', Items.gunpowder}));
 		}
 	}.setUnlocalizedName("snowCapsule").setCreativeTab(M.tabCore), false, new String[]{});
 	
 	// other stuff
 	public static final Item iron_nugget = registerItem("iron_nugget", new Item().setUnlocalizedName("ironNugget").setCreativeTab(CreativeTabs.tabMaterials), true, new String[]{"nuggetIron"});
 	public static final Item container = registerItem("container", new Item().setUnlocalizedName("container").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final ItemFood2 food_mush = registerItem("food_mush", (ItemFood2)new ItemFood2(3, 0.1F, false, 42).setUnlocalizedName("foodMush").setCreativeTab(M.tabCore), false, new String[]{});
-	public static final Item gear_wood = registerItem("gear_wood", new Item().setUnlocalizedName("gear.wood").setCreativeTab(M.tabCore), false, new String[]{"gearWood"});
+	public static final ItemFood2 food_mush = registerItem("food_mush", (ItemFood2)new ItemFood2(3, 0.1F, false, 42).setUnlocalizedName("foodMush").setCreativeTab(M.tabCore), false, new String[]{"food"});
+	public static final Item gear_wood = registerItem("gear_wood", new Item().setUnlocalizedName("gear.wood").setCreativeTab(M.tabCore), false, new String[]{"gearWood", "gearWooden"});
 	public static final Item gear_iron = registerItem("gear_iron", new Item().setUnlocalizedName("gear.iron").setCreativeTab(M.tabCore), false, new String[]{"gearIron"});
-	public static final Item gear_gold = registerItem("gear_gold", new Item().setUnlocalizedName("gear.gold").setCreativeTab(M.tabCore), false, new String[]{"gearGold"});
+	public static final Item gear_gold = registerItem("gear_gold", new Item().setUnlocalizedName("gear.gold").setCreativeTab(M.tabCore), false, new String[]{"gearGold", "gearGolden"});
 	public static final Item gear_diamond = registerItem("gear_diamond", new Item().setUnlocalizedName("gear.diamond").setCreativeTab(M.tabCore), false, new String[]{"gearDiamond"});
 	public static final Item lens_convex = registerItem("lens_convex", new Item().setUnlocalizedName("lens.convex").setCreativeTab(M.tabCore), false, new String[]{});
 	public static final Item lens_concave = registerItem("lens_concave", new Item().setUnlocalizedName("lens.concave").setCreativeTab(M.tabCore), false, new String[]{});
