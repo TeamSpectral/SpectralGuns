@@ -50,7 +50,7 @@ public class ComponentMagazineSnowball extends ComponentMagazineStandard
 	@Override
 	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
-		return super.speed(slot, speed, stack, world, player) / 6;
+		return super.speed(slot, speed, stack, world, player) / 2F;
 	}
 	
 	@Override
