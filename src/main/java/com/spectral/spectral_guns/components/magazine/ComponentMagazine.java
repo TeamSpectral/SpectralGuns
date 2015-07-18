@@ -16,7 +16,7 @@ import com.spectral.spectral_guns.components.ComponentGeneric;
 import com.spectral.spectral_guns.components.IComponentHeatOnFire;
 import com.spectral.spectral_guns.items.ItemGun;
 
-public abstract class ComponentMagazine extends ComponentGeneric implements IComponentAmmoItem, IComponentHeatOnFire
+public abstract class ComponentMagazine extends ComponentGeneric implements IComponentAmmoItem, IComponentHeatOnFire, IComponentProjectileCount
 {
 	public final int capacity;
 	public final float heating;

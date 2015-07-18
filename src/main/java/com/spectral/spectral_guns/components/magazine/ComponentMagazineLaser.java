@@ -241,4 +241,10 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	{
 		return Items.redstone;
 	}
+	
+	@Override
+	public int projectileCount(int slot, ItemStack stack, World world, EntityPlayer player)
+	{
+		return 1;
+	}
 }

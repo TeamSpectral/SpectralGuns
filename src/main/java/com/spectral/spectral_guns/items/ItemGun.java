@@ -35,6 +35,7 @@ import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentEvents;
+import com.spectral.spectral_guns.components.magazine.IComponentProjectileCount;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
 
@@ -103,6 +104,8 @@ public class ItemGun extends Item
 		{
 			tooltip.add(ChatFormatting.WHITE + "Zoom: " + ChatFormatting.GRAY + zoom + "%" + ChatFormatting.RESET);
 		}
+		tooltip.add(ChatFormatting.WHITE + "Velocity: " + ChatFormatting.GRAY + Math.floor(kickback(stack, player) * 100) / 100 + " m/tick" + ChatFormatting.RESET);
+		tooltip.add(ChatFormatting.WHITE + "Projectile Amount: " + ChatFormatting.GRAY + amount(stack, player) + ChatFormatting.RESET);
 		HashMap<Integer, Component> c = getComponents(stack);
 		int max = this.getMaxComponentId(c);
 		if(c.size() > 0)
@@ -722,6 +725,24 @@ public class ItemGun extends Item
 			}
 		}
 		return b;
+	}
+	
+	public static int amount(ItemStack stack, EntityPlayer player)
+	{
+		int amount = 0;
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
+		{
+			if(cs.get(slot) instanceof IComponentProjectileCount)
+			{
+				amount += ((IComponentProjectileCount)cs.get(slot)).projectileCount(slot, stack, player.worldObj, player);
+			}
+		}
+		if(amount < 1)
+		{
+			amount = 1;
+		}
+		return amount;
 	}
 	
 	public static int ammo(ItemStack stack, EntityPlayer player)

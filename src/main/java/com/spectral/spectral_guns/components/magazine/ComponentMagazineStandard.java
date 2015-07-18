@@ -27,7 +27,8 @@ public abstract class ComponentMagazineStandard extends ComponentMagazine
 	
 	protected abstract Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player);
 	
-	public int projectileCount(ItemStack stack, World world, EntityPlayer player)
+	@Override
+	public int projectileCount(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return this.projectileCount;
 	}
@@ -35,7 +36,7 @@ public abstract class ComponentMagazineStandard extends ComponentMagazine
 	@Override
 	public ArrayList<Entity> fire(int slot, ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player)
 	{
-		for(int i = 0; i < this.projectileCount(stack, world, player); ++i)
+		for(int i = 0; i < this.projectileCount(slot, stack, world, player); ++i)
 		{
 			e.add(this.projectile(slot, stack, world, player));
 		}
