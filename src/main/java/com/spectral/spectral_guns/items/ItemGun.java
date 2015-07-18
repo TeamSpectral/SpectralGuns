@@ -105,7 +105,7 @@ public class ItemGun extends Item
 			tooltip.add(ChatFormatting.WHITE + "Zoom: " + ChatFormatting.GRAY + zoom + "%" + ChatFormatting.RESET);
 		}
 		tooltip.add(ChatFormatting.WHITE + "Velocity: " + ChatFormatting.GRAY + Math.floor(kickback(stack, player) * 100) / 100 + " m/tick" + ChatFormatting.RESET);
-		tooltip.add(ChatFormatting.WHITE + "Projectile Amount: " + ChatFormatting.GRAY + amount(stack, player) + ChatFormatting.RESET);
+		tooltip.add(ChatFormatting.WHITE + "Projectile Count: " + ChatFormatting.GRAY + amount(stack, player) + ChatFormatting.RESET);
 		HashMap<Integer, Component> c = getComponents(stack);
 		int max = this.getMaxComponentId(c);
 		if(c.size() > 0)
