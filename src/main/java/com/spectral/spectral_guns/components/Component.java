@@ -327,7 +327,12 @@ public abstract class Component
 		return d;
 	}
 	
-	public abstract double heatConductiveness(int slot, ItemStack stack);
+	protected abstract double heatConductiveness2(int slot, ItemStack stack);
+	
+	public double heatConductiveness(int slot, ItemStack stack)
+	{
+		return Math.min(this.heatConductiveness2(slot, stack), 1);
+	}
 	
 	public abstract float heatThreshold(int slot, ItemStack stack);
 	
@@ -335,10 +340,10 @@ public abstract class Component
 	{
 		double heat1 = this.heat(slot, stack);
 		double heat1Old = heat1;
-		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss / 10;
+		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss;
 		double heat2 = c.heat(slot, stack);
 		double heat2Old = heat2;
-		double cond2 = c.heatConductiveness(slot, stack) * c.material.heatLoss / 10;
+		double cond2 = c.heatConductiveness(slot, stack) * c.material.heatLoss;
 		
 		if(cond1 > 1)
 		{
@@ -351,7 +356,7 @@ public abstract class Component
 		
 		double distr1 = heat1 * cond1;
 		double distr2 = heat2 * cond2;
-		double distr = (distr1 + distr2) / 2;
+		double distr = (distr1 + distr2) / 4;
 		heat1 += distr - distr1;
 		heat2 += distr - distr2;
 		
@@ -383,14 +388,14 @@ public abstract class Component
 	{
 		double oldHeat1 = this.heat(slot, stack);
 		this.heatMix(slot, stack, c2Heat, c2Threshold, c2HeatLoss);
-		this.setHeat(slot, (this.heat(slot, stack) * change + oldHeat1 / change) / 2, stack);
+		this.setHeat(slot, (this.heat(slot, stack) * change + oldHeat1 * (1 - change)) / 2, stack);
 	}
 	
 	public void heatMix(int slot, ItemStack stack, double c2Heat, double c2Threshold, double c2HeatLoss)
 	{
 		double heat1 = this.heat(slot, stack);
 		double heat1Old = heat1;
-		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss / 10;
+		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss;
 		double heat2 = c2Heat;
 		double heat2Old = heat2;
 		double cond2 = c2HeatLoss;
@@ -406,7 +411,7 @@ public abstract class Component
 		
 		double distr1 = heat1 * cond1;
 		double distr2 = heat2 * cond2;
-		double distr = (distr1 + distr2) / 2;
+		double distr = (distr1 + distr2) / 4;
 		heat1 += distr - distr1;
 		heat2 += distr - distr2;
 		

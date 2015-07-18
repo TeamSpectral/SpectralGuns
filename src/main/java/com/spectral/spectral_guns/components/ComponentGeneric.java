@@ -177,7 +177,7 @@ public abstract class ComponentGeneric extends Component
 	}
 	
 	@Override
-	public double heatConductiveness(int slot, ItemStack stack)
+	protected double heatConductiveness2(int slot, ItemStack stack)
 	{
 		return this.heatLoss;
 	}
