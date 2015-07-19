@@ -1,7 +1,5 @@
 package com.spectral.spectral_guns.gui;
 
-import io.netty.buffer.Unpooled;
-
 import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
@@ -14,15 +12,17 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.util.ResourceLocation;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.inventory.ContainerGunWorkbench;
 import com.spectral.spectral_guns.inventory.SlotComponent;
+import com.spectral.spectral_guns.inventory.SlotGun;
+import com.spectral.spectral_guns.packet.PacketItemName;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
 public class GuiContainerGunWorkbench extends GuiContainer
@@ -102,6 +102,10 @@ public class GuiContainerGunWorkbench extends GuiContainer
 		this.nameField.setEnabled(true);
 		this.nameField.setEnableBackgroundDrawing(false);
 		this.nameField.setMaxStringLength(40);
+		if(this.container.getSlot(0).getStack() != null)
+		{
+			this.nameField.setText(this.container.getSlot(0).getStack().getDisplayName());
+		}
 	}
 	
 	@Override
@@ -135,7 +139,7 @@ public class GuiContainerGunWorkbench extends GuiContainer
 		}
 		
 		this.container.updateItemName(s);
-		this.mc.thePlayer.sendQueue.addToSendQueue(new C17PacketCustomPayload("MC|ItemName", new PacketBuffer(Unpooled.buffer()).writeString(s)));
+		M.network.sendToServer(new PacketItemName(s, this.container.getClass()));
 	}
 	
 	@Override
@@ -172,6 +176,34 @@ public class GuiContainerGunWorkbench extends GuiContainer
 			{
 				this.renameItem();
 			}
+		}
+	}
+	
+	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+		if(this.container.getSlot(0).getStack() != null && !this.nameField.isFocused() && StringUtils.isBlank(this.nameField.getText()))
+		{
+			this.nameField.setText(this.container.getSlot(0).getStack().getDisplayName());
+			this.renameItem();
+		}
+		clear:
+		if(true)
+		{
+			for(Object slot : this.container.inventorySlots)
+			{
+				if(slot instanceof SlotGun || slot instanceof SlotComponent)
+				{
+					ItemStack stack = ((Slot)slot).getStack();
+					if(stack != null)
+					{
+						break clear;
+					}
+				}
+			}
+			this.nameField.setText("");
+			this.renameItem();
 		}
 	}
 }

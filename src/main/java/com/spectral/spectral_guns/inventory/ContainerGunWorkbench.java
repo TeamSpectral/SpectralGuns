@@ -20,7 +20,7 @@ import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
-public class ContainerGunWorkbench extends Container implements IContainerAddPlayerSlots
+public class ContainerGunWorkbench extends Container implements IContainerAddPlayerSlots, IContainerItemName
 {
 	private final TileEntityGunWorkbench inventory;
 	private int playersUsing;
@@ -201,6 +201,7 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 		return super.addSlotToContainer(slotIn);
 	}
 	
+	@Override
 	public void updateItemName(String newName)
 	{
 		this.gunName = newName;
@@ -208,8 +209,12 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 		if(this.getSlot(0).getHasStack())
 		{
 			ItemStack itemstack = this.getSlot(0).getStack();
+			if(StringUtils.isBlank(this.gunName) || this.gunName.equals(itemstack.getItem().getItemStackDisplayName(itemstack)))
+			{
+				this.gunName = null;
+			}
 			
-			if(StringUtils.isBlank(newName))
+			if(StringUtils.isBlank(this.gunName))
 			{
 				itemstack.clearCustomName();
 			}

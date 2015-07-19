@@ -40,6 +40,7 @@ import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
 import com.spectral.spectral_guns.event.HandlerCommon;
 import com.spectral.spectral_guns.event.HandlerCommonFML;
 import com.spectral.spectral_guns.gui.GuiHandler;
+import com.spectral.spectral_guns.packet.PacketItemName;
 import com.spectral.spectral_guns.packet.PacketKey;
 import com.spectral.spectral_guns.packet.PacketPlayerData;
 import com.spectral.spectral_guns.recipe.RecipeGun;
@@ -88,6 +89,7 @@ public abstract class ProxyCommon
 		M.network = NetworkRegistry.INSTANCE.newSimpleChannel(References.MODID + "Packets");
 		M.network.registerMessage(PacketKey.Handler.class, PacketKey.class, 0, Side.SERVER);
 		M.network.registerMessage(PacketPlayerData.Handler.class, PacketPlayerData.class, 1, Side.CLIENT);
+		M.network.registerMessage(PacketItemName.Handler.class, PacketItemName.class, 2, Side.SERVER);
 		// M.network.registerMessage(PacketEntityData.Handler.class, PacketEntityData.class, 1, Side.CLIENT);
 		// M.network.registerMessage(PacketPlayerData.Handler.class, PacketPlayerData.class, 2, Side.CLIENT);
 	}

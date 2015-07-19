@@ -73,14 +73,7 @@ public class SlotGun extends Slot
 		super.putStack(stack);
 		if(stack != null)
 		{
-			if(stack.hasDisplayName())
-			{
-				this.container.gunName = stack.getDisplayName();
-			}
-			else
-			{
-				this.container.gunName = null;
-			}
+			this.container.gunName = stack.getDisplayName();
 			this.damageWrench();
 			TileEntityGunWorkbench tileEntity = this.inventory();
 			Vec3 vec = Stuff.Coordinates3D.middle(tileEntity.getPos());
@@ -126,6 +119,10 @@ public class SlotGun extends Slot
 				this.container.insertComponents(stack);
 			}
 		}
+		else
+		{
+			this.container.gunName = null;
+		}
 	}
 	
 	@Override
@@ -134,6 +131,7 @@ public class SlotGun extends Slot
 		super.onPickupFromSlot(player, stack);
 		this.inventory().clearComponentStacks(false, 1);
 		this.damageWrench();
+		this.container.gunName = null;
 	}
 	
 	public static void gunFromComponents(TileEntityGunWorkbench inventory, ContainerGunWorkbench container, EntityPlayer player, ItemStack stack)
@@ -166,7 +164,7 @@ public class SlotGun extends Slot
 					stack.clearCustomName();
 				}
 			}
-			else if(!container.gunName.equals(stack.getDisplayName()))
+			else if(!container.gunName.equals(stack.getItem().getItemStackDisplayName(stack)))
 			{
 				stack.setStackDisplayName(container.gunName);
 			}
