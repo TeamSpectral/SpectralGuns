@@ -19,6 +19,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References;
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.inventory.ContainerGunWorkbench;
 import com.spectral.spectral_guns.inventory.SlotComponent;
 import com.spectral.spectral_guns.inventory.SlotGun;
@@ -102,9 +103,9 @@ public class GuiContainerGunWorkbench extends GuiContainer
 		this.nameField.setEnabled(true);
 		this.nameField.setEnableBackgroundDrawing(false);
 		this.nameField.setMaxStringLength(40);
-		if(this.container.getSlot(0).getStack() != null)
+		if(this.container.getSlot(0).getStack() != null && (StringUtils.isBlank(this.container.getGunName()) || this.container.getSlot(0).getStack().hasDisplayName()))
 		{
-			this.nameField.setText(this.container.getSlot(0).getStack().getDisplayName());
+			this.setText(this.container.getSlot(0).getStack().getDisplayName());
 		}
 	}
 	
@@ -133,7 +134,7 @@ public class GuiContainerGunWorkbench extends GuiContainer
 		String s = this.nameField.getText();
 		Slot slot = this.container.getSlot(0);
 		
-		if(slot != null && slot.getHasStack() && !slot.getStack().hasDisplayName() && s.equals(slot.getStack().getDisplayName()))
+		if(slot != null && slot.getHasStack() && !slot.getStack().hasDisplayName() && s.equals(Stuff.Strings.removeFormatting(slot.getStack().getDisplayName())))
 		{
 			s = "";
 		}
@@ -169,7 +170,7 @@ public class GuiContainerGunWorkbench extends GuiContainer
 	{
 		if(slotInd == 0)
 		{
-			this.nameField.setText(stack == null ? "" : stack.getDisplayName());
+			this.setText(stack == null ? "" : stack.getDisplayName());
 			this.nameField.setEnabled(stack != null);
 			
 			if(stack != null)
@@ -179,31 +180,50 @@ public class GuiContainerGunWorkbench extends GuiContainer
 		}
 	}
 	
+	boolean b = false;
+	
 	@Override
 	public void updateScreen()
 	{
 		super.updateScreen();
 		if(this.container.getSlot(0).getStack() != null && !this.nameField.isFocused() && StringUtils.isBlank(this.nameField.getText()))
 		{
-			this.nameField.setText(this.container.getSlot(0).getStack().getDisplayName());
+			this.setText(this.container.getSlot(0).getStack().getDisplayName());
 			this.renameItem();
 		}
-		clear:
-		if(true)
+		boolean flag = true;
+		for(Object slot : this.container.inventorySlots)
 		{
-			for(Object slot : this.container.inventorySlots)
+			if(slot instanceof SlotGun || slot instanceof SlotComponent)
 			{
-				if(slot instanceof SlotGun || slot instanceof SlotComponent)
+				ItemStack stack = ((Slot)slot).getStack();
+				if(stack != null)
 				{
-					ItemStack stack = ((Slot)slot).getStack();
-					if(stack != null)
-					{
-						break clear;
-					}
+					flag = false;
 				}
 			}
-			this.nameField.setText("");
-			this.renameItem();
 		}
+		if(flag)
+		{
+			if(this.b)
+			{
+				this.nameField.setFocused(false);
+				this.setText("");
+				this.renameItem();
+			}
+			else
+			{
+				this.b = true;
+			}
+		}
+		else
+		{
+			this.b = false;
+		}
+	}
+	
+	private void setText(String s)
+	{
+		this.nameField.setText(s == null ? "" : Stuff.Strings.removeFormatting(s));
 	}
 }

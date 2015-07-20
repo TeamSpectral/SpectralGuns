@@ -73,7 +73,7 @@ public class SlotGun extends Slot
 		super.putStack(stack);
 		if(stack != null)
 		{
-			this.container.gunName = stack.getDisplayName();
+			this.container.setGunName(stack.getDisplayName());
 			this.damageWrench();
 			TileEntityGunWorkbench tileEntity = this.inventory();
 			Vec3 vec = Stuff.Coordinates3D.middle(tileEntity.getPos());
@@ -121,7 +121,7 @@ public class SlotGun extends Slot
 		}
 		else
 		{
-			this.container.gunName = null;
+			this.container.setGunName("");
 		}
 	}
 	
@@ -131,8 +131,10 @@ public class SlotGun extends Slot
 		super.onPickupFromSlot(player, stack);
 		this.inventory().clearComponentStacks(false, 1);
 		this.damageWrench();
-		this.container.gunName = null;
+		//this.container.setGunName("");
 	}
+	
+	static private boolean b = false;
 	
 	public static void gunFromComponents(TileEntityGunWorkbench inventory, ContainerGunWorkbench container, EntityPlayer player, ItemStack stack)
 	{
@@ -155,20 +157,23 @@ public class SlotGun extends Slot
 		{
 			stack = null;
 		}
-		if(stack != null && container.gunName != null)
+		boolean flag = true;
+		if(stack != null)
 		{
-			if(StringUtils.isBlank(container.gunName))
+			if(StringUtils.isBlank(container.getGunName()))
 			{
-				if(stack.hasDisplayName())
+				flag = false;
+				if(stack.hasDisplayName() && b)
 				{
 					stack.clearCustomName();
 				}
 			}
-			else if(!container.gunName.equals(stack.getItem().getItemStackDisplayName(stack)))
+			else if(!container.getGunName().equals(stack.getItem().getItemStackDisplayName(stack)))
 			{
-				stack.setStackDisplayName(container.gunName);
+				stack.setStackDisplayName(container.getGunNameFormatting());
 			}
 		}
+		b = !flag;
 		inventory.setInventorySlotContents(0, stack);
 	}
 	

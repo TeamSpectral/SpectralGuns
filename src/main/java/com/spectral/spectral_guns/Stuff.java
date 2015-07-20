@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkProviderSettings;
 
 import com.google.common.collect.Lists;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.inventory.IContainerAddPlayerSlots;
 
 public class Stuff
@@ -658,6 +659,20 @@ public class Stuff
 			{
 				char c = cs.get(i);
 				s = s + c;
+			}
+			return s;
+		}
+		
+		public static String removeFormatting(String s)
+		{
+			if(s == null)
+			{
+				return s;
+			}
+			s = new String(s);
+			for(ChatFormatting cf : ChatFormatting.values())
+			{
+				s = s.replaceAll("" + cf, "");
 			}
 			return s;
 		}

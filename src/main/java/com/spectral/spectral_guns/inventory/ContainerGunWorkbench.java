@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
@@ -24,7 +25,7 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 {
 	private final TileEntityGunWorkbench inventory;
 	private int playersUsing;
-	public String gunName;
+	private String gunName;
 	
 	public ContainerGunWorkbench(InventoryPlayer playerInventory, TileEntityGunWorkbench containerInventory)
 	{
@@ -201,28 +202,47 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 		return super.addSlotToContainer(slotIn);
 	}
 	
+	public String getGunName()
+	{
+		return Stuff.Strings.removeFormatting(this.gunName);
+	}
+	
+	public String getGunNameFormatting()
+	{
+		String s = this.getGunName();
+		if(!StringUtils.isBlank(s))
+		{
+			return ChatFormatting.RESET + Stuff.Strings.removeFormatting(s);
+		}
+		return s;
+	}
+	
+	public void setGunName(String newName)
+	{
+		this.gunName = Stuff.Strings.removeFormatting(newName);
+	}
+	
 	@Override
 	public void updateItemName(String newName)
 	{
-		this.gunName = newName;
+		this.gunName = Stuff.Strings.removeFormatting(newName);
 		
 		if(this.getSlot(0).getHasStack())
 		{
 			ItemStack itemstack = this.getSlot(0).getStack();
-			if(StringUtils.isBlank(this.gunName) || this.gunName.equals(itemstack.getItem().getItemStackDisplayName(itemstack)))
+			if(StringUtils.isBlank(this.getGunName()) || this.getGunName().equals(itemstack.getItem().getItemStackDisplayName(itemstack)))
 			{
-				this.gunName = null;
+				this.setGunName(null);
 			}
 			
-			if(StringUtils.isBlank(this.gunName))
+			if(StringUtils.isBlank(this.getGunName()))
 			{
 				itemstack.clearCustomName();
 			}
 			else
 			{
-				itemstack.setStackDisplayName(this.gunName);
+				itemstack.setStackDisplayName(this.getGunNameFormatting());
 			}
-			
 			SlotGun.gunFromComponents(this.inventory, this, this.inventory.lastUsing, itemstack);
 		}
 	}
