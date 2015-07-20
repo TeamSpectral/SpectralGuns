@@ -61,7 +61,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 		{
 			float incline = 1.13F / ItemGun.delay(gun, player);
 			compound.setFloat(CHARGE, compound.getFloat(CHARGE) + incline);
-			ComponentEvents.heatUp(gun, player, compound.getFloat(CHARGE) / 30);
+			ComponentEvents.heatUp(gun, player, Math.max(1, compound.getFloat(CHARGE)) / 20);
 		}
 		else
 		{

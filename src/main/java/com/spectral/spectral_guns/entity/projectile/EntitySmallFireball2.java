@@ -81,6 +81,11 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 			
 			if(pos.entityHit != null)
 			{
+				float damage = 5;
+				if(this.hasBounced)
+				{
+					damage /= 2;
+				}
 				if(pos.entityHit instanceof EntityLivingBase)
 				{
 					((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;

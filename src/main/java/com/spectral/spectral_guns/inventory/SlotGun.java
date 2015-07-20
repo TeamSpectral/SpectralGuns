@@ -134,8 +134,6 @@ public class SlotGun extends Slot
 		//this.container.setGunName("");
 	}
 	
-	static private boolean b = false;
-	
 	public static void gunFromComponents(TileEntityGunWorkbench inventory, ContainerGunWorkbench container, EntityPlayer player, ItemStack stack)
 	{
 		ItemGun.setComponents(stack, inventory.getComponents());
@@ -157,13 +155,11 @@ public class SlotGun extends Slot
 		{
 			stack = null;
 		}
-		boolean flag = true;
 		if(stack != null)
 		{
 			if(StringUtils.isBlank(container.getGunName()))
 			{
-				flag = false;
-				if(stack.hasDisplayName() && b)
+				if(stack.hasDisplayName() && container.gunNameHasBeenSet)
 				{
 					stack.clearCustomName();
 				}
@@ -173,7 +169,6 @@ public class SlotGun extends Slot
 				stack.setStackDisplayName(container.getGunNameFormatting());
 			}
 		}
-		b = !flag;
 		inventory.setInventorySlotContents(0, stack);
 	}
 	

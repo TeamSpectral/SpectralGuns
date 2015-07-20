@@ -17,6 +17,7 @@ import net.minecraft.util.Vec3;
 
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
+import com.spectral.spectral_guns.Stuff.Randomization;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
@@ -87,6 +88,7 @@ public class ComponentEvents
 			}
 		}
 		double h = 0;
+		int a = 0;
 		for(Integer i : cs.keySet())
 		{
 			Component c = cs.get(i);
@@ -94,16 +96,20 @@ public class ComponentEvents
 			{
 				double cond = c.heatConductiveness(i, stack) / 2;
 				double heat = c.heat(i, stack);
-				h += heat * cond;
+				h += heat * cond / c.heatThreshold(slot, stack);
+				++a;
 				c.setHeat(i, heat * (1 - cond), stack);
 			}
 		}
-		for(Integer i : cs.keySet())
+		if(h != 0 && a > 0)
 		{
-			Component c = cs.get(i);
-			if(c != null)
+			for(Integer i : cs.keySet())
 			{
-				c.addHeat(i, h / cs.size() * c.heatConductiveness(i, stack) / 2, stack);
+				Component c = cs.get(i);
+				if(c != null)
+				{
+					c.addHeat(i, h / a * c.heatThreshold(slot, stack), stack);
+				}
 			}
 		}
 		for(Integer i : cs.keySet())

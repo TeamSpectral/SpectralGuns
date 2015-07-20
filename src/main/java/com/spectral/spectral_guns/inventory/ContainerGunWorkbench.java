@@ -26,6 +26,7 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 	private final TileEntityGunWorkbench inventory;
 	private int playersUsing;
 	private String gunName;
+	public boolean gunNameHasBeenSet = false;
 	
 	public ContainerGunWorkbench(InventoryPlayer playerInventory, TileEntityGunWorkbench containerInventory)
 	{
@@ -220,12 +221,13 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 	public void setGunName(String newName)
 	{
 		this.gunName = Stuff.Strings.removeFormatting(newName);
+		this.gunNameHasBeenSet = true;
 	}
 	
 	@Override
 	public void updateItemName(String newName)
 	{
-		this.gunName = Stuff.Strings.removeFormatting(newName);
+		this.setGunName(newName);
 		
 		if(this.getSlot(0).getHasStack())
 		{

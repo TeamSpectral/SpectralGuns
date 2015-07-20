@@ -2,6 +2,7 @@ package com.spectral.spectral_guns.components;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -219,14 +220,23 @@ public abstract class ComponentGeneric extends Component
 				}
 			}
 		}
-		this.heatMix(slot, stack, player.isInWater() ? -20 : 0, 1, 0.0001, 0.51);
-		if(this.heat(slot, stack) > 0)
+		float h = 0.00001F;
+		float baseTemp = player.isInsideOfMaterial(Material.water) ? -20 : 0;
+		if(this.heat(slot, stack) > this.heatThreshold(slot, stack) / 5 + baseTemp)
 		{
-			this.addHeat(slot, -0.01, stack);
+			this.addHeat(slot, -h, stack);
+			if(this.heat(slot, stack) < baseTemp)
+			{
+				this.setHeat(slot, baseTemp, stack);
+			}
 		}
-		else if(this.heat(slot, stack) < 0)
+		else if(this.heat(slot, stack) < -this.heatThreshold(slot, stack) / 5 + baseTemp)
 		{
-			this.addHeat(slot, 0.01, stack);
+			this.addHeat(slot, h, stack);
+			if(this.heat(slot, stack) > baseTemp)
+			{
+				this.setHeat(slot, baseTemp, stack);
+			}
 		}
 	}
 }
