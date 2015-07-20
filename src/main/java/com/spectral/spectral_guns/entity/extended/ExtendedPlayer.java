@@ -3,6 +3,7 @@ package com.spectral.spectral_guns.entity.extended;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -27,6 +28,7 @@ public class ExtendedPlayer implements IExtendedEntityProperties, IEntityAdditio
 	public int reloadDelay = 0;
 	public double recoilPitch = 0;
 	public double recoilYaw = 0;
+	protected double zoom = 0.5;
 	
 	public final static String PROP = References.MODID;
 	public final static String SNOW = "Snow";
@@ -171,6 +173,42 @@ public class ExtendedPlayer implements IExtendedEntityProperties, IEntityAdditio
 	public void snowball()
 	{
 		this.snow += 1.4F + this.player.worldObj.rand.nextFloat();
+	}
+	
+	public void setZoom(int scroll)
+	{
+		ItemStack stack = this.player.getHeldItem();
+		if(stack == null || !(stack.getItem() instanceof ItemGun) || stack.getTagCompound() == null)
+		{
+			return;
+		}
+		double d = (double)scroll / 5000;
+		if(ItemGun.zoom(stack, this.player, 1) - 1 > 0)
+		{
+			this.zoom += d;
+			if(this.zoom > 1)
+			{
+				this.zoom = 1;
+			}
+			if(this.zoom < 0.3)
+			{
+				this.zoom = 0.3;
+			}
+		}
+	}
+	
+	public double getZoom()
+	{
+		ItemStack stack = this.player.getHeldItem();
+		if(stack == null || !(stack.getItem() instanceof ItemGun) || stack.getTagCompound() == null)
+		{
+			return 0;
+		}
+		if(ItemGun.zoom(stack, this.player, 1) - 1 > 0)
+		{
+			return this.zoom;
+		}
+		return 0;
 	}
 	
 	@Override

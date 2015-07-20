@@ -10,7 +10,9 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
 import com.spectral.spectral_guns.items.ItemGun;
@@ -64,17 +66,16 @@ public class HandlerCommon extends HandlerBase
 	@SubscribeEvent
 	public void FOVUpdateEvent(FOVUpdateEvent event)
 	{
-		if(event.entity instanceof EntityPlayer)
+		if(M.proxy.side() == Side.CLIENT)
 		{
-			EntityPlayer player = event.entity;
-			if(player.getHeldItem() != null)
+			if(event.entity.getHeldItem() != null)
 			{
-				ItemStack itemstack = player.getHeldItem();
-				ExtendedPlayer props = ExtendedPlayer.get(player);
+				ItemStack itemstack = event.entity.getHeldItem();
+				ExtendedPlayer props = ExtendedPlayer.get(event.entity);
 				if(itemstack.getItem() instanceof ItemGun && props.isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1))
 				{
 					event.newfov = 1;
-					event.newfov -= (ItemGun.zoom(itemstack, player, 1) - 1) / 3 + 0.05;
+					event.newfov -= props.getZoom() * (ItemGun.zoom(itemstack, event.entity, 1) - 1) / 3 + 0.05;
 				}
 			}
 		}

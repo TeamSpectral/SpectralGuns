@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -22,6 +23,7 @@ import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.components.magazine.IComponentAmmoItem;
+import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.gui.GuiSpectralGunsHud;
 import com.spectral.spectral_guns.gui.GuiSpectralGunsHud.RenderOrder;
 import com.spectral.spectral_guns.items.ItemAmmo;
@@ -45,6 +47,25 @@ public class HandlerClient extends HandlerCommon
 			{
 				if(event.type == ElementType.CROSSHAIRS && event.isCancelable())
 				{
+					event.setCanceled(true);
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void MouseEvent(MouseEvent event)
+	{
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		if(player != null && player.getHeldItem() != null)
+		{
+			ItemStack stack = player.getHeldItem();
+			ExtendedPlayer props = ExtendedPlayer.get(player);
+			if(stack.getItem() instanceof ItemGun && props.isZoomHeldDown && (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 || Minecraft.getMinecraft().gameSettings.thirdPersonView == 1))
+			{
+				if(event.dwheel != 0)
+				{
+					props.setZoom(event.dwheel);
 					event.setCanceled(true);
 				}
 			}
