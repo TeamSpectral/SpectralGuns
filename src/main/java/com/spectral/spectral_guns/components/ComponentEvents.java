@@ -204,11 +204,6 @@ public class ComponentEvents
 		float spread = ItemGun.spread(stack, player);
 		float speed = ItemGun.speed(stack, player);
 		
-		if(props.recoilPitch > 0)
-		{
-			spread *= 1 + props.recoilPitch;
-		}
-		
 		for(int i = 0; i < projectiles.size(); ++i)
 		{
 			Entity e = projectiles.get(i);
@@ -234,6 +229,15 @@ public class ComponentEvents
 			}
 		}
 		
+		float oldRotPitch = player.rotationPitch;
+		float oldRotYaw = player.rotationYaw;
+		float inst = (float)(props.recoilPitch + props.recoilYaw);
+		if(inst > 60)
+		{
+			inst = 60;
+		}
+		player.rotationYaw += Randomization.r(inst * 5);
+		player.rotationPitch += Randomization.r(inst * 5);
 		for(int i = 0; i < projectiles.size(); ++i)
 		{
 			Entity e = projectiles.get(i);
@@ -260,6 +264,8 @@ public class ComponentEvents
 				e.motionZ = pos.zCoord;
 			}
 		}
+		player.rotationPitch = oldRotPitch;
+		player.rotationYaw = oldRotYaw;
 		
 		return projectiles;
 	}
