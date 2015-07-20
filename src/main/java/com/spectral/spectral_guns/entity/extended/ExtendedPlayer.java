@@ -178,7 +178,6 @@ public class ExtendedPlayer implements IExtendedEntityProperties, IEntityAdditio
 		buf.writeBoolean(this.isRightClickHeldDownLast);
 		buf.writeBoolean(this.isZoomHeldDown);
 		buf.writeInt(this.reloadDelay);
-		buf.writeDouble(this.recoilPitch);
 	}
 	
 	/**
@@ -196,6 +195,5 @@ public class ExtendedPlayer implements IExtendedEntityProperties, IEntityAdditio
 		this.isRightClickHeldDownLast = buf.readBoolean();
 		this.isZoomHeldDown = buf.readBoolean();
 		this.reloadDelay = buf.readInt();
-		this.recoilPitch = buf.readDouble();
 	}
 }
