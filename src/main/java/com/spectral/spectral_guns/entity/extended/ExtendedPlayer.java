@@ -86,6 +86,18 @@ public class ExtendedPlayer implements IExtendedEntityProperties, IEntityAdditio
 			this.recoilPitch = properties.getDouble(RECOIL_PITCH);
 			this.recoilYaw = properties.getDouble(RECOIL_YAW);
 		}
+		if(Float.isNaN(this.snow))
+		{
+			this.snow = 0;
+		}
+		if(Double.isNaN(this.recoilPitch))
+		{
+			this.recoilPitch = 0;
+		}
+		if(Double.isNaN(this.recoilYaw))
+		{
+			this.recoilYaw = 0;
+		}
 		this.capSnow();
 	}
 	
