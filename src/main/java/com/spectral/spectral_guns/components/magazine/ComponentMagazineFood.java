@@ -40,9 +40,9 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	}
 	
 	@Override
-	public int projectileCount(ItemStack stack, World world, EntityPlayer player)
+	public int projectileCount(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		float f = super.projectileCount(stack, world, player) * (1 + ItemGun.spread(stack, player) * 10);
+		float f = super.projectileCount(slot, stack, world, player) * (1 + ItemGun.spread(stack, player) * 10);
 		int i = (int)Math.floor(f);
 		f = f - i;
 		return i + (world.rand.nextFloat() <= f ? 1 : 0);
