@@ -30,7 +30,8 @@ public class ExtendedPlayer implements IExtendedEntityProperties, IEntityAdditio
 	
 	public final static String PROP = References.MODID;
 	public final static String SNOW = "Snow";
-	public final static String RECOIL = "Recoil";
+	public final static String RECOIL_PITCH = "RecoilPitch";
+	public final static String RECOIL_YAW = "RecoilYaw";
 	public final static String RIGHTCLICK = "RightClick";
 	public final static String RIGHTCLICKLAST = "RightClickLast";
 	public final static String ZOOM = "Zoom";
@@ -82,7 +83,8 @@ public class ExtendedPlayer implements IExtendedEntityProperties, IEntityAdditio
 		if(b)
 		{
 			this.snow = properties.getFloat(SNOW);
-			this.recoilPitch = properties.getDouble(RECOIL);
+			this.recoilPitch = properties.getDouble(RECOIL_PITCH);
+			this.recoilYaw = properties.getDouble(RECOIL_YAW);
 		}
 		this.capSnow();
 	}
@@ -118,7 +120,8 @@ public class ExtendedPlayer implements IExtendedEntityProperties, IEntityAdditio
 		if(b)
 		{
 			properties.setFloat(SNOW, this.snow);
-			properties.setDouble(RECOIL, this.recoilPitch);
+			properties.setDouble(RECOIL_PITCH, this.recoilPitch);
+			properties.setDouble(RECOIL_YAW, this.recoilYaw);
 		}
 	}
 	
