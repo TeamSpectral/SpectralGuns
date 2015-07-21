@@ -59,6 +59,9 @@ public class HandlerClientFML extends HandlerBase
 	{
 		ExtendedPlayer props = ExtendedPlayer.get(event.player);
 		
+		event.player.rotationPitch = Float.isNaN(event.player.rotationPitch) ? 0 : event.player.rotationPitch;
+		event.player.rotationYaw = Float.isNaN(event.player.rotationYaw) ? 0 : event.player.rotationYaw;
+		
 		if(event.player.getHeldItem() != null && event.player.getHeldItem().getItem() instanceof ItemGun)
 		{
 			this.pitchMove = Float.isNaN(this.pitchMove) ? 0 : this.pitchMove;
@@ -96,6 +99,7 @@ public class HandlerClientFML extends HandlerBase
 			
 			float max = 6;
 			float w = (float)Math.sqrt((this.pitch + this.pitchMove) * (this.pitch + this.pitchMove) + (this.yaw + this.yawMove) * (this.yaw + this.yawMove));
+			w = Float.isNaN(w) ? 0 : w;
 			for(int i = 0; i < 20 && (this.pitch > 0 == this.pitchMove > 0 || this.yaw > 0 == this.yawMove > 0) && w > max; ++i)
 			{
 				vec = Stuff.Coordinates3D.stabilize(new Vec3(Stuff.Randomization.r(f), Stuff.Randomization.r(f), 0), Stuff.Randomization.r(f));
@@ -104,9 +108,11 @@ public class HandlerClientFML extends HandlerBase
 				this.pitchMove = (this.lastPitchMove + this.pitchMove) / 2;
 				this.yawMove = (this.lastYawMove + this.yawMove) / 2;
 				w = (float)Math.sqrt((this.pitch + this.yawMove) * (this.pitch + this.yawMove) + (this.yaw + this.lastYawMove) * (this.yaw + this.lastYawMove));
+				w = Float.isNaN(w) ? 0 : w;
 			}
 			max = 4;
 			w = (float)Math.sqrt(this.pitchMove * this.pitchMove + this.yawMove * this.yawMove);
+			w = Float.isNaN(w) ? 0 : w;
 			if(w > max)
 			{
 				this.pitchMove /= w / max;
@@ -118,6 +124,7 @@ public class HandlerClientFML extends HandlerBase
 			}
 			max = 3;
 			w = (float)Math.sqrt(this.lastPitchMove * this.lastPitchMove + this.lastYawMove * this.lastYawMove);
+			w = Float.isNaN(w) ? 0 : w;
 			if(w > max)
 			{
 				this.lastPitchMove /= w / max;
@@ -130,6 +137,8 @@ public class HandlerClientFML extends HandlerBase
 		{
 			this.pitchMove = 0;
 			this.yawMove = 0;
+			this.pitch = Float.isNaN(this.pitch) ? 0 : this.pitch;
+			this.yaw = Float.isNaN(this.pitch) ? 0 : this.yaw;
 			event.player.rotationPitch -= this.pitch;
 			event.player.rotationYaw -= this.yaw;
 			this.pitch = 0;
@@ -137,6 +146,8 @@ public class HandlerClientFML extends HandlerBase
 		}
 		
 		float f = 0.02F;
+		this.pitch = Float.isNaN(this.pitch) ? 0 : this.pitch;
+		this.yaw = Float.isNaN(this.pitch) ? 0 : this.yaw;
 		event.player.rotationPitch -= this.pitch * f;
 		event.player.rotationYaw -= this.yaw * f;
 		this.pitch -= this.pitch * f;
