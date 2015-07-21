@@ -43,7 +43,7 @@ public class ComponentOverclocker extends ComponentAddon implements IComponentHe
 	@Override
 	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
-		return speed * 2;
+		return speed * 1.2F;
 	}
 	
 	@Override

@@ -422,7 +422,6 @@ public class ItemGun extends Item
 		double oldPitch = player.rotationPitch;
 		ExtendedPlayer props = ExtendedPlayer.get(player);
 		float r = recoil(stack, player) * 2;
-		NBTTagCompound compound = stack.getTagCompound();
 		float i = instability(stack, player);
 		if(props.isZoomHeldDown)
 		{
@@ -645,11 +644,6 @@ public class ItemGun extends Item
 			float f = cs.get(slot).speed(slot, speed, stack, player.worldObj, player);
 			f -= a.get(slot);
 			speed = f;
-		}
-		float max = 5;
-		if(speed > max)
-		{
-			speed = max;
 		}
 		return speed;
 	}

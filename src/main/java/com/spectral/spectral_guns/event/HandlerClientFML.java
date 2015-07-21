@@ -61,6 +61,8 @@ public class HandlerClientFML extends HandlerBase
 		
 		if(event.player.getHeldItem() != null && event.player.getHeldItem().getItem() instanceof ItemGun)
 		{
+			this.pitchMove = Float.isNaN(this.pitchMove) ? 0 : this.pitchMove;
+			this.yawMove = Float.isNaN(this.yawMove) ? 0 : this.yawMove;
 			event.player.rotationPitch += this.pitchMove;
 			event.player.rotationYaw += this.yawMove;
 			this.pitch += this.pitchMove;
@@ -74,7 +76,7 @@ public class HandlerClientFML extends HandlerBase
 				f *= 2 * ItemGun.instability(event.player.getHeldItem(), event.player);
 				if(props.isZoomHeldDown)
 				{
-					f *= ItemGun.zoom(event.player.getHeldItem(), event.player, 1);
+					f *= ItemGun.zoom(event.player.getHeldItem(), event.player, 1) * props.getZoom() * 2;
 				}
 				if(!props.isZoomHeldDown || ItemGun.getComponentsOf(event.player.getHeldItem(), ComponentScope.class).size() <= 0)
 				{
@@ -92,7 +94,7 @@ public class HandlerClientFML extends HandlerBase
 			this.lastPitchMove = ((float)vec.xCoord + lastPitchMove * 3) / 4;
 			this.lastYawMove = ((float)vec.yCoord + lastYawMove * 3) / 4;
 			
-			float max = 2;
+			float max = 6;
 			float w = (float)Math.sqrt((this.pitch + this.pitchMove) * (this.pitch + this.pitchMove) + (this.yaw + this.yawMove) * (this.yaw + this.yawMove));
 			for(int i = 0; i < 20 && (this.pitch > 0 == this.pitchMove > 0 || this.yaw > 0 == this.yawMove > 0) && w > max; ++i)
 			{
@@ -103,7 +105,7 @@ public class HandlerClientFML extends HandlerBase
 				this.yawMove = (this.lastYawMove + this.yawMove) / 2;
 				w = (float)Math.sqrt((this.pitch + this.yawMove) * (this.pitch + this.yawMove) + (this.yaw + this.lastYawMove) * (this.yaw + this.lastYawMove));
 			}
-			max = 2;
+			max = 4;
 			w = (float)Math.sqrt(this.pitchMove * this.pitchMove + this.yawMove * this.yawMove);
 			if(w > max)
 			{
@@ -114,7 +116,7 @@ public class HandlerClientFML extends HandlerBase
 				this.lastPitchMove = ((float)vec.xCoord + lastPitchMove) / 2;
 				this.lastYawMove = ((float)vec.yCoord + lastYawMove) / 2;
 			}
-			max = 1;
+			max = 3;
 			w = (float)Math.sqrt(this.lastPitchMove * this.lastPitchMove + this.lastYawMove * this.lastYawMove);
 			if(w > max)
 			{
