@@ -3,19 +3,21 @@
 
 -
 
-credits:
+Credits:
 
 Code written by sigurd4.
-
-Models by NonExistingName.
 
 Ideas and such from the whole team.
 
 -
 
-We hope you enjoy our mod! :P
+Be sure to check out the mod on PlanetMinecraft: http://www.planetminecraft.com/mod/spectralguns/
 
-Be sure to read the lisence (LICENSE.txt)!
+-
+
+Hope you enjoy the mod!
+
+Be sure to read the mod's lisence before doing anything with it online. License is to be found on PlanetMinecraft.
 
 -
 
