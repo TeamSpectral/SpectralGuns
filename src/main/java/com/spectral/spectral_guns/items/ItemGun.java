@@ -82,43 +82,49 @@ public class ItemGun extends Item
 		{
 			tooltip.add(ChatFormatting.RED + "ERROR!" + ChatFormatting.RESET);
 		}
-		int ammo = ammo(stack, player);
-		int cap = capacity(stack, player);
-		if(cap > 0)
+		boolean hide = !Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode());
+		if(hide)
 		{
-			String s = ChatFormatting.WHITE + "Ammo: " + ChatFormatting.GRAY + ammo + "/" + cap + ChatFormatting.RESET;
-			if(ammo <= 0)
+			int ammo = ammo(stack, player);
+			int cap = capacity(stack, player);
+			if(cap > 0)
 			{
-				s += " (hit '" + Keyboard.getKeyName(HandlerClientFML.WeaponReload.getKeyCode()) + "' to reload)";
+				String s = ChatFormatting.WHITE + "Ammo: " + ChatFormatting.GRAY + ammo + "/" + cap + ChatFormatting.RESET;
+				if(ammo <= 0)
+				{
+					s += " (hit '" + Keyboard.getKeyName(HandlerClientFML.WeaponReload.getKeyCode()) + "' to reload)";
+				}
+				tooltip.add(s + ChatFormatting.RESET);
 			}
-			tooltip.add(s + ChatFormatting.RESET);
+			tooltip.add(ChatFormatting.WHITE + "Recoil: " + ChatFormatting.GRAY + Math.floor(recoil(stack, player) * 100) / 100 + new String(Character.toChars(0x00B0)) + ChatFormatting.RESET);
+			tooltip.add(ChatFormatting.WHITE + "Instability: " + ChatFormatting.GRAY + Math.floor(instability(stack, player) * 100) + "%" + ChatFormatting.RESET);
+			tooltip.add(ChatFormatting.WHITE + "Kickback: " + ChatFormatting.GRAY + Math.floor(kickback(stack, player) * 100) / 100 + " m/tick" + ChatFormatting.RESET);
+			tooltip.add(ChatFormatting.WHITE + "Spread: " + ChatFormatting.GRAY + Math.floor(spread(stack, player) * 36000) / 100 + new String(Character.toChars(0x00B0)) + ChatFormatting.RESET);
+			tooltip.add(ChatFormatting.WHITE + "Response Time: " + ChatFormatting.GRAY + delay(stack, player) + " ticks" + ChatFormatting.RESET);
+			tooltip.add(ChatFormatting.WHITE + "Fire Rate: " + ChatFormatting.GRAY + fireRate(stack, player) + " ticks" + ChatFormatting.RESET);
+			int zoom = (int)Math.floor(zoom(stack, player, 1) * 100);
+			if(zoom > 100)
+			{
+				tooltip.add(ChatFormatting.WHITE + "Zoom: " + ChatFormatting.GRAY + zoom + "%" + ChatFormatting.RESET);
+			}
+			tooltip.add(ChatFormatting.WHITE + "Velocity: " + ChatFormatting.GRAY + Math.floor(speed(stack, player) * 100) / 100 + " m/tick" + ChatFormatting.RESET);
+			tooltip.add(ChatFormatting.WHITE + "Projectile Count: " + ChatFormatting.GRAY + amount(stack, player) + ChatFormatting.RESET);
 		}
-		tooltip.add(ChatFormatting.WHITE + "Recoil: " + ChatFormatting.GRAY + Math.floor(recoil(stack, player) * 100) / 100 + new String(Character.toChars(0x00B0)) + ChatFormatting.RESET);
-		tooltip.add(ChatFormatting.WHITE + "Instability: " + ChatFormatting.GRAY + Math.floor(instability(stack, player) * 100) + "%" + ChatFormatting.RESET);
-		tooltip.add(ChatFormatting.WHITE + "Kickback: " + ChatFormatting.GRAY + Math.floor(kickback(stack, player) * 100) / 100 + " m/tick" + ChatFormatting.RESET);
-		tooltip.add(ChatFormatting.WHITE + "Spread: " + ChatFormatting.GRAY + Math.floor(spread(stack, player) * 36000) / 100 + new String(Character.toChars(0x00B0)) + ChatFormatting.RESET);
-		tooltip.add(ChatFormatting.WHITE + "Response Time: " + ChatFormatting.GRAY + delay(stack, player) + " ticks" + ChatFormatting.RESET);
-		tooltip.add(ChatFormatting.WHITE + "Fire Rate: " + ChatFormatting.GRAY + fireRate(stack, player) + " ticks" + ChatFormatting.RESET);
-		int zoom = (int)Math.floor(zoom(stack, player, 1) * 100);
-		if(zoom > 100)
-		{
-			tooltip.add(ChatFormatting.WHITE + "Zoom: " + ChatFormatting.GRAY + zoom + "%" + ChatFormatting.RESET);
-		}
-		tooltip.add(ChatFormatting.WHITE + "Velocity: " + ChatFormatting.GRAY + Math.floor(speed(stack, player) * 100) / 100 + " m/tick" + ChatFormatting.RESET);
-		tooltip.add(ChatFormatting.WHITE + "Projectile Count: " + ChatFormatting.GRAY + amount(stack, player) + ChatFormatting.RESET);
 		HashMap<Integer, Component> c = getComponents(stack);
-		int max = this.getMaxComponentId(c);
 		if(c.size() > 0)
 		{
-			tooltip.add("");
-			tooltip.add(ChatFormatting.WHITE + "Components used:" + ChatFormatting.GRAY + ChatFormatting.RESET);
-			for(int i = 0; i <= max; ++i)
+			tooltip.add(ChatFormatting.WHITE + "Components used:" + ChatFormatting.GRAY + (hide ? " " + c.size() + " " + ChatFormatting.WHITE + "(Hold '" + Keyboard.getKeyName(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode()) + "')" : "") + ChatFormatting.RESET);
+			if(!hide)
 			{
-				if(c.get(i) != null)
+				int max = this.getMaxComponentId(c);
+				for(int i = 0; i <= max; ++i)
 				{
-					ItemStack componentStack = c.get(i).toItemStack(i, stack);
-					tooltip.add(" - " + I18n.format(componentStack.getUnlocalizedName() + ".name") + ":" + ChatFormatting.RESET);
-					tooltip.add("    D:" + (c.get(i).durabilityMax(i, stack) - c.get(i).durabilityDamage(i, stack)) + "/" + c.get(i).durabilityMax(i, stack) + ", T:" + (int)(c.get(i).heat(i, stack) * 100 / c.get(i).heatThreshold(i, stack)) + "%" + ChatFormatting.RESET);
+					if(c.get(i) != null)
+					{
+						ItemStack componentStack = c.get(i).toItemStack(i, stack);
+						tooltip.add(" - " + I18n.format(componentStack.getUnlocalizedName() + ".name") + ":" + ChatFormatting.RESET);
+						tooltip.add("    D:" + (c.get(i).durabilityMax(i, stack) - c.get(i).durabilityDamage(i, stack)) + "/" + c.get(i).durabilityMax(i, stack) + ", T:" + (int)(c.get(i).heat(i, stack) * 100 / c.get(i).heatThreshold(i, stack)) + "%" + ChatFormatting.RESET);
+					}
 				}
 			}
 		}
