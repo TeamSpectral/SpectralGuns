@@ -26,6 +26,7 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 	private final TileEntityGunWorkbench inventory;
 	private int playersUsing;
 	private String gunName;
+	public boolean gunNameIsBeingSet = false;
 	public boolean gunNameHasBeenSet = false;
 	
 	public ContainerGunWorkbench(InventoryPlayer playerInventory, TileEntityGunWorkbench containerInventory)
@@ -221,6 +222,7 @@ public class ContainerGunWorkbench extends Container implements IContainerAddPla
 	public void setGunName(String newName)
 	{
 		this.gunName = Stuff.Strings.removeFormatting(newName);
+		this.gunNameIsBeingSet = true;
 		this.gunNameHasBeenSet = true;
 	}
 	

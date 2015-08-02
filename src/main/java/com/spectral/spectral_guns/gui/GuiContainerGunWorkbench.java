@@ -186,6 +186,11 @@ public class GuiContainerGunWorkbench extends GuiContainer
 	public void updateScreen()
 	{
 		super.updateScreen();
+		if(this.container.gunNameIsBeingSet)
+		{
+			this.setText(this.container.getGunName());
+			this.container.gunNameIsBeingSet = false;
+		}
 		if(this.container.getSlot(0).getStack() != null && !this.nameField.isFocused() && StringUtils.isBlank(this.nameField.getText()))
 		{
 			this.setText(this.container.getSlot(0).getStack().getDisplayName());
