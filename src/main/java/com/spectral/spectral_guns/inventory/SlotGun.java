@@ -8,7 +8,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.fml.relauncher.Side;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -201,32 +200,29 @@ public class SlotGun extends Slot
 	
 	public void damageWrench()
 	{
-		if(M.proxy.side() == Side.SERVER)
+		ItemStack stack = this.inventory().getStackInSlot(1);
+		if(stack != null && stack.getItem() instanceof ItemWrench)
 		{
-			ItemStack stack = this.inventory().getStackInSlot(1);
-			if(stack != null && stack.getItem() instanceof ItemWrench)
+			if(this.inventory().lastUsing != null)
 			{
-				if(this.inventory().lastUsing != null)
+				boolean b = this.inventory().lastUsing.capabilities.isCreativeMode;
+				if(b)
 				{
-					boolean b = this.inventory().lastUsing.capabilities.isCreativeMode;
-					if(b)
-					{
-						this.inventory().lastUsing.capabilities.isCreativeMode = false;
-					}
-					stack.damageItem(1, this.inventory().lastUsing);
-					if(b)
-					{
-						this.inventory().lastUsing.capabilities.isCreativeMode = true;
-					}
+					this.inventory().lastUsing.capabilities.isCreativeMode = false;
 				}
-				else
+				stack.damageItem(1, this.inventory().lastUsing);
+				if(b)
 				{
-					stack.setItemDamage(stack.getItemDamage() + 1);
+					this.inventory().lastUsing.capabilities.isCreativeMode = true;
 				}
-				if(stack.getItemDamage() >= stack.getMaxDamage())
-				{
-					this.inventory().setStackInSlot(1, null);
-				}
+			}
+			else
+			{
+				stack.setItemDamage(stack.getItemDamage() + 1);
+			}
+			if(stack.getItemDamage() >= stack.getMaxDamage())
+			{
+				this.inventory().setStackInSlot(1, null);
 			}
 		}
 	}
