@@ -651,6 +651,10 @@ public class ItemGun extends Item
 			f -= a.get(slot);
 			speed = f;
 		}
+		if(speed > 299792458 / 20)
+		{
+			return 299792458 / 20;
+		}
 		return speed;
 	}
 	

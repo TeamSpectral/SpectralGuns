@@ -139,7 +139,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	@Override
 	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
-		return 299792458 / 20; //the speed of light
+		return speed + 299792458 / 20; //the speed of light
 	}
 	
 	@Override
