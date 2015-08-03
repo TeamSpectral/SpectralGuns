@@ -23,7 +23,6 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazineStand
 	public ComponentMagazineSmallFireball(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
 		super("small_fireball", "fireballSmall", 0.2, 5 * 5 * 8, material, capacity, kickback, 30, fireRate * 3, projectileCount, 86.9F * heating);
-		this.incapatibleMats = new ComponentMaterial[]{ComponentMaterial.WOOD};
 	}
 	
 	@Override
