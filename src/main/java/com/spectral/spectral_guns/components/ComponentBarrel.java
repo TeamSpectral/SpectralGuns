@@ -60,22 +60,13 @@ public abstract class ComponentBarrel extends ComponentGeneric
 	}
 	
 	@Override
-	public ArrayList<Entity> fire(int slot, ArrayList<Entity> projectiles, ItemStack stack, World world, EntityPlayer player)
+	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
-		if(this.velocity <= 1 && this.velocity > 0)
+		if(this.velocity <= 2 && this.velocity > 0)
 		{
-			for(int i = 0; i < projectiles.size(); ++i)
-			{
-				Entity e = projectiles.get(i);
-				if(e != null)
-				{
-					e.motionX *= this.velocity;
-					e.motionY *= this.velocity;
-					e.motionZ *= this.velocity;
-				}
-			}
+			speed *= this.velocity;
 		}
-		return projectiles;
+		return speed;
 	}
 	
 	@Override
