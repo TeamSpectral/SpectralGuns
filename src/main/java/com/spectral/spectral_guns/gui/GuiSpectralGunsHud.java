@@ -145,9 +145,9 @@ public class GuiSpectralGunsHud extends Gui
 				this.mc.mcProfiler.endSection();
 				
 				this.mc.mcProfiler.startSection("fireRateStats");
-				if(stack.getTagCompound().getInteger(ItemGun.FIRERATETIMER) > 0)
+				if(ItemGun.FIRE_RATE_TIMER.get(stack) > 0)
 				{
-					String s = "" + (float)stack.getTagCompound().getInteger(ItemGun.FIRERATETIMER) / 20;
+					String s = "" + (float)ItemGun.FIRE_RATE_TIMER.get(stack) / 20;
 					
 					fontrenderer.drawStringWithShadow(s, 2, h - 10 * line, 0xAF8A33);
 					++line;

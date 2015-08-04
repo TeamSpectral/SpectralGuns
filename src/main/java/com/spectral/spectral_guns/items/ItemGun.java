@@ -14,9 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -38,18 +36,21 @@ import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.components.magazine.IComponentProjectileCount;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
+import com.spectral.spectral_guns.itemtags.ItemTagCompound;
+import com.spectral.spectral_guns.itemtags.ItemTagInteger;
+import com.spectral.spectral_guns.itemtags.ItemTagList;
+import com.spectral.spectral_guns.itemtags.ItemTagString;
 
 public class ItemGun extends Item
 {
 	// nbt
-	public static final String COMPONENTS = "ComponentsList";
-	public static final String COMPONENTS_PRE_v1_3 = "Components";
-	public static final String COMPONENT_SLOT = "SLOT";
-	public static final String COMPONENT_ID = "ID";
-	public static final String COMPONENT_COMPOUND = "COMPOUND";
-	public static final String NAME = "Name";
-	public static final String DELAYTIMER = "DelayTimer";
-	public static final String FIRERATETIMER = "FireRateTimer";
+	public static final ItemTagList COMPONENTS = new ItemTagList("ComponentsList", false);
+	public static final ItemTagCompound COMPONENTS_PRE_v1_3 = new ItemTagCompound("Components", false);
+	public static final ItemTagInteger COMPONENT_SLOT = new ItemTagInteger("SLOT", 0, 0, ComponentRegister.Type.countSlots(), false);
+	public static final ItemTagString COMPONENT_ID = new ItemTagString("ID", "null", false);
+	public static final ItemTagCompound COMPONENT_COMPOUND = new ItemTagCompound("COMPOUND", false);
+	public static final ItemTagInteger DELAY_TIMER = new ItemTagInteger("DelayTimer", -1, -1, Integer.MAX_VALUE, true);
+	public static final ItemTagInteger FIRE_RATE_TIMER = new ItemTagInteger("FireRateTimer", 0, 0, Integer.MAX_VALUE, true);
 	
 	public ItemGun()
 	{
@@ -107,7 +108,7 @@ public class ItemGun extends Item
 			{
 				tooltip.add(ChatFormatting.WHITE + "Zoom: " + ChatFormatting.GRAY + zoom + "%" + ChatFormatting.RESET);
 			}
-			tooltip.add(ChatFormatting.WHITE + "Velocity: " + ChatFormatting.GRAY + Math.floor(speed(stack, player) * 100) / 100 + " m/tick" + ChatFormatting.RESET);
+			tooltip.add(ChatFormatting.WHITE + "Velocity: " + ChatFormatting.GRAY + Double.toString(Math.floor(speed(stack, player) * 100) / 100) + " m/tick" + ChatFormatting.RESET);
 			tooltip.add(ChatFormatting.WHITE + "Projectile Count: " + ChatFormatting.GRAY + amount(stack, player) + ChatFormatting.RESET);
 		}
 		HashMap<Integer, Component> c = getComponents(stack);
@@ -241,7 +242,7 @@ public class ItemGun extends Item
 		for(int i = 0; i < a.size();)
 		{
 			Stuff.ItemStacks.compound(a.get(i));
-			a.get(i).getTagCompound().setInteger(DELAYTIMER, -1);
+			DELAY_TIMER.set(a.get(i), -1);
 			setComponents(a.get(0), getRandomComponents(Item.itemRand));
 			ComponentEvents.setAmmo(capacity(a.get(i), player), a.get(i), player);
 			return a.get(i);
@@ -264,15 +265,13 @@ public class ItemGun extends Item
 	public void resetDelay(ItemStack stack)
 	{
 		NBTTagCompound compound = stack.getTagCompound();
-		compound.setInteger(DELAYTIMER, -1);
+		DELAY_TIMER.set(stack, -1);
 	}
 	
 	public void setDelay(ItemStack stack, EntityPlayer player)
 	{
 		ExtendedPlayer props = ExtendedPlayer.get(player);
-		
 		props.reloadDelay = props.maxReloadDelay;
-		NBTTagCompound compound = stack.getTagCompound();
 		int i = delay(stack, player);
 		if(i < 0)
 		{
@@ -282,17 +281,16 @@ public class ItemGun extends Item
 		{
 			i = 0;
 		}
-		compound.setInteger(DELAYTIMER, i);
+		DELAY_TIMER.set(stack, i);
 	}
 	
 	public boolean canShoot(ItemStack stack, EntityPlayer player)
 	{
-		NBTTagCompound compound = stack.getTagCompound();
 		if(ExtendedPlayer.get(player).reloadDelay > 0)
 		{
 			return false;
 		}
-		if(compound.getInteger(DELAYTIMER) >= 0 || compound.getInteger(FIRERATETIMER) > 0)
+		if(DELAY_TIMER.get(stack) >= 0 || FIRE_RATE_TIMER.get(stack) > 0)
 		{
 			return false;
 		}
@@ -307,7 +305,6 @@ public class ItemGun extends Item
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected)
 	{
 		super.onUpdate(stack, world, entity, slot, isSelected);
-		NBTTagCompound compound = stack.getTagCompound();
 		if(entity instanceof EntityPlayer)
 		{
 			ExtendedPlayer props = ExtendedPlayer.get((EntityPlayer)entity);
@@ -317,14 +314,14 @@ public class ItemGun extends Item
 				this.setDelay(stack, (EntityPlayer)entity);
 			}
 		}
-		if(compound.getInteger(FIRERATETIMER) > 0)
+		if(FIRE_RATE_TIMER.get(stack) > 0)
 		{
-			compound.setInteger(FIRERATETIMER, compound.getInteger(FIRERATETIMER) - 1);
+			FIRE_RATE_TIMER.add(stack, -1);
 		}
 		
 		if(entity instanceof EntityPlayer)
 		{
-			if(compound.getInteger(DELAYTIMER) == 0 && compound.getInteger(FIRERATETIMER) <= 0)
+			if(DELAY_TIMER.get(stack) == 0 && FIRE_RATE_TIMER.get(stack) <= 0)
 			{
 				this.fire(stack, world, (EntityPlayer)entity);
 			}
@@ -334,9 +331,9 @@ public class ItemGun extends Item
 			this.resetDelay(stack);
 		}
 		
-		if(compound.getInteger(DELAYTIMER) > 0)
+		if(DELAY_TIMER.get(stack) > 0)
 		{
-			compound.setInteger(DELAYTIMER, compound.getInteger(DELAYTIMER) - 1);
+			DELAY_TIMER.add(stack, -1);
 		}
 		
 		if(stack.stackSize == 0 && entity instanceof EntityPlayer)
@@ -371,7 +368,7 @@ public class ItemGun extends Item
 			}
 			this.kickBack(stack, player, e);
 			this.applyRecoil(stack, player);
-			compound.setInteger(FIRERATETIMER, fireRate(stack, player));
+			FIRE_RATE_TIMER.set(stack, fireRate(stack, player));
 		}
 		this.resetDelay(stack);
 	}
@@ -465,16 +462,7 @@ public class ItemGun extends Item
 	
 	public static void setComponents(ItemStack stack, HashMap<Integer, Component> cs)
 	{
-		if(!stack.hasTagCompound())
-		{
-			stack.setTagCompound(new NBTTagCompound());
-		}
-		NBTTagCompound compound = stack.getTagCompound();
-		if(!compound.hasKey(COMPONENTS))
-		{
-			compound.setTag(COMPONENTS, new NBTTagCompound());
-		}
-		NBTTagList oldList = compound.getTagList(COMPONENTS, new NBTTagCompound().getId());
+		NBTTagList oldList = COMPONENTS.get(stack);
 		NBTTagList list = new NBTTagList();
 		int max = getMaxComponentId(cs);
 		for(int i = 0; i <= max; ++i)
@@ -486,48 +474,39 @@ public class ItemGun extends Item
 				for(int i2 = 0; i2 < oldList.tagCount(); ++i2)
 				{
 					NBTTagCompound cCompound2 = oldList.getCompoundTagAt(i);
-					if(cCompound2 != null && cCompound2.hasKey(COMPONENT_SLOT, new NBTTagInt(0).getId()) && cCompound2.hasKey(COMPONENT_ID, new NBTTagString("").getId()))
+					if(cCompound2 != null && COMPONENT_SLOT.has(cCompound2) && COMPONENT_ID.has(cCompound2))
 					{
-						int slot = cCompound2.getInteger(COMPONENT_SLOT);
-						String id = cCompound2.getString(COMPONENT_ID);
+						int slot = COMPONENT_SLOT.get(cCompound2, true);
+						String id = COMPONENT_ID.get(cCompound2, true);
 						if(slot == i && id.equals(c.getID()))
 						{
 							cCompound = (NBTTagCompound)cCompound2.copy();
 						}
 					}
 				}
-				cCompound.setInteger(COMPONENT_SLOT, i);
-				cCompound.setString(COMPONENT_ID, c.getID());
-				if(!cCompound.hasKey(COMPONENT_COMPOUND, new NBTTagCompound().getId()))
-				{
-					cCompound.setTag(COMPONENT_COMPOUND, new NBTTagCompound());
-				}
+				COMPONENT_SLOT.set(stack, cCompound, i);
+				COMPONENT_ID.set(stack, cCompound, c.getID());
 				list.appendTag(cCompound);
 			}
 		}
-		compound.setTag(COMPONENTS, list);
+		COMPONENTS.set(stack, list);
 	}
 	
 	public static HashMap<Integer, Component> getComponents(ItemStack stack)
 	{
 		HashMap<Integer, Component> cs = new HashMap();
-		if(!stack.hasTagCompound())
+		if(COMPONENTS.has(stack))
 		{
-			stack.setTagCompound(new NBTTagCompound());
-		}
-		NBTTagCompound compound = stack.getTagCompound();
-		if(compound.hasKey(COMPONENTS))
-		{
-			NBTTagList list = compound.getTagList(COMPONENTS, new NBTTagCompound().getId());
+			NBTTagList list = COMPONENTS.get(stack);
 			for(int i = 0; i < list.tagCount(); ++i)
 			{
 				if(list.getCompoundTagAt(i) != null)
 				{
 					NBTTagCompound componentCompound = list.getCompoundTagAt(i);
-					if(componentCompound.hasKey(COMPONENT_ID) && componentCompound.hasKey(COMPONENT_ID))
+					if(COMPONENT_ID.has(componentCompound) && COMPONENT_ID.has(componentCompound))
 					{
-						int slot = componentCompound.getInteger(COMPONENT_SLOT);
-						String id = componentCompound.getString(COMPONENT_ID);
+						int slot = COMPONENT_SLOT.get(componentCompound, false);
+						String id = COMPONENT_ID.get(componentCompound, false);
 						Component c = Component.ComponentRegister.getComponent(id);
 						if(c != null)
 						{

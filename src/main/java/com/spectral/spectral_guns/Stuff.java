@@ -1,12 +1,15 @@
 package com.spectral.spectral_guns;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +28,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkProviderSettings;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -594,6 +599,15 @@ public class Stuff
 			{
 				return ChunkProviderSettings.Factory.func_177865_a("").func_177864_b();
 			}
+		}
+		
+		@SideOnly(Side.CLIENT)
+		public static void setItemToRender(ItemStack stack)
+		{
+			Minecraft mc = Minecraft.getMinecraft();
+			ItemRenderer ir = mc.getItemRenderer();
+			Field[] fs = ItemRenderer.class.getFields();
+			return;
 		}
 	}
 	

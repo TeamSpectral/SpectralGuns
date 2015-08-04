@@ -10,9 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,6 +41,16 @@ public abstract class Component
 			{
 				this.isRequired = isRequired;
 				this.slots = slots;
+			}
+			
+			public static int countSlots()
+			{
+				int i = 0;
+				for(Type t : values())
+				{
+					i += t.slots.length;
+				}
+				return i;
 			}
 		}
 		
@@ -282,17 +290,17 @@ public abstract class Component
 		{
 			durability = 0;
 		}
-		this.getTagCompound(slot, stack).setInteger(ItemComponent.ITEMDAMAGE, durability);
+		ItemComponent.ITEMDAMAGE.set(stack, this.getTagCompound(slot, stack), durability);
 	}
 	
-	public void addDurabilityDamage(int slot, int heat, ItemStack stack, EntityPlayer player)
+	public void addDurabilityDamage(int slot, int damage, ItemStack stack, EntityPlayer player)
 	{
-		this.setDurabilityDamage(slot, heat + this.durabilityDamage(slot, stack), stack, player);
+		this.setDurabilityDamage(slot, damage + this.durabilityDamage(slot, stack), stack, player);
 	}
 	
 	public int durabilityDamage(int slot, ItemStack stack)
 	{
-		return this.getTagCompound(slot, stack).getInteger(ItemComponent.ITEMDAMAGE);
+		return ItemComponent.ITEMDAMAGE.get(this.getTagCompound(slot, stack), true);
 	}
 	
 	public abstract int durabilityMax(int slot, ItemStack stack);
@@ -309,7 +317,7 @@ public abstract class Component
 		{
 			heat = -this.heatThreshold(slot, stack) * 3;
 		}
-		this.getTagCompound(slot, stack).setDouble(ItemComponent.HEAT, heat);
+		ItemComponent.HEAT.set(stack, this.getTagCompound(slot, stack), heat);
 	}
 	
 	public void addHeat(int slot, double heat, ItemStack stack)
@@ -319,7 +327,7 @@ public abstract class Component
 	
 	public double heat(int slot, ItemStack stack)
 	{
-		double d = this.getTagCompound(slot, stack).getDouble(ItemComponent.HEAT);
+		double d = ItemComponent.HEAT.get(this.getTagCompound(slot, stack), true);
 		if(Double.isNaN(d))
 		{
 			d = 0;
@@ -538,23 +546,19 @@ public abstract class Component
 	
 	public NBTTagCompound getComponentCompound(int slot, NBTTagCompound compound)
 	{
-		if(!compound.hasKey(ItemGun.COMPONENTS))
-		{
-			compound.setTag(ItemGun.COMPONENTS, new NBTTagCompound());
-		}
-		NBTTagList components = compound.getTagList(ItemGun.COMPONENTS, new NBTTagCompound().getId());
+		NBTTagList components = ItemGun.COMPONENTS.get(compound, true);
 		for(int i = 0; i < components.tagCount(); ++i)
 		{
 			NBTTagCompound cCompound = components.getCompoundTagAt(i);
-			if(cCompound != null && cCompound.hasKey(ItemGun.COMPONENT_SLOT, new NBTTagInt(0).getId()) && cCompound.hasKey(ItemGun.COMPONENT_ID, new NBTTagString("").getId()))
+			if(cCompound != null && ItemGun.COMPONENT_SLOT.has(cCompound) && ItemGun.COMPONENT_ID.has(cCompound))
 			{
-				int cSlot = cCompound.getInteger(ItemGun.COMPONENT_SLOT);
-				String id = cCompound.getString(ItemGun.COMPONENT_ID);
+				int cSlot = ItemGun.COMPONENT_SLOT.get(cCompound, false);
+				String id = ItemGun.COMPONENT_ID.get(cCompound, false);
 				if(cSlot == slot)
 				{
-					if(!cCompound.hasKey(ItemGun.COMPONENT_COMPOUND, new NBTTagCompound().getId()))
+					if(!ItemGun.COMPONENT_COMPOUND.has(cCompound))
 					{
-						cCompound.setTag(ItemGun.COMPONENT_COMPOUND, new NBTTagCompound());
+						ItemGun.COMPONENT_COMPOUND.set(cCompound, new NBTTagCompound());
 					}
 					return cCompound;
 				}
@@ -570,12 +574,7 @@ public abstract class Component
 	
 	public NBTTagCompound getTagCompound(int slot, NBTTagCompound compound)
 	{
-		NBTTagCompound cCompound = this.getComponentCompound(slot, compound);
-		if(cCompound.hasKey(ItemGun.COMPONENT_COMPOUND, new NBTTagCompound().getId()))
-		{
-			return cCompound.getCompoundTag(ItemGun.COMPONENT_COMPOUND);
-		}
-		return new NBTTagCompound();
+		return ItemGun.COMPONENT_COMPOUND.get(this.getComponentCompound(slot, compound), false);
 	}
 	
 	public static class String2
@@ -606,8 +605,9 @@ public abstract class Component
 	public ItemStack toItemStack(int slot, ItemStack gun)
 	{
 		NBTTagCompound compound = (NBTTagCompound)this.getTagCompound(slot, gun).copy();
-		ItemStack stack = new ItemStack(this.item, 1, compound.getInteger(ItemComponent.ITEMDAMAGE));
-		compound.removeTag(ItemComponent.ITEMDAMAGE);
+		ItemStack stack = new ItemStack(this.item, 1, ItemComponent.ITEMDAMAGE.get(compound, false));
+		ItemComponent.ITEMDAMAGE.remove(stack);
+		ItemComponent.HEAT.remove(stack);
 		stack.setTagCompound(compound);
 		return stack;
 	}

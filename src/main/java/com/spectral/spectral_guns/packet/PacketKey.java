@@ -118,7 +118,7 @@ public class PacketKey implements IMessage
 						ItemStack stack = player.getHeldItem();
 						if(ComponentEvents.reload(stack, player))
 						{
-							stack.getTagCompound().setInteger(ItemGun.FIRERATETIMER, 20);
+							ItemGun.FIRE_RATE_TIMER.set(stack, 20); //TODO make reload time dynamic
 							props.reloadDelay = props.maxReloadDelay;
 						}
 					}

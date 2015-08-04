@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 import net.minecraft.world.World;
 
 import com.spectral.spectral_guns.components.Component;
@@ -22,7 +22,7 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	public final float heating;
 	
 	// nbt
-	public static final String AMMO = "Ammo";
+	public final ItemTagInteger AMMO = new ItemTagInteger("Ammo", 0, 0, Integer.MAX_VALUE, true);
 	
 	public ComponentMagazine(String id, String name, double heatLoss, float heatThreshold, ComponentMaterial material, int capacity, float heating)
 	{
@@ -39,23 +39,16 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	@Override
 	public int setAmmo(int slot, int ammo, ItemStack stack, World world, EntityPlayer player)
 	{
-		NBTTagCompound compound = this.getTagCompound(slot, stack);
-		if(!compound.hasKey(AMMO))
+		while(ammo > 0 && this.AMMO.get(this.getTagCompound(slot, stack), true) < Math.min(this.AMMO.max, this.capacity(slot, stack, world, player)))
 		{
-			compound.setInteger(AMMO, 0);
-		}
-		while(ammo > 0 && compound.getInteger(AMMO) < this.capacity(slot, stack, world, player))
-		{
-			compound.setInteger(AMMO, compound.getInteger(AMMO) + 1);
+			this.AMMO.add(this.getTagCompound(slot, stack), 1);
 			--ammo;
 		}
-		while(ammo < 0 && compound.getInteger(AMMO) > 0)
+		while(ammo < 0 && this.AMMO.get(this.getTagCompound(slot, stack), true) > this.AMMO.min)
 		{
-			compound.setInteger(AMMO, compound.getInteger(AMMO) - 1);
+			this.AMMO.add(this.getTagCompound(slot, stack), -1);
 			++ammo;
 		}
-		
-		this.capAmmo(slot, stack, world, player);
 		return ammo;
 	}
 	
@@ -78,9 +71,7 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	@Override
 	public int ammo(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		NBTTagCompound compound = this.getTagCompound(slot, stack);
-		this.capAmmo(slot, stack, world, player);
-		return compound.getInteger(AMMO);
+		return this.AMMO.get(this.getTagCompound(slot, stack), true);
 	}
 	
 	@Override
@@ -96,20 +87,6 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	}
 	
 	public abstract Item ammoItem();
-	
-	protected void capAmmo(int slot, ItemStack stack, World world, EntityPlayer player)
-	{
-		NBTTagCompound c = this.getTagCompound(slot, stack);
-		int a = c.getInteger(AMMO);
-		if(c.getInteger(AMMO) > this.capacity(slot, stack, world, player))
-		{
-			c.setInteger(AMMO, this.capacity(slot, stack, world, player));
-		}
-		if(c.getInteger(AMMO) < 0)
-		{
-			c.setInteger(AMMO, 0);
-		}
-	}
 	
 	@Override
 	public int capacity(int slot, ItemStack stack, World world, EntityPlayer player)

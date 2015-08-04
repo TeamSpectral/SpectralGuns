@@ -21,14 +21,17 @@ import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
 import com.spectral.spectral_guns.items.ItemGun;
+import com.spectral.spectral_guns.itemtags.ItemTagBoolean;
+import com.spectral.spectral_guns.itemtags.ItemTagFloat;
+import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 
 public class ComponentMagazineLaser extends ComponentMagazine
 {
 	public final LaserColor color;
 	
-	public final static String FIRING = "IsFiring";
-	public final static String CHARGE = "Charge";
-	public final static String TIMER = "Timer";
+	public final static ItemTagBoolean FIRING = new ItemTagBoolean("IsFiring", false, true);
+	public final static ItemTagFloat CHARGE = new ItemTagFloat("Charge", 0F, 0F, 12F, true);
+	public final static ItemTagInteger TIMER = new ItemTagInteger("Timer", 0, 0, Integer.MAX_VALUE, true);
 	public final static int ammoMultiplier = 25;
 	public final int battery;
 	
@@ -49,60 +52,59 @@ public class ComponentMagazineLaser extends ComponentMagazine
 			ExtendedPlayer props = ExtendedPlayer.get(player);
 			if(props.isRightClickHeldDown && props.reloadDelay <= 0)
 			{
-				compound.setBoolean(FIRING, true);
+				FIRING.set(gun, compound, true);
 			}
 		}
 		if(!isSelected || !ExtendedPlayer.get(player).isRightClickHeldDown || this.ammo(slot, gun, world, player) - 1 < 0)
 		{
-			compound.setBoolean(FIRING, false);
-			compound.setInteger(TIMER, 0);
+			FIRING.set(gun, compound, false);
+			TIMER.set(gun, compound, 0);
 		}
-		if(compound.getBoolean(FIRING))
+		if(FIRING.get(compound, true))
 		{
 			float incline = 1.13F / ItemGun.delay(gun, player);
-			compound.setFloat(CHARGE, compound.getFloat(CHARGE) + incline);
-			ComponentEvents.heatUp(gun, player, Math.max(1, compound.getFloat(CHARGE)) / 20);
+			CHARGE.wobbleCheck(gun);
+			CHARGE.add(compound, incline);
+			ComponentEvents.heatUp(gun, player, Math.max(1, CHARGE.get(compound, true)) / 20);
 		}
 		else
 		{
-			compound.setFloat(CHARGE, compound.getFloat(CHARGE) * 0.95F - 0.1F);
+			CHARGE.set(compound, CHARGE.get(compound, true) * 0.95F - 0.1F);
 		}
-		compound.setInteger(TIMER, 1 + compound.getInteger(TIMER));
-		compound.setFloat(CHARGE, Math.max(0, Math.min(12, compound.getFloat(CHARGE))));
-		if(compound.getFloat(CHARGE) > 0.5)
+		TIMER.add(compound, 1);
+		if(CHARGE.get(compound, true) > 0.5)
 		{
-			EntityLaser e = new EntityLaser(world, player, compound.getFloat(CHARGE), this.color, 0);
+			EntityLaser e = new EntityLaser(world, player, CHARGE.get(compound, true), this.color, 0);
 			
 			if(!world.isRemote || true) //this needs to be spawned clientside as well, but only for laser entities
 			{
 				world.spawnEntityInWorld(e);
 			}
 			
-			int t = (int)(12 / compound.getFloat(CHARGE));
-			if(t <= 0 || compound.getInteger(TIMER) % t == t - 1)
+			int t = (int)(12 / CHARGE.get(compound, true));
+			if(t <= 0 || TIMER.get(compound, true) % t == t - 1)
 			{
 				this.setAmmo(slot, -1, gun, world, player);
 			}
 		}
 		if(world.isRemote)
 		{
-			if(compound.getFloat(CHARGE) > 1)
+			if(CHARGE.get(compound, true) > 1)
 			{
 				if(AudioHandler.getSound(player, "fire.fire") == null || !AudioHandler.isPlaying(player, "fire.fire"))
 				{
 					AudioHandler.createMovingEntitySound(player, "fire.fire", 1.8F + world.rand.nextFloat(), world.rand.nextFloat() * 0.5F + 0.1F, false);
 				}
 			}
-			if(compound.getFloat(CHARGE) <= 0)
+			if(CHARGE.get(compound, true) <= 0)
 			{
 				AudioHandler.stopSound(player, "fire.fire");
 			}
 			if(AudioHandler.getSound(player, "fire.fire") != null && AudioHandler.getSound(player, "fire.fire") instanceof MovingSoundPublic)
 			{
-				((MovingSoundPublic)AudioHandler.getSound(player, "fire.fire")).setVolume(compound.getFloat(CHARGE) / 2);
+				((MovingSoundPublic)AudioHandler.getSound(player, "fire.fire")).setVolume(CHARGE.get(compound, true) / 2);
 			}
 		}
-		this.capAmmo(slot, gun, world, player);
 		super.update(slot, gun, world, player, invSlot, isSelected);
 	}
 	
@@ -152,7 +154,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	public ArrayList<Entity> fire(int slot, ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player)
 	{
 		ExtendedPlayer props = ExtendedPlayer.get(player);
-		this.getTagCompound(slot, stack).setBoolean(FIRING, props.isRightClickHeldDown);
+		FIRING.set(stack, this.getTagCompound(slot, stack), props.isRightClickHeldDown);
 		e.clear();
 		return e;
 	}

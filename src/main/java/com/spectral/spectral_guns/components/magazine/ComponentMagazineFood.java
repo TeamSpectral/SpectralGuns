@@ -22,6 +22,7 @@ import com.spectral.spectral_guns.Stuff.Randomization;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
 import com.spectral.spectral_guns.items.ItemGun;
+import com.spectral.spectral_guns.itemtags.ItemTagList;
 
 public final class ComponentMagazineFood extends ComponentMagazineStandard
 {
@@ -31,7 +32,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	public final static int ammoMultiplier = 4;
 	
 	// nbt
-	public static final String ITEMS = "Items";
+	public static final ItemTagList ITEMS = new ItemTagList("Items", true);
 	
 	public ComponentMagazineFood(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
 	{
@@ -152,12 +153,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	{
 		NBTTagCompound compound = this.getTagCompound(slot, gun);
 		
-		NBTTagList items = compound.getTagList(ITEMS, new NBTTagCompound().getId());
-		if(items == null)
-		{
-			items = new NBTTagList();
-			compound.setTag(ITEMS, items);
-		}
+		NBTTagList items = ITEMS.get(compound, true);
 		for(int i = 0; i < items.tagCount(); ++i)
 		{
 			NBTTagCompound stackCompound = items.getCompoundTagAt(i);
@@ -178,7 +174,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 				}
 			}
 		}
-		this.getTagCompound(slot, gun).setTag(ITEMS, items);
+		ITEMS.set(gun, this.getTagCompound(slot, gun), items);
 		return items;
 	}
 	
@@ -209,7 +205,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 				--i;
 			}
 		}
-		this.getTagCompound(slot, gun).setTag(ITEMS, items);
+		ITEMS.set(gun, compound, items);
 		
 		return a;
 	}
@@ -233,7 +229,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 		{
 			items.removeTag(0);
 		}
-		this.getTagCompound(slot, gun).setTag(ITEMS, items);
+		ITEMS.set(gun, this.getTagCompound(slot, gun), items);
 	}
 	
 	protected void removeLastItem(int slot, ItemStack gun)
@@ -243,7 +239,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 		{
 			items.removeTag(items.tagCount() - 1);
 		}
-		this.getTagCompound(slot, gun).setTag(ITEMS, items);
+		ITEMS.set(gun, this.getTagCompound(slot, gun), items);
 	}
 	
 	protected void addItem(int slot, ItemStack gun)
@@ -266,7 +262,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 					{
 						items.appendTag(stack);
 					}
-					this.getTagCompound(slot, gun).setTag(ITEMS, items);
+					ITEMS.set(gun, this.getTagCompound(slot, gun), items);
 				}
 			}
 		}
@@ -275,7 +271,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	
 	protected void sortItems(int slot, ItemStack gun)
 	{
-		int ammo = this.getTagCompound(slot, gun).getInteger(AMMO);
+		int ammo = this.AMMO.get(this.getTagCompound(slot, gun), true);
 		while(this.getItemsNBT(slot, gun).tagCount() > ammo)
 		{
 			this.removeFirstItem(slot, gun);

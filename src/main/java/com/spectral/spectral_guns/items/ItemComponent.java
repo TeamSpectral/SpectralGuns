@@ -12,14 +12,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.itemtags.ItemTagDouble;
+import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 
 public class ItemComponent extends Item
 {
 	public final Component c;
 	private final static CreativeTabs theTab = M.tabCore;
 	
-	public final static String HEAT = "Heat";
-	public final static String ITEMDAMAGE = "Damage";
+	public static final ItemTagDouble HEAT = new ItemTagDouble("Heat", 0D, -Double.MAX_VALUE, Double.MAX_VALUE, true);
+	public static final ItemTagInteger ITEMDAMAGE = new ItemTagInteger("Damage", 0, 0, Integer.MAX_VALUE, true);
 	
 	/**
 	 * Crafting components

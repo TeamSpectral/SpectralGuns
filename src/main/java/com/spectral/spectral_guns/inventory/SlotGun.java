@@ -145,7 +145,7 @@ public class SlotGun extends Slot
 			{
 				if(cStack.getTagCompound() != null)
 				{
-					c.getComponentCompound(slot, stack).setTag(ItemGun.COMPONENT_COMPOUND, cStack.getTagCompound());
+					ItemGun.COMPONENT_COMPOUND.set(stack, c.getComponentCompound(slot, stack), cStack.getTagCompound());
 				}
 				c.setDurabilityDamage(slot, cStack.getItemDamage(), stack, player);
 			}

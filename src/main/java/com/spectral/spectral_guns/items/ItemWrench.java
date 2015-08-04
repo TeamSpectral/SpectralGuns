@@ -6,7 +6,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,15 +48,6 @@ public class ItemWrench extends Item
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		return this.getUnlocalizedName();
-	}
-	
-	protected static ItemStack compound(ItemStack stack)
-	{
-		if(!stack.hasTagCompound())
-		{
-			stack.setTagCompound(new NBTTagCompound());
-		}
-		return stack;
 	}
 	
 	/**
