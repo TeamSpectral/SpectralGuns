@@ -7,9 +7,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 import net.minecraft.world.World;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentGeneric;
@@ -30,11 +30,11 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
-		super.getTooltip(tooltip);
+		super.getTooltip(tooltip, player, world);
 		tooltip.add(new String2("Projectile:", this.projectileName()));
-		tooltip.add(new String2("Capacity:", "" + this.capacity(-1, null, null, null)));
+		tooltip.add(new String2("Capacity:", "" + this.capacity(-1, new ItemStack(M.gun), world, player)));
 		tooltip.add(new String2("Heating:", this.ADDS(this.heating)));
 	}
 	

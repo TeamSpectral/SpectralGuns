@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.components.Component.ComponentTraits;
 import com.spectral.spectral_guns.components.Component.String2;
 import com.spectral.spectral_guns.itemtags.ItemTagDouble;
 import com.spectral.spectral_guns.itemtags.ItemTagInteger;
@@ -87,7 +88,7 @@ public class ItemComponent extends Item
 		tooltip.add(EnumChatFormatting.DARK_GRAY + "Temperature Conductiveness: " + EnumChatFormatting.WHITE + this.c.material.heatLoss);
 		
 		ArrayList<String2> tooltip2 = new ArrayList();
-		this.c.getTooltip(tooltip2);
+		this.c.getTooltip(tooltip2, player, player.worldObj);
 		loop:
 		for(int i1 = 0; i1 < tooltip2.size(); ++i1)
 		{

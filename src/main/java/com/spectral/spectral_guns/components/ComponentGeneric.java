@@ -246,7 +246,7 @@ public abstract class ComponentGeneric extends Component
 		}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
 		
 	}

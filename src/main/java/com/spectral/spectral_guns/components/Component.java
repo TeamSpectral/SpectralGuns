@@ -454,7 +454,7 @@ public abstract class Component
 	public final static String MORE = ">";
 	public final static String MORE_OR_EQUAL = ">=";
 	
-	public abstract void getTooltip(ArrayList<String2> tooltip);
+	public abstract void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world);
 	
 	public boolean isValid(int slot, HashMap<Integer, Component> ecs)
 	{

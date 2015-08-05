@@ -20,9 +20,9 @@ import com.spectral.spectral_guns.items.ItemGun;
 
 public class ComponentMagazineSnowball extends ComponentMagazineStandard
 {
-	public ComponentMagazineSnowball(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
+	public ComponentMagazineSnowball(ComponentMaterial material, int capacity, float kickback, float recoil, float speed, float fireRate, int projectileCount, float heating)
 	{
-		super("snowball", "snowball", 0.3, 4 * 4 * 9, material, capacity, kickback, 60, fireRate, projectileCount, 4.2F * heating);
+		super("snowball", "snowball", 0.3, 4 * 4 * 9, material, capacity, kickback, recoil, speed, fireRate, projectileCount, 4.2F * heating);
 	}
 	
 	@Override
@@ -45,12 +45,6 @@ public class ComponentMagazineSnowball extends ComponentMagazineStandard
 				return super.isInRangeToRenderDist(distance / 16);
 			}
 		};
-	}
-	
-	@Override
-	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
-	{
-		return super.speed(slot, speed, stack, world, player) / 2F;
 	}
 	
 	@Override
@@ -134,7 +128,7 @@ public class ComponentMagazineSnowball extends ComponentMagazineStandard
 		super.update(slot, stack, world, player, invSlot, isSelected);
 		if(this.ammo(slot, stack, world, player) > 0)
 		{
-			this.heatMix(invSlot, stack, 100, 1, 0.1);
+			this.addHeat(slot, -0.2, stack);
 		}
 	}
 	

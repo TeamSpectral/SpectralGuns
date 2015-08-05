@@ -34,9 +34,16 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	// nbt
 	public static final ItemTagList ITEMS = new ItemTagList("Items", true);
 	
-	public ComponentMagazineFood(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
+	public ComponentMagazineFood(ComponentMaterial material, int capacity, float kickback, float recoil, float speed, float fireRate, int projectileCount, float heating)
 	{
-		super("food", "food", 0.4, 5 * 8 * 8, material, capacity, kickback, 90, fireRate, projectileCount, 5.2F * heating);
+		super("food", "food", 0.4, 5 * 8 * 8, material, capacity, kickback, recoil, speed, fireRate, projectileCount, 5.2F * heating);
+	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
+	{
+		super.getTooltip(tooltip, player, world);
+		tooltip.add(new String2("ProjectileCount:", "" + this.projectileCount(-1, new ItemStack(M.gun), world, player)));
 	}
 	
 	@Override
@@ -49,7 +56,6 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	}
 	
 	@Override
-	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
 		return super.speed(slot, speed, stack, world, player) / 2.8F;
 	}
@@ -174,7 +180,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 				}
 			}
 		}
-		ITEMS.set(gun, this.getTagCompound(slot, gun), items);
+		ITEMS.set(gun, compound, items);
 		return items;
 	}
 	
@@ -205,7 +211,7 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 				--i;
 			}
 		}
-		ITEMS.set(gun, compound, items);
+		ITEMS.set(gun, this.getTagCompound(slot, gun), items);
 		
 		return a;
 	}
