@@ -48,6 +48,7 @@ public class SlotGun extends Slot
 				{
 					if(this.inventory().getComponents().size() <= 0)
 					{
+						this.damageWrench = true;
 						return true;
 					}
 					this.inventory().errorMessage(ReferencesGunErrors.COMPONENT_SLOTS_OCCUPIED);
@@ -177,6 +178,7 @@ public class SlotGun extends Slot
 	@Override
 	public boolean canTakeStack(EntityPlayer playerIn)
 	{
+		this.damageWrench = true;
 		ItemStack stackWrench = this.inventory().getStackInSlot(1);
 		if(stackWrench != null && stackWrench.getItem() instanceof ItemWrench && stackWrench.getItemDamage() < stackWrench.getMaxDamage())
 		{
@@ -198,33 +200,39 @@ public class SlotGun extends Slot
 		return false;
 	}
 	
+	public boolean damageWrench = true;
+	
 	public void damageWrench()
 	{
-		ItemStack stack = this.inventory().getStackInSlot(1);
-		if(stack != null && stack.getItem() instanceof ItemWrench)
+		if(this.damageWrench)
 		{
-			if(this.inventory().lastUsing != null)
+			ItemStack stack = this.inventory().getStackInSlot(1);
+			if(stack != null && stack.getItem() instanceof ItemWrench)
 			{
-				boolean b = this.inventory().lastUsing.capabilities.isCreativeMode;
-				if(b)
+				if(this.inventory().lastUsing != null)
 				{
-					this.inventory().lastUsing.capabilities.isCreativeMode = false;
+					boolean b = this.inventory().lastUsing.capabilities.isCreativeMode;
+					if(b)
+					{
+						this.inventory().lastUsing.capabilities.isCreativeMode = false;
+					}
+					stack.damageItem(1, this.inventory().lastUsing);
+					if(b)
+					{
+						this.inventory().lastUsing.capabilities.isCreativeMode = true;
+					}
 				}
-				stack.damageItem(1, this.inventory().lastUsing);
-				if(b)
+				else
 				{
-					this.inventory().lastUsing.capabilities.isCreativeMode = true;
+					stack.setItemDamage(stack.getItemDamage() + 1);
 				}
-			}
-			else
-			{
-				stack.setItemDamage(stack.getItemDamage() + 1);
-			}
-			if(stack.getItemDamage() >= stack.getMaxDamage())
-			{
-				this.inventory().setStackInSlot(1, null);
+				if(stack.getItemDamage() >= stack.getMaxDamage())
+				{
+					this.inventory().setStackInSlot(1, null);
+				}
 			}
 		}
+		this.damageWrench = false;
 	}
 	
 	@Override
