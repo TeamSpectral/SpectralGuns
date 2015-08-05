@@ -196,10 +196,15 @@ public abstract class Component
 		
 		public String getDisplayName(Type type, Component c)
 		{
-			return this.getName(type, c);
+			return Stuff.Strings.capitalize(this.getName(type, c));
 		}
 		
 		public String getIDName(Type type, Component c)
+		{
+			return this.getName(type, c);
+		}
+		
+		public String getUnlocalizedName(Type type, Component c)
 		{
 			return this.getName(type, c);
 		}
@@ -433,6 +438,21 @@ public abstract class Component
 	public abstract void update(int slot, ItemStack stack, World world, EntityPlayer player, int invSlot, boolean isSelected);
 	
 	public abstract void registerRecipe();
+	
+	public final static String ADDS(Number c)
+	{
+		return c.equals(0) ? "" : c.doubleValue() > 0 ? ADDS + c : "" + c;
+	}
+	
+	public final static String ADDS = "+";
+	public final static String SUBTRACTS = "-";
+	public final static String MULTIPLIES = "*";
+	public final static String LESS = "<";
+	public final static String LESS_OR_EQUAL = "<=";
+	public final static String MORE = ">";
+	public final static String MORE_OR_EQUAL = ">=";
+	
+	public abstract void getTooltip(ArrayList<String2> tooltip);
 	
 	public boolean isValid(int slot, HashMap<Integer, Component> ecs)
 	{

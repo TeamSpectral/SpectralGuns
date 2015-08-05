@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.audio.MovingSoundPublic;
 import com.spectral.spectral_guns.components.Component;
@@ -41,6 +42,19 @@ public class ComponentMagazineLaser extends ComponentMagazine
 		this.color = color;
 		this.battery = battery;
 		this.required = new Component[]{M.barrel_thin_diamond};
+	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip)
+	{
+		super.getTooltip(tooltip);
+		tooltip.add(new String2("Color:", this.color.formatting + Stuff.Strings.capitalize(this.color.formatting.name().toLowerCase())));
+	}
+	
+	@Override
+	public String projectileName()
+	{
+		return new EntityLaser(M.proxy.world(0)).getName();
 	}
 	
 	@Override
@@ -141,7 +155,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	@Override
 	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
-		return speed + 299792458 / 20; //the speed of light
+		return speed + Float.MAX_VALUE; //the speed of light
 	}
 	
 	@Override

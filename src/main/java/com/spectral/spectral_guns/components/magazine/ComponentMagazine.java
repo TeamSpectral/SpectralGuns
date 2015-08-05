@@ -14,7 +14,7 @@ import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentGeneric;
 import com.spectral.spectral_guns.components.IComponentHeatOnFire;
-import com.spectral.spectral_guns.items.ItemGun;
+import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 
 public abstract class ComponentMagazine extends ComponentGeneric implements IComponentAmmoItem, IComponentHeatOnFire, IComponentProjectileCount
 {
@@ -28,6 +28,17 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	{
 		this(new String2(id, ""), new String2(name, ""), heatLoss, heatThreshold, material, capacity, heating);
 	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip)
+	{
+		super.getTooltip(tooltip);
+		tooltip.add(new String2("Projectile:", this.projectileName()));
+		tooltip.add(new String2("Capacity:", "" + this.capacity(-1, null, null, null)));
+		tooltip.add(new String2("Heating:", this.ADDS(this.heating)));
+	}
+	
+	public abstract String projectileName();
 	
 	public ComponentMagazine(String2 id, String2 name, double heatLoss, float heatThreshold, ComponentMaterial material, int capacity, float heating)
 	{
@@ -98,18 +109,5 @@ public abstract class ComponentMagazine extends ComponentGeneric implements ICom
 	public void heatUp(int slot, ItemStack stack, double modifier)
 	{
 		this.addHeat(slot, this.heating * modifier, stack);
-		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
-		for(Integer slot2 : cs.keySet())
-		{
-			Component c = cs.get(slot2);
-			if(c.type == Type.BARREL)
-			{
-				c.addHeat(slot2, this.heating * modifier, stack);
-			}
-			else if(c.type == Type.TRIGGER)
-			{
-				c.addHeat(slot2, this.heating / 4 * modifier, stack);
-			}
-		}
 	}
 }

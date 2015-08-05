@@ -1,5 +1,7 @@
 package com.spectral.spectral_guns.components.aim;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -24,6 +26,13 @@ public class ComponentScope extends ComponentGeneric
 		super(new String2("scope", "").add(id), new String2("scope", "").add(name), 0.3, 6 * 2 * 2, 0.9F, Type.AIM, material);
 		this.requiredTypes = new Type[]{Type.TRIGGER};
 		this.zoom = zoom;
+	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip)
+	{
+		super.getTooltip(tooltip);
+		tooltip.add(new String2("Zoom:", this.MULTIPLIES + this.zoom(-1, 1, null, null, null)));
 	}
 	
 	@Override
