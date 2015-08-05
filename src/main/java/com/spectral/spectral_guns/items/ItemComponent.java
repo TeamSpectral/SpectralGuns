@@ -103,6 +103,14 @@ public class ItemComponent extends Item
 			}
 			tooltip.add(EnumChatFormatting.DARK_GRAY + s.s1 + EnumChatFormatting.RESET + (StringUtils.isBlank(s.s1) ? "" : " ") + EnumChatFormatting.WHITE + s.s2 + EnumChatFormatting.RESET);
 		}
+		
+		for(ComponentTraits trait : this.c.materialTraits())
+		{
+			String s = Stuff.Strings.capitalize(trait.name().toLowerCase());
+			s.replaceAll("_", " ");
+			tooltip.add(trait.color + "(" + s + ")" + EnumChatFormatting.RESET);
+			//tooltip.add("  " + EnumChatFormatting.DARK_GRAY + EnumChatFormatting.ITALIC + trait.description + EnumChatFormatting.RESET);
+		}
 	}
 	
 	@Override

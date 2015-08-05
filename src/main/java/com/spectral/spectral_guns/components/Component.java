@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -175,23 +176,50 @@ public abstract class Component
 		}
 	}
 	
+	public static final int burnDamage = 8;
+	public static final int burnIgniteChance1 = 1;
+	public static final int burnIgniteChance2 = 5;
+	public static final int burnIgniteSeconds = 1;
+	public static final int shatterThreshold1 = 2;
+	public static final int shatterThreshold2 = 5;
+	public static final int shatterChance1 = 1;
+	public static final int shatterChance2 = 6;
+	public static final int shatterDamageMultiplier = 10;
+	public static final int shinyDamage = 1;
+	
+	public enum ComponentTraits
+	{
+		BURNS(EnumChatFormatting.RED, "Overheating deals " + burnDamage + " more damage to durability and has a " + burnIgniteChance1 + "/" + burnIgniteChance2 + " chance ignite user for " + burnIgniteSeconds + " seconds."), RUSTS(EnumChatFormatting.GOLD, "Slowly takes damage in water and rain."), SHATTERS(EnumChatFormatting.GRAY, "Component has a " + shatterChance1 + "/" + shatterChance2 + " chance to take " + shatterDamageMultiplier + "x damage when on " + shatterThreshold1 + "/" + shatterThreshold2 + " durability or less."), SHINY(EnumChatFormatting.YELLOW, "Takes -" + shinyDamage + " durability when firing with a food magazine.");
+		
+		public EnumChatFormatting color;
+		public String description;
+		
+		private ComponentTraits(EnumChatFormatting color, String description)
+		{
+			this.color = color;
+			this.description = description;
+		}
+	}
+	
 	public enum ComponentMaterial
 	{
-		WOOD(140, 0.04, 3, 0.1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), IRON(267, 3.3, 0.5, 7, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), GOLD(122, 3.9, 1, 0.5, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}), DIAMOND(320, 0.2, 0.1, 1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM});
+		WOOD(140, 0.04, 3, 0.1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}, new ComponentTraits[]{ComponentTraits.BURNS}), IRON(267, 3.3, 0.5, 7, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}, new ComponentTraits[]{ComponentTraits.RUSTS}), GOLD(122, 3.9, 1, 0.5, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}, new ComponentTraits[]{ComponentTraits.SHINY}), DIAMOND(320, 0.2, 0.1, 1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM}, new ComponentTraits[]{ComponentTraits.SHINY, ComponentTraits.SHATTERS});
 		
 		public final Type[] types;
 		public final int durability;
 		public final double heatLoss;
 		public final double heatThresholdMin;
 		public final double heatThresholdMax;
+		public final ComponentTraits[] traits;
 		
-		private ComponentMaterial(int durability, double heatLoss, double heatThresholdMin, double heatThresholdMax, Type[] types)
+		private ComponentMaterial(int durability, double heatLoss, double heatThresholdMin, double heatThresholdMax, Type[] types, ComponentTraits[] traits)
 		{
 			this.types = types;
 			this.durability = durability;
 			this.heatLoss = heatLoss;
 			this.heatThresholdMin = heatThresholdMin;
 			this.heatThresholdMax = heatThresholdMax;
+			this.traits = traits;
 		}
 		
 		public String getDisplayName(Type type, Component c)
@@ -291,6 +319,16 @@ public abstract class Component
 	
 	public abstract int capacity(int slot, ItemStack stack, World world, EntityPlayer player);
 	
+	public ComponentTraits[] materialTraits()
+	{
+		return this.material.traits;
+	}
+	
+	public final boolean hasMaterialTrait(ComponentTraits trait)
+	{
+		return Stuff.ArraysAndSuch.has(this.materialTraits(), trait);
+	}
+	
 	public void setDurabilityDamage(int slot, int durability, ItemStack stack, EntityPlayer player)
 	{
 		if(durability < 0)
@@ -302,6 +340,18 @@ public abstract class Component
 	
 	public void addDurabilityDamage(int slot, int damage, ItemStack stack, EntityPlayer player)
 	{
+		if(damage > 0)
+		{
+			if(this.hasMaterialTrait(ComponentTraits.SHATTERS))
+			{
+				float threshold = (float)shatterThreshold1 / (float)shatterThreshold2;
+				float chance = (float)shatterChance1 / (float)shatterChance2;
+				if(this.durabilityDamage(slot, stack) > this.durabilityMax(slot, stack) * threshold && player.worldObj.rand.nextFloat() <= chance)
+				{
+					damage *= (float)shatterDamageMultiplier;
+				}
+			}
+		}
 		this.setDurabilityDamage(slot, damage + this.durabilityDamage(slot, stack), stack, player);
 	}
 	

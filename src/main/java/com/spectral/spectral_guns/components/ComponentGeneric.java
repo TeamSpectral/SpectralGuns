@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
+import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.items.ItemGun;
 
@@ -208,7 +209,17 @@ public abstract class ComponentGeneric extends Component
 		{
 			if(player.ticksExisted % 10 == 1)
 			{
-				this.addDurabilityDamage(slot, 1, stack, player);
+				int damage = 1;
+				if(this.hasMaterialTrait(ComponentTraits.BURNS))
+				{
+					damage += burnDamage;
+					if(world.rand.nextFloat() <= (float)burnIgniteChance1 / (float)burnIgniteChance2)
+					{
+						player.setFire(burnIgniteSeconds);
+					}
+					AudioHandler.createMovingEntitySound(player, "fire.fire", 1.8F + world.rand.nextFloat(), world.rand.nextFloat() * 0.2F + 0.7F, false);
+				}
+				this.addDurabilityDamage(slot, damage, stack, player);
 			}
 		}
 		loop:
@@ -230,7 +241,10 @@ public abstract class ComponentGeneric extends Component
 		float baseTemp = player.isInsideOfMaterial(Material.water) ? -20 : 0;
 		if(this.heat(slot, stack) > this.heatThreshold(slot, stack) / 5 + baseTemp)
 		{
-			this.addHeat(slot, -h, stack);
+			if(!player.isInLava() && !player.isBurning())
+			{
+				this.addHeat(slot, -h, stack);
+			}
 			if(this.heat(slot, stack) < baseTemp)
 			{
 				this.setHeat(slot, baseTemp, stack);
@@ -244,6 +258,14 @@ public abstract class ComponentGeneric extends Component
 				this.setHeat(slot, baseTemp, stack);
 			}
 		}
+		if(player.isInsideOfMaterial(Material.water) || world.isRaining() && world.canLightningStrike(player.getPosition()))
+		{
+			if(this.hasMaterialTrait(ComponentTraits.RUSTS) && player.ticksExisted % 640 == 1)
+			{
+				this.addDurabilityDamage(slot, 1, stack, player);
+			}
+		}
+	}
 	
 	@Override
 	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)

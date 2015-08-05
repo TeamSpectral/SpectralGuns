@@ -1,6 +1,7 @@
 package com.spectral.spectral_guns.components.magazine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +20,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
+import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
 import com.spectral.spectral_guns.items.ItemGun;
@@ -56,8 +58,22 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	}
 	
 	@Override
+	public ArrayList<Entity> fire(int slot, ArrayList<Entity> e, ItemStack stack, World world, EntityPlayer player)
 	{
-		return super.speed(slot, speed, stack, world, player) / 2.8F;
+		e = super.fire(slot, e, stack, world, player);
+		if(e.size() > 0)
+		{
+			HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
+			for(Integer i : cs.keySet())
+			{
+				Component c = cs.get(i);
+				if(c.hasMaterialTrait(ComponentTraits.SHINY))
+				{
+					c.addDurabilityDamage(i, shinyDamage, stack, player);
+				}
+			}
+		}
+		return e;
 	}
 	
 	@Override
