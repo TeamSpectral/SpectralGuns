@@ -204,6 +204,12 @@ public class ComponentEvents
 		float spread = ItemGun.spread(stack, player);
 		float speed = ItemGun.speed(stack, player);
 		
+		float maxSpeed = 7;
+		if(speed > maxSpeed)
+		{
+			speed = maxSpeed;
+		}
+		
 		for(int i = 0; i < projectiles.size(); ++i)
 		{
 			Entity e = projectiles.get(i);
