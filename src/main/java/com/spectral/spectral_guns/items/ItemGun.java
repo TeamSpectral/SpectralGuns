@@ -638,6 +638,20 @@ public class ItemGun extends Item
 		return speed;
 	}
 	
+	public static boolean doSpray(ItemStack stack, EntityPlayer player)
+	{
+		boolean b = true;
+		HashMap<Integer, Component> cs = getComponents(stack);
+		for(Integer slot : cs.keySet())
+		{
+			if(!cs.get(slot).doSpray(slot, stack, player.worldObj, player))
+			{
+				b = false;
+			}
+		}
+		return b;
+	}
+	
 	public static float kickback(ItemStack stack, EntityPlayer player)
 	{
 		float kickback = 0;

@@ -244,6 +244,7 @@ public class ComponentEvents
 		}
 		player.rotationYaw += Randomization.r(inst * 5);
 		player.rotationPitch += Randomization.r(inst * 5);
+		boolean doSpray = ItemGun.doSpray(stack, player);
 		for(int i = 0; i < projectiles.size(); ++i)
 		{
 			Entity e = projectiles.get(i);
@@ -268,6 +269,15 @@ public class ComponentEvents
 				e.motionX = pos.xCoord;
 				e.motionY = pos.yCoord;
 				e.motionZ = pos.zCoord;
+				
+				if(!doSpray && projectiles.get(0) != null && i > 0)
+				{
+					Entity e2 = projectiles.get(0);
+					int x = 4;
+					e.motionX = (e.motionX + e2.motionX * x) / (x + 1);
+					e.motionY = (e.motionY + e2.motionY * x) / (x + 1);
+					e.motionZ = (e.motionZ + e2.motionZ * x) / (x + 1);
+				}
 			}
 		}
 		player.rotationPitch = oldRotPitch;

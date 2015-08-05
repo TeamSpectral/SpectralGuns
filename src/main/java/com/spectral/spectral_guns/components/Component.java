@@ -283,6 +283,8 @@ public abstract class Component
 	
 	public abstract float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player);
 	
+	public abstract boolean doSpray(int slot, ItemStack stack, World world, EntityPlayer player);
+	
 	public abstract int ammo(int slot, ItemStack stack, World world, EntityPlayer player);
 	
 	public abstract boolean isAmmoItem(ItemStack stack);
@@ -588,7 +590,6 @@ public abstract class Component
 						}
 						return cCompound;
 					}
-					return cCompound;
 				}
 			}
 		}

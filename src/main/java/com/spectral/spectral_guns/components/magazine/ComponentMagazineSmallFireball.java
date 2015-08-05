@@ -39,9 +39,9 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazineStand
 	}
 	
 	@Override
-	public Item ammoItem()
+	public boolean doSpray(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		return Items.fire_charge;
+		return false;
 	}
 	
 	@Override

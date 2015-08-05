@@ -137,6 +137,12 @@ public abstract class ComponentGeneric extends Component
 	}
 	
 	@Override
+	public boolean doSpray(int slot, ItemStack stack, World world, EntityPlayer player)
+	{
+		return true;
+	}
+	
+	@Override
 	protected void fireSound(int slot, Entity e, ItemStack stack, World world, EntityPlayer player)
 	{
 	}
