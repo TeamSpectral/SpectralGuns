@@ -110,4 +110,30 @@ public class ItemComponent extends Item
 	{
 		return this.c.durabilityMax(-1, new ItemStack(M.gun));
 	}
+	
+	@Override
+	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+	{
+		ItemStack mat = null;
+		switch(this.c.material)
+		{
+		case DIAMOND:
+			mat = new ItemStack(Items.diamond);
+			break;
+		case GOLD:
+			mat = new ItemStack(Items.gold_ingot);
+			break;
+		case IRON:
+			mat = new ItemStack(Items.iron_ingot);
+			break;
+		case WOOD:
+			mat = new ItemStack(Blocks.planks);
+			break;
+		}
+		if(mat != null && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false))
+		{
+			return true;
+		}
+		return super.getIsRepairable(toRepair, repair);
+	}
 }
