@@ -82,16 +82,16 @@ public class ComponentGrip extends ComponentGeneric
 	public void update(int slot, ItemStack gun, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
 		super.update(slot, gun, world, player, invSlot, isSelected);
-		if(this.heat(slot, gun) * this.heatConductiveness(slot, gun) > this.heatThreshold(slot, gun) / 2 || this.heat(slot, gun) > this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax)
+		if(this.heat(slot, gun) > this.heatThreshold(slot, gun) || this.heat(slot, gun) > this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax / 2)
 		{
 			if(player.ticksExisted % 20 == 1 && player.getHeldItem() == gun)
 			{
 				player.attackEntityFrom(DamageSource.inFire, 1F);
 				this.addHeat(slot, -1, gun);
 			}
-			if(this.heat(slot, gun) * this.heatConductiveness(slot, gun) > 800 || this.heat(slot, gun) >= this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax * 2)
+			if(this.heat(slot, gun) * this.heatConductiveness(slot, gun) > 200 || this.heat(slot, gun) >= this.heatThreshold * ComponentMaterial.IRON.heatThresholdMax / 2)
 			{
-				if(world.rand.nextFloat() > 6 / 7)
+				if(world.rand.nextFloat() > 5 / 7)
 				{
 					player.setFire(1);
 					this.addHeat(slot, -1, gun);
