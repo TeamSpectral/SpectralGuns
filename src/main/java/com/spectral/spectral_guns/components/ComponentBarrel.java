@@ -30,12 +30,12 @@ public abstract class ComponentBarrel extends ComponentGeneric implements ICompo
 	}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
-		super.getTooltip(tooltip);
-		tooltip.add(new String2("Spread: ", this.LESS_OR_EQUAL + this.spread));
-		tooltip.add(new String2("Speed: ", this.MULTIPLIES + this.velocity));
-		tooltip.add(new String2("Heating: ", this.ADDS(Math.floor((1 - this.velocity) * 100) / 100) + this.MULTIPLIES + "Magazine Heating"));
+		super.getTooltip(tooltip, player, world);
+		tooltip.add(new String2("Spread:", this.LESS_OR_EQUAL + this.spread(-1, Integer.MAX_VALUE, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("Speed:", this.MULTIPLIES + this.speed(-1, 1, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("Heating:", this.ADDS(Math.floor((1 - this.speed(-1, 1, new ItemStack(M.gun), world, player)) * 100) / 100) + this.MULTIPLIES + "Magazine Heating"));
 	}
 	
 	@Override

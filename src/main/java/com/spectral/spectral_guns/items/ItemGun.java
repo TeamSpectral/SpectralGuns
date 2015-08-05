@@ -33,6 +33,7 @@ import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.ComponentEvents;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
 import com.spectral.spectral_guns.components.magazine.IComponentProjectileCount;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
@@ -630,10 +631,9 @@ public class ItemGun extends Item
 			f -= a.get(slot);
 			speed = f;
 		}
-		float speedOfLight = 299792458 / 20;
-		if(speed > speedOfLight)
+		if(speed > ComponentMagazineLaser.speedOfLight)
 		{
-			return speedOfLight;
+			return ComponentMagazineLaser.speedOfLight;
 		}
 		return speed;
 	}

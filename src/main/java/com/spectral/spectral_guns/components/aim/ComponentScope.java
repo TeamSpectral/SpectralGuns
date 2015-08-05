@@ -29,10 +29,10 @@ public class ComponentScope extends ComponentGeneric
 	}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
-		super.getTooltip(tooltip);
-		tooltip.add(new String2("Zoom:", this.MULTIPLIES + this.zoom(-1, 1, null, null, null)));
+		super.getTooltip(tooltip, player, world);
+		tooltip.add(new String2("Zoom:", this.MULTIPLIES + this.zoom(-1, 1, new ItemStack(M.gun), world, player)));
 	}
 	
 	@Override

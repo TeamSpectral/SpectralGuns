@@ -25,9 +25,9 @@ public class ComponentScopeLaser extends ComponentScope
 	}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
-		super.getTooltip(tooltip);
+		super.getTooltip(tooltip, player, world);
 		tooltip.add(new String2("Color:", this.color.formatting + Stuff.Strings.capitalize(this.color.formatting.name().toLowerCase())));
 	}
 	

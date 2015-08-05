@@ -109,10 +109,10 @@ public class ComponentTriggerMechanism extends ComponentGeneric implements IComp
 	}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
-		super.getTooltip(tooltip);
-		tooltip.add(new String2("Delay:", "" + this.delay));
+		super.getTooltip(tooltip, player, world);
+		tooltip.add(new String2("Delay:", "" + this.delay(-1, 0, new ItemStack(M.gun), world, player)));
 		tooltip.add(new String2("Heating:", this.ADDS(this.heating) + this.ADDS(this.magazineHeat) + this.MULTIPLIES + "Magazine Heating"));
 	}
 	

@@ -51,12 +51,12 @@ public class ComponentTriggerMechanismAuto extends ComponentTriggerMechanism
 	}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
-		super.getTooltip(tooltip);
-		tooltip.add(new String2("Delay:", "" + this.delay));
-		tooltip.add(new String2("Fire Rate:", this.MULTIPLIES + this.fireRate));
-		tooltip.add(new String2("Recoil:", this.MULTIPLIES + this.recoil));
+		super.getTooltip(tooltip, player, world);
+		tooltip.add(new String2("Delay:", "" + this.delay(-1, 0, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("Fire Rate:", this.MULTIPLIES + this.fireRate(-1, 1, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("Recoil:", this.MULTIPLIES + this.recoil(-1, 1, new ItemStack(M.gun), world, player)));
 		tooltip.add(new String2("Automatic", "" + true));
 	}
 	

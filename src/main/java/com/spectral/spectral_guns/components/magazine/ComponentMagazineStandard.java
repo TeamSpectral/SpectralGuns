@@ -14,17 +14,31 @@ import com.spectral.spectral_guns.components.ComponentEvents;
 public abstract class ComponentMagazineStandard extends ComponentMagazine
 {
 	public final float kickback;
-	public final float spread;
+	public final float recoil;
+	public final float speed;
 	public final int projectileCount;
 	public final float fireRate;
 	
-	public ComponentMagazineStandard(String id, String name, double heatLoss, float heatThreshold, ComponentMaterial material, int capacity, float kickback, float spread, float fireRate, int projectileCount, float heating)
+	public ComponentMagazineStandard(String id, String name, double heatLoss, float heatThreshold, ComponentMaterial material, int capacity, float kickback, float recoil, float speed, float fireRate, int projectileCount, float heating)
 	{
 		super(id, name, heatLoss, heatThreshold, material, capacity, heating);
 		this.kickback = kickback;
-		this.spread = spread;
+		this.recoil = recoil;
+		this.speed = speed;
 		this.projectileCount = projectileCount;
 		this.fireRate = fireRate;
+	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
+	{
+		super.getTooltip(tooltip, player, world);
+		tooltip.add(new String2("Recoil:", this.ADDS(this.recoil(-1, 0, new ItemStack(M.gun), world, player))));
+		tooltip.add(new String2("Kickback:", this.ADDS(this.kickback(-1, 0, new ItemStack(M.gun), world, player))));
+		tooltip.add(new String2("Speed:", this.ADDS(this.speed(-1, 0, new ItemStack(M.gun), world, player))));
+		tooltip.add(new String2("ProjectileCount:", "" + this.projectileCount(-1, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("FireRate:", this.ADDS(this.fireRate(-1, 0, new ItemStack(M.gun), world, player))));
+		tooltip.add(new String2("Delay:", this.ADDS(this.delay(-1, 0, new ItemStack(M.gun), world, player))));
 	}
 	
 	protected abstract Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player);
@@ -71,27 +85,21 @@ public abstract class ComponentMagazineStandard extends ComponentMagazine
 	}
 	
 	@Override
-	public float spread(int slot, float spread, ItemStack stack, World world, EntityPlayer player)
-	{
-		return this.spread;
-	}
-	
-	@Override
 	public float kickback(int slot, float kickback, ItemStack stack, World world, EntityPlayer player)
 	{
-		return kickback + this.kickback * 0.63F;
+		return kickback + this.kickback;
 	}
 	
 	@Override
 	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
 	{
-		return recoil + this.kickback * 5.6F;
+		return recoil + this.recoil;
 	}
 	
 	@Override
 	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
-		return speed + 1.8F + this.kickback * 3;
+		return speed + this.speed;
 	}
 	
 	@Override

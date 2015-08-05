@@ -25,7 +25,7 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 	
 	public float recoilMod = 4;
 	public float fireRateMod = 0.5F;
-	public float speedMod = 2;
+	public float speedMod = 1.2F;
 	
 	@Override
 	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
@@ -46,13 +46,13 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 	}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
-		super.getTooltip(tooltip);
-		tooltip.add(new String2("Delay:", "" + this.delay));
-		tooltip.add(new String2("Fire Rate:", this.MULTIPLIES + this.fireRateMod));
-		tooltip.add(new String2("Recoil:", this.MULTIPLIES + this.recoilMod));
-		tooltip.add(new String2("Speed:", this.MULTIPLIES + this.speedMod));
+		super.getTooltip(tooltip, player, world);
+		tooltip.add(new String2("Delay:", "" + this.delay(-1, 0, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("Fire Rate:", this.MULTIPLIES + this.fireRate(-1, 1, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("Recoil:", this.MULTIPLIES + this.recoil(-1, 1, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("Speed:", this.MULTIPLIES + this.speed(-1, 1, new ItemStack(M.gun), world, player)));
 	}
 	
 	@SuppressWarnings("incomplete-switch")

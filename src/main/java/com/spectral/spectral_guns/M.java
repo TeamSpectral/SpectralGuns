@@ -323,31 +323,31 @@ public class M
 		return ComponentRegister.getItem(c);
 	}
 	
-	public static final ComponentMagazineSnowball magazine_snowball_wood = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.WOOD, 16, 0.2F, 1F, 1, 1));
-	public static final ComponentMagazineSnowball magazine_snowball_iron = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.IRON, 20, 0.4F, 2F, 6, 2));
-	public static final ComponentMagazineSnowball magazine_snowball_gold = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.GOLD, 24, 0.6F, 3F, 13, 4));
-	public static final ComponentMagazineSnowball magazine_snowball_diamond = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.DIAMOND, 28, 0.9F, 4F, 21, 8));
+	public static final ComponentMagazineSnowball magazine_snowball_wood = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.WOOD, 16, 0.2F, 0.2F * 5.6F, 1.5F, 1F, 1, 1));
+	public static final ComponentMagazineSnowball magazine_snowball_iron = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.IRON, 20, 0.4F, 0.4F * 5.6F, 1.5F, 2F, 6, 2));
+	public static final ComponentMagazineSnowball magazine_snowball_gold = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.GOLD, 24, 0.6F, 0.6F * 5.6F, 1.5F, 3F, 13, 4));
+	public static final ComponentMagazineSnowball magazine_snowball_diamond = registerComponent(new ComponentMagazineSnowball(ComponentMaterial.DIAMOND, 28, 0.9F, 0.9F * 5.6F, 1.5F, 4F, 21, 8));
 	
-	public static final ComponentMagazineSmallFireball magazine_small_fireball_iron = registerComponent(new ComponentMagazineSmallFireball(ComponentMaterial.IRON, 6, 0.35F, 33F, 1, 1));
-	public static final ComponentMagazineSmallFireball magazine_small_fireball_gold = registerComponent(new ComponentMagazineSmallFireball(ComponentMaterial.GOLD, 10, 0.7F, 43F, 3, 2));
-	public static final ComponentMagazineSmallFireball magazine_small_fireball_diamond = registerComponent(new ComponentMagazineSmallFireball(ComponentMaterial.DIAMOND, 14, 1.4F, 53F, 9, 4));
+	public static final ComponentMagazineSmallFireball magazine_small_fireball_iron = registerComponent(new ComponentMagazineSmallFireball(ComponentMaterial.IRON, 6, 0.35F, 0.35F * 7.6F, 7.4F, 33F, 1, 1));
+	public static final ComponentMagazineSmallFireball magazine_small_fireball_gold = registerComponent(new ComponentMagazineSmallFireball(ComponentMaterial.GOLD, 10, 0.7F, 0.7F * 7.6F, 7.4F, 43F, 3, 2));
+	public static final ComponentMagazineSmallFireball magazine_small_fireball_diamond = registerComponent(new ComponentMagazineSmallFireball(ComponentMaterial.DIAMOND, 14, 1.4F, 1.4F * 7.6F, 7.4F, 53F, 9, 4));
 	
-	public static final ComponentMagazineFood magazine_food_wood = registerComponent(new ComponentMagazineFood(ComponentMaterial.WOOD, 10, 0.18F, 12F, 5, 1));
-	public static final ComponentMagazineFood magazine_food_iron = registerComponent(new ComponentMagazineFood(ComponentMaterial.IRON, 14, 0.72F, 16F, 14, 2));
-	public static final ComponentMagazineFood magazine_food_gold = registerComponent(new ComponentMagazineFood(ComponentMaterial.GOLD, 18, 1.56F, 20F, 23, 4));
+	public static final ComponentMagazineFood magazine_food_wood = registerComponent(new ComponentMagazineFood(ComponentMaterial.WOOD, 10, 0.18F, 0.46F * 9.6F, 1.1F, 12F, 5, 1));
+	public static final ComponentMagazineFood magazine_food_iron = registerComponent(new ComponentMagazineFood(ComponentMaterial.IRON, 14, 0.72F, 0.92F * 9.6F, 1.1F, 16F, 14, 2));
+	public static final ComponentMagazineFood magazine_food_gold = registerComponent(new ComponentMagazineFood(ComponentMaterial.GOLD, 18, 1.56F, 1.38F * 9.6F, 1.1F, 20F, 23, 4));
 	
-	public static final ComponentMagazineLaser magazine_laser_iron_red = registerComponent(new ComponentMagazineLaser(ComponentMaterial.IRON, LaserColor.RED, 4, 2));
-	public static final ComponentMagazineLaser magazine_laser_gold_red = registerComponent(new ComponentMagazineLaser(ComponentMaterial.GOLD, LaserColor.RED, 8, 4));
-	public static final ComponentMagazineLaser magazine_laser_diamond_red = registerComponent(new ComponentMagazineLaser(ComponentMaterial.DIAMOND, LaserColor.RED, 16, 8));
+	public static final ComponentMagazineLaser magazine_laser_iron_red = registerComponent(new ComponentMagazineLaser(ComponentMaterial.IRON, LaserColor.RED, 4, 2, 0.001F));
+	public static final ComponentMagazineLaser magazine_laser_gold_red = registerComponent(new ComponentMagazineLaser(ComponentMaterial.GOLD, LaserColor.RED, 8, 4, 0.01F));
+	public static final ComponentMagazineLaser magazine_laser_diamond_red = registerComponent(new ComponentMagazineLaser(ComponentMaterial.DIAMOND, LaserColor.RED, 16, 8, 0.1F));
 	
-	public static final ComponentMagazineLaser magazine_laser_iron_green = registerComponent(new ComponentMagazineLaser(ComponentMaterial.IRON, LaserColor.GREEN, 4, 2));
-	public static final ComponentMagazineLaser magazine_laser_gold_green = registerComponent(new ComponentMagazineLaser(ComponentMaterial.GOLD, LaserColor.GREEN, 8, 4));
-	public static final ComponentMagazineLaser magazine_laser_diamond_green = registerComponent(new ComponentMagazineLaser(ComponentMaterial.DIAMOND, LaserColor.GREEN, 16, 8));
+	public static final ComponentMagazineLaser magazine_laser_iron_green = registerComponent(new ComponentMagazineLaser(ComponentMaterial.IRON, LaserColor.GREEN, 4, 2, 0.001F));
+	public static final ComponentMagazineLaser magazine_laser_gold_green = registerComponent(new ComponentMagazineLaser(ComponentMaterial.GOLD, LaserColor.GREEN, 8, 4, 0.01F));
+	public static final ComponentMagazineLaser magazine_laser_diamond_green = registerComponent(new ComponentMagazineLaser(ComponentMaterial.DIAMOND, LaserColor.GREEN, 16, 8, 0.1F));
 	
-	public static final ComponentMagazineShuriken magazine_shuriken_wood = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.WOOD, 4, 0.01F, 3F, 1, 1));
-	public static final ComponentMagazineShuriken magazine_shuriken_iron = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.IRON, 8, 0.08F, 6F, 1, 2));
-	public static final ComponentMagazineShuriken magazine_shuriken_gold = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.GOLD, 16, 0.16F, 12F, 1, 3));
-	public static final ComponentMagazineShuriken magazine_shuriken_diamond = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.DIAMOND, 32, 0.32F, 24, 1, 4));
+	public static final ComponentMagazineShuriken magazine_shuriken_wood = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.WOOD, 4, 0.01F, 0.01F * 5.6F, 1.4F, 3F, 1, 1));
+	public static final ComponentMagazineShuriken magazine_shuriken_iron = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.IRON, 8, 0.08F, 0.08F * 5.6F, 1.4F, 6F, 1, 2));
+	public static final ComponentMagazineShuriken magazine_shuriken_gold = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.GOLD, 16, 0.16F, 0.16F * 5.6F, 1.4F, 12F, 1, 3));
+	public static final ComponentMagazineShuriken magazine_shuriken_diamond = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.DIAMOND, 32, 0.32F, 0.32F * 5.6F, 1.4F, 24, 1, 4));
 	
 	public static final ComponentTriggerMechanism trigger_wood = registerComponent(new ComponentTriggerMechanism(ComponentMaterial.WOOD, 14F, 5));
 	public static final ComponentTriggerMechanism trigger_wood_redstone = registerComponent(new ComponentTriggerMechanismBoosted(trigger_wood));

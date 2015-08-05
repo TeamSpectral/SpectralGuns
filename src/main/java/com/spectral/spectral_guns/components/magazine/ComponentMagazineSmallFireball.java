@@ -20,9 +20,9 @@ import com.spectral.spectral_guns.items.ItemGun;
 
 public final class ComponentMagazineSmallFireball extends ComponentMagazineStandard
 {
-	public ComponentMagazineSmallFireball(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
+	public ComponentMagazineSmallFireball(ComponentMaterial material, int capacity, float kickback, float recoil, float speed, float fireRate, int projectileCount, float heating)
 	{
-		super("small_fireball", "fireballSmall", 0.2, 5 * 5 * 8, material, capacity, kickback, 30, fireRate * 3, projectileCount, 86.9F * heating);
+		super("small_fireball", "fireballSmall", 0.2, 5 * 5 * 8, material, capacity, kickback, recoil, speed, fireRate * 3, projectileCount, 86.9F * heating);
 	}
 	
 	@Override
@@ -45,9 +45,9 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazineStand
 	}
 	
 	@Override
-	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
+	public Item ammoItem()
 	{
-		return super.speed(slot, speed, stack, world, player) * 5;
+		return Items.fire_charge;
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 
 public class ComponentGrip extends ComponentGeneric
@@ -29,12 +30,12 @@ public class ComponentGrip extends ComponentGeneric
 	}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
-		super.getTooltip(tooltip);
-		tooltip.add(new String2("Instability:", this.MULTIPLIES + this.instabilityMultiplier));
-		tooltip.add(new String2("Recoil:", this.MULTIPLIES + this.recoilMultiplier));
-		tooltip.add(new String2("Kickback:", this.MULTIPLIES + this.kickbackMultiplier));
+		super.getTooltip(tooltip, player, world);
+		tooltip.add(new String2("Instability:", this.MULTIPLIES + this.instability(-1, 1, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("Recoil:", this.MULTIPLIES + this.recoil(-1, 1, new ItemStack(M.gun), world, player)));
+		tooltip.add(new String2("Kickback:", this.MULTIPLIES + this.kickback(-1, 1, new ItemStack(M.gun), world, player)));
 		tooltip.add(new String2("", EnumChatFormatting.DARK_RED + "(high temperatures will hurt user)"));
 	}
 	

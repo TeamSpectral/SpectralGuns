@@ -8,6 +8,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -35,20 +36,30 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	public final static ItemTagInteger TIMER = new ItemTagInteger("Timer", 0, 0, Integer.MAX_VALUE, true);
 	public final static int ammoMultiplier = 25;
 	public final int battery;
+	public final float kickback;
+	public final static float speedOfLight = 299792458 / 20;
 	
-	public ComponentMagazineLaser(ComponentMaterial material, LaserColor color, int capacity, int battery)
+	public ComponentMagazineLaser(ComponentMaterial material, LaserColor color, int capacity, int battery, float kickback)
 	{
 		super(new String2("laser", "_" + color.toString().toLowerCase()), new String2("laser", "." + color.toString().toLowerCase()), 0.4, 3 * 9 * 3, material, capacity, 4.6F);
 		this.color = color;
 		this.battery = battery;
+		this.kickback = kickback;
 		this.required = new Component[]{M.barrel_thin_diamond};
 	}
 	
 	@Override
-	public void getTooltip(ArrayList<String2> tooltip)
+	public void getTooltip(ArrayList<String2> tooltip, EntityPlayer player, World world)
 	{
-		super.getTooltip(tooltip);
+		super.getTooltip(tooltip, player, world);
+		tooltip.add(new String2("Capacity:", this.capacity(-1, new ItemStack(M.gun), world, player) + "/" + this.battery));
 		tooltip.add(new String2("Color:", this.color.formatting + Stuff.Strings.capitalize(this.color.formatting.name().toLowerCase())));
+		tooltip.add(new String2("Recoil:", "" + 0));
+		tooltip.add(new String2("Kickback:", "" + this.kickback));
+		tooltip.add(new String2("Speed:", "" + speedOfLight));
+		tooltip.add(new String2("ProjectileCount:", "" + 1));
+		tooltip.add(new String2("FireRate:", "" + 0));
+		tooltip.add(new String2("Delay:", this.ADDS(this.delay(-1, 0, new ItemStack(M.gun), world, player))));
 	}
 	
 	@Override
@@ -86,20 +97,34 @@ public class ComponentMagazineLaser extends ComponentMagazine
 			CHARGE.set(compound, CHARGE.get(compound, true) * 0.95F - 0.1F);
 		}
 		TIMER.add(compound, 1);
-		if(CHARGE.get(compound, true) > 0.5)
+		if(CHARGE.get(compound, true) > 0)
 		{
 			EntityLaser e = new EntityLaser(world, player, CHARGE.get(compound, true), this.color, 0);
 			
-			if(!world.isRemote || true) //this needs to be spawned clientside as well, but only for laser entities
+			if(CHARGE.get(compound, true) > 0.2)
 			{
-				world.spawnEntityInWorld(e);
+				if(!world.isRemote || true) //this needs to be spawned clientside as well, but only for laser entities
+				{
+					world.spawnEntityInWorld(e);
+				}
+				
+				int t = (int)(12 / CHARGE.get(compound, true));
+				if(t <= 0 || TIMER.get(compound, true) % t == t - 1)
+				{
+					this.setAmmo(slot, -1, gun, world, player);
+				}
 			}
 			
-			int t = (int)(12 / CHARGE.get(compound, true));
-			if(t <= 0 || TIMER.get(compound, true) % t == t - 1)
-			{
-				this.setAmmo(slot, -1, gun, world, player);
-			}
+			ArrayList<Entity> es = new ArrayList();
+			es.add(e);
+			Vec3 mot1 = Stuff.Coordinates3D.velocity(player);
+			((ItemGun)gun.getItem()).kickBack(gun, player, es);
+			Vec3 mot2 = Stuff.Coordinates3D.velocity(player);
+			int x = 30;
+			Vec3 mot = Stuff.Coordinates3D.divide(Stuff.Coordinates3D.add(Stuff.Coordinates3D.multiply(mot1, x), mot2), x + 1);
+			player.motionX = mot.xCoord;
+			player.motionY = mot.yCoord;
+			player.motionZ = mot.zCoord;
 		}
 		if(world.isRemote)
 		{
@@ -143,7 +168,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 	@Override
 	public float kickback(int slot, float kickback, ItemStack stack, World world, EntityPlayer player)
 	{
-		return 0;
+		return kickback + this.kickback * CHARGE.get(this.getTagCompound(slot, stack), true);
 	}
 	
 	@Override

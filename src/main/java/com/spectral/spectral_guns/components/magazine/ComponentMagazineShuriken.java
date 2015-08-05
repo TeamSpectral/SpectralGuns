@@ -15,9 +15,9 @@ import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
 
 public class ComponentMagazineShuriken extends ComponentMagazineStandard
 {
-	public ComponentMagazineShuriken(ComponentMaterial material, int capacity, float kickback, float fireRate, int projectileCount, float heating)
+	public ComponentMagazineShuriken(ComponentMaterial material, int capacity, float kickback, float recoil, float speed, float fireRate, int projectileCount, float heating)
 	{
-		super("shuriken", "shuriken", 0.2, 3 * 10 * 3 / 6, material, capacity, kickback, 60, fireRate, projectileCount, 0.1F * heating);
+		super("shuriken", "shuriken", 0.2, 3 * 10 * 3 / 6, material, capacity, kickback, recoil, speed, fireRate, projectileCount, 0.1F * heating);
 	}
 	
 	@Override
