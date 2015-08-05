@@ -561,24 +561,32 @@ public abstract class Component
 	
 	public final NBTTagCompound getComponentCompound(int slot, ItemStack stack)
 	{
+		if(stack.getTagCompound() == null)
+		{
+			stack.setTagCompound(new NBTTagCompound());
+		}
 		return this.getComponentCompound(slot, stack.getTagCompound());
 	}
 	
 	public NBTTagCompound getComponentCompound(int slot, NBTTagCompound compound)
 	{
-		NBTTagList components = ItemGun.COMPONENTS.get(compound, true);
-		for(int i = 0; i < components.tagCount(); ++i)
+		if(compound != null)
 		{
-			NBTTagCompound cCompound = components.getCompoundTagAt(i);
-			if(cCompound != null && ItemGun.COMPONENT_SLOT.has(cCompound) && ItemGun.COMPONENT_ID.has(cCompound))
+			NBTTagList components = ItemGun.COMPONENTS.get(compound, true);
+			for(int i = 0; i < components.tagCount(); ++i)
 			{
-				int cSlot = ItemGun.COMPONENT_SLOT.get(cCompound, false);
-				String id = ItemGun.COMPONENT_ID.get(cCompound, false);
-				if(cSlot == slot)
+				NBTTagCompound cCompound = components.getCompoundTagAt(i);
+				if(cCompound != null && ItemGun.COMPONENT_SLOT.has(cCompound) && ItemGun.COMPONENT_ID.has(cCompound))
 				{
-					if(!ItemGun.COMPONENT_COMPOUND.has(cCompound))
+					int cSlot = ItemGun.COMPONENT_SLOT.get(cCompound, false);
+					String id = ItemGun.COMPONENT_ID.get(cCompound, false);
+					if(cSlot == slot)
 					{
-						ItemGun.COMPONENT_COMPOUND.set(cCompound, new NBTTagCompound());
+						if(!ItemGun.COMPONENT_COMPOUND.has(cCompound))
+						{
+							ItemGun.COMPONENT_COMPOUND.set(cCompound, new NBTTagCompound());
+						}
+						return cCompound;
 					}
 					return cCompound;
 				}
