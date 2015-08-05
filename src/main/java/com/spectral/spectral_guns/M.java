@@ -349,15 +349,15 @@ public class M
 	public static final ComponentMagazineShuriken magazine_shuriken_gold = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.GOLD, 16, 0.16F, 12F, 1, 3));
 	public static final ComponentMagazineShuriken magazine_shuriken_diamond = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.DIAMOND, 32, 0.32F, 24, 1, 4));
 	
-	public static final ComponentTriggerMechanism trigger_wood = registerComponent(new ComponentTriggerMechanism(ComponentMaterial.WOOD, 14F));
+	public static final ComponentTriggerMechanism trigger_wood = registerComponent(new ComponentTriggerMechanism(ComponentMaterial.WOOD, 14F, 5));
 	public static final ComponentTriggerMechanism trigger_wood_redstone = registerComponent(new ComponentTriggerMechanismBoosted(trigger_wood));
 	public static final ComponentTriggerMechanism trigger_wood_auto = registerComponent(new ComponentTriggerMechanismAuto(trigger_wood));
 	
-	public static final ComponentTriggerMechanism trigger_iron = registerComponent(new ComponentTriggerMechanism(ComponentMaterial.IRON, 10F));
+	public static final ComponentTriggerMechanism trigger_iron = registerComponent(new ComponentTriggerMechanism(ComponentMaterial.IRON, 10F, 10));
 	public static final ComponentTriggerMechanism trigger_iron_redstone = registerComponent(new ComponentTriggerMechanismBoosted(trigger_iron));
 	public static final ComponentTriggerMechanism trigger_iron_auto = registerComponent(new ComponentTriggerMechanismAuto(trigger_iron));
 	
-	public static final ComponentTriggerMechanism trigger_gold = registerComponent(new ComponentTriggerMechanism(ComponentMaterial.GOLD, 6F));
+	public static final ComponentTriggerMechanism trigger_gold = registerComponent(new ComponentTriggerMechanism(ComponentMaterial.GOLD, 6F, 15));
 	public static final ComponentTriggerMechanism trigger_gold_redstone = registerComponent(new ComponentTriggerMechanismBoosted(trigger_gold));
 	public static final ComponentTriggerMechanism trigger_gold_auto = registerComponent(new ComponentTriggerMechanismAuto(trigger_gold));
 	

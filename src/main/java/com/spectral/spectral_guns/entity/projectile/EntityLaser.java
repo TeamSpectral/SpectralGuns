@@ -23,6 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.EnumParticleTypes;
@@ -43,19 +44,21 @@ public class EntityLaser extends Entity implements IEntityAdditionalSpawnData
 {
 	public enum LaserColor
 	{
-		RED(1, 0, 0, EnumDyeColor.RED), GREEN(0, 1, 0, EnumDyeColor.GREEN), CYAN(0, 1, 1, EnumDyeColor.CYAN), VIOLET(85 / 255, 0, 1, EnumDyeColor.PURPLE);
+		RED(1, 0, 0, EnumDyeColor.RED, EnumChatFormatting.RED), GREEN(0, 1, 0, EnumDyeColor.GREEN, EnumChatFormatting.GREEN), CYAN(0, 1, 1, EnumDyeColor.CYAN, EnumChatFormatting.AQUA), VIOLET(85 / 255, 0, 1, EnumDyeColor.PURPLE, EnumChatFormatting.DARK_PURPLE);
 		
 		public final float r;
 		public final float g;
 		public final float b;
 		public final EnumDyeColor dye;
+		public final EnumChatFormatting formatting;
 		
-		private LaserColor(float r, float g, float b, EnumDyeColor dye)
+		private LaserColor(float r, float g, float b, EnumDyeColor dye, EnumChatFormatting formatting)
 		{
 			this.r = r;
 			this.g = g;
 			this.b = b;
 			this.dye = dye;
+			this.formatting = formatting;
 		}
 		
 		public boolean goTrough(IBlockState bs)

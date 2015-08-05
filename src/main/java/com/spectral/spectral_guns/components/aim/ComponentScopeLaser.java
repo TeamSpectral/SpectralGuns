@@ -1,5 +1,7 @@
 package com.spectral.spectral_guns.components.aim;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -7,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
@@ -19,6 +22,13 @@ public class ComponentScopeLaser extends ComponentScope
 	{
 		super(new String2("", "_laser_" + color.toString().toLowerCase()), new String2("", ".laser." + color.toString().toLowerCase()), c.material, c.zoom);
 		this.color = color;
+	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip)
+	{
+		super.getTooltip(tooltip);
+		tooltip.add(new String2("Color:", this.color.formatting + Stuff.Strings.capitalize(this.color.formatting.name().toLowerCase())));
 	}
 	
 	@Override

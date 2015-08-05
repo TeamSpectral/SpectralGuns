@@ -13,8 +13,10 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.components.magazine.ComponentMagazine;
+import com.spectral.spectral_guns.items.ItemGun;
 
-public abstract class ComponentBarrel extends ComponentGeneric
+public abstract class ComponentBarrel extends ComponentGeneric implements IComponentHeatOnFire
 {
 	public final float spread;
 	public final float velocity;
@@ -25,6 +27,25 @@ public abstract class ComponentBarrel extends ComponentGeneric
 		this.spread = spread;
 		this.velocity = velocity;
 		this.requiredTypes = new Type[]{Type.MAGAZINE};
+	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip)
+	{
+		super.getTooltip(tooltip);
+		tooltip.add(new String2("Spread: ", this.LESS_OR_EQUAL + this.spread));
+		tooltip.add(new String2("Speed: ", this.MULTIPLIES + this.velocity));
+		tooltip.add(new String2("Heating: ", this.ADDS(Math.floor((1 - this.velocity) * 100) / 100) + this.MULTIPLIES + "Magazine Heating"));
+	}
+	
+	@Override
+	public void heatUp(int slot, ItemStack stack, double modifier)
+	{
+		ArrayList<Component> cs = ItemGun.getComponentsOfType(Type.MAGAZINE);
+		if(cs.size() > 0 && cs.get(0) instanceof ComponentMagazine)
+		{
+			this.addHeat(slot, modifier * ((ComponentMagazine)cs.get(0)).heating * (1 - this.velocity), stack);
+		}
 	}
 	
 	@Override

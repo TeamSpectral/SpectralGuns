@@ -1,6 +1,6 @@
 package com.spectral.spectral_guns.components.trigger_mechanism;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -10,45 +10,49 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
-import com.spectral.spectral_guns.components.IComponentHeatOnFire;
-import com.spectral.spectral_guns.items.ItemGun;
 
-public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism implements IComponentHeatOnFire
+public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism
 {
-	protected ComponentTriggerMechanismBoosted(ComponentMaterial material, float delay)
+	protected ComponentTriggerMechanismBoosted(ComponentMaterial material, float delay, double heating)
 	{
-		super(new String2("", "_boosted"), new String2("", ".boosted"), material, delay);
+		super(new String2("", "_boosted"), new String2("", ".boosted"), material, delay / 2, heating + 30);
 	}
 	
 	public ComponentTriggerMechanismBoosted(ComponentTriggerMechanism c)
 	{
-		this(c.material, c.delay);
+		this(c.material, c.delay, c.heating);
 	}
+	
+	public float recoilMod = 4;
+	public float fireRateMod = 0.5F;
+	public float speedMod = 2;
 	
 	@Override
 	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
 	{
-		return recoil * 4;
-	}
-	
-	@Override
-	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
-	{
-		return delay / 2 + this.delay / 2;
+		return super.recoil(slot, recoil, stack, world, player) * this.recoilMod;
 	}
 	
 	@Override
 	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
-		return rate / 2;
+		return super.fireRate(slot, rate, stack, world, player) * this.fireRateMod;
 	}
 	
 	@Override
 	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
 	{
-		return speed * 2;
+		return super.speed(slot, speed, stack, world, player) * this.speedMod;
+	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip)
+	{
+		super.getTooltip(tooltip);
+		tooltip.add(new String2("Delay:", "" + this.delay));
+		tooltip.add(new String2("Fire Rate:", this.MULTIPLIES + this.fireRateMod));
+		tooltip.add(new String2("Recoil:", this.MULTIPLIES + this.recoilMod));
+		tooltip.add(new String2("Speed:", this.MULTIPLIES + this.speedMod));
 	}
 	
 	@SuppressWarnings("incomplete-switch")
@@ -69,20 +73,5 @@ public class ComponentTriggerMechanismBoosted extends ComponentTriggerMechanism 
 			break;
 		}
 		GameRegistry.addShapelessRecipe(new ItemStack(this.item), new Object[]{Items.redstone, trigger});
-	}
-	
-	@Override
-	public void heatUp(int slot, ItemStack stack, double modifier)
-	{
-		this.addHeat(slot, 30 * modifier, stack);
-		HashMap<Integer, Component> cs = ItemGun.getComponents(stack);
-		for(Integer slot2 : cs.keySet())
-		{
-			Component c = cs.get(slot2);
-			if(c.type == Type.MAGAZINE)
-			{
-				c.addHeat(slot2, 100 * modifier, stack);
-			}
-		}
 	}
 }

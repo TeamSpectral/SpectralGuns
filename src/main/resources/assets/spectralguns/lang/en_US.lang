@@ -114,3 +114,5 @@ item.component.scope.gold.laser.green.name=Green Golden Laser Scope (T3)
 item.component.scope.diamond.laser.green.name=Green Diamond Laser Scope (T4)
 
 item.component.addon.overclocker.name=Overclocker
+
+entity.spectralguns.laser.name=Laser

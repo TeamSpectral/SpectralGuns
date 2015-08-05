@@ -1,5 +1,7 @@
 package com.spectral.spectral_guns.components.misc;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -21,6 +23,46 @@ public class ComponentOverclocker extends ComponentAddon implements IComponentHe
 		this.requiredTypes = new Type[]{Type.MAGAZINE};
 	}
 	
+	public float fireRate1()
+	{
+		return 0.7F;
+	}
+	
+	public float fireRate2()
+	{
+		return 0.9F;
+	}
+	
+	public float recoil()
+	{
+		return 1.2F;
+	}
+	
+	public float instability()
+	{
+		return 1.3F;
+	}
+	
+	public float kickback()
+	{
+		return 1.1F;
+	}
+	
+	public double heat()
+	{
+		return 100;
+	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip)
+	{
+		tooltip.add(new String2("Fire Rate:", "Is gun fully automatic?: " + this.MULTIPLIES + this.fireRate2() + ", if not: " + this.MULTIPLIES + this.fireRate1()));
+		tooltip.add(new String2("Heating:", this.ADDS(this.heat())));
+		tooltip.add(new String2("Recoil:", this.MULTIPLIES + this.recoil()));
+		tooltip.add(new String2("Instability:", this.MULTIPLIES + this.instability()));
+		tooltip.add(new String2("Kickback:", this.MULTIPLIES + this.kickback()));
+	}
+	
 	@Override
 	public void registerRecipe()
 	{
@@ -30,44 +72,38 @@ public class ComponentOverclocker extends ComponentAddon implements IComponentHe
 	@Override
 	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
-		if(ItemGun.automatic(stack, player))
+		if(!ItemGun.automatic(stack, player))
 		{
-			return rate * 0.7F;
+			return rate * this.fireRate1();
 		}
 		else
 		{
-			return rate * 0.9F;
+			return rate * this.fireRate2();
 		}
-	}
-	
-	@Override
-	public float speed(int slot, float speed, ItemStack stack, World world, EntityPlayer player)
-	{
-		return speed * 1.2F;
 	}
 	
 	@Override
 	public void heatUp(int slot, ItemStack stack, double modifier)
 	{
-		this.addHeat(slot, 100 * modifier, stack);
+		this.addHeat(slot, this.heat() * modifier, stack);
 	}
 	
 	@Override
 	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
 	{
-		return recoil * 1.4F;
+		return recoil * this.recoil();
 	}
 	
 	@Override
 	public float instability(int slot, float instability, ItemStack stack, World world, EntityPlayer player)
 	{
-		return instability * 1.3F;
+		return instability * this.instability();
 	}
 	
 	@Override
 	public float kickback(int slot, float kickback, ItemStack stack, World world, EntityPlayer player)
 	{
-		return kickback * 1.2F;
+		return kickback * this.kickback();
 	}
 	
 	@Override

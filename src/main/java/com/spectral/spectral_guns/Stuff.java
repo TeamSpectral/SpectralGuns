@@ -31,6 +31,8 @@ import net.minecraft.world.gen.ChunkProviderSettings;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.inventory.IContainerAddPlayerSlots;
@@ -653,11 +655,7 @@ public class Stuff
 		public static String UnderscoresToCamelSpaces(String s)
 		{
 			s = s.toLowerCase();
-			ArrayList<Character> cs = Lists.newArrayList();
-			for(int i = 0; i < s.length(); ++i)
-			{
-				cs.add(s.charAt(i));
-			}
+			ArrayList<Character> cs = toCharArrayList(s);
 			for(int i = 0; i < cs.size(); ++i)
 			{
 				char c = cs.get(i);
@@ -668,13 +666,7 @@ public class Stuff
 					--i;
 				}
 			}
-			s = "";
-			for(int i = 0; i < cs.size(); ++i)
-			{
-				char c = cs.get(i);
-				s = s + c;
-			}
-			return s;
+			return fromCharArrayList(cs);
 		}
 		
 		public static String removeFormatting(String s)
@@ -687,6 +679,45 @@ public class Stuff
 			for(ChatFormatting cf : ChatFormatting.values())
 			{
 				s = s.replaceAll("" + cf, "");
+			}
+			return s;
+		}
+		
+		public static String capitalize(String s)
+		{
+			if(s == null || s.length() <= 0 || StringUtils.isBlank(s))
+			{
+				return s;
+			}
+			ArrayList<Character> cs = toCharArrayList(s);
+			for(int i = 0; i < cs.size(); ++i)
+			{
+				if(!StringUtils.isBlank("" + cs.get(i)))
+				{
+					cs.set(i, Character.toUpperCase(cs.get(i)));
+					break;
+				}
+			}
+			return fromCharArrayList(cs);
+		}
+		
+		public static ArrayList<Character> toCharArrayList(String s)
+		{
+			ArrayList<Character> cs = Lists.newArrayList();
+			for(int i = 0; i < s.length(); ++i)
+			{
+				cs.add(s.charAt(i));
+			}
+			return cs;
+		}
+		
+		public static String fromCharArrayList(ArrayList<Character> cs)
+		{
+			String s = "";
+			for(int i = 0; i < cs.size(); ++i)
+			{
+				char c = cs.get(i);
+				s = s + c;
 			}
 			return s;
 		}

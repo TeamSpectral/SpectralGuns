@@ -1,9 +1,12 @@
 package com.spectral.spectral_guns.components;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -23,6 +26,16 @@ public class ComponentGrip extends ComponentGeneric
 		this.recoilMultiplier = recoilMultiplier;
 		this.kickbackMultiplier = kickbackMultiplier;
 		this.requiredTypes = new Type[]{Type.TRIGGER};
+	}
+	
+	@Override
+	public void getTooltip(ArrayList<String2> tooltip)
+	{
+		super.getTooltip(tooltip);
+		tooltip.add(new String2("Instability:", this.MULTIPLIES + this.instabilityMultiplier));
+		tooltip.add(new String2("Recoil:", this.MULTIPLIES + this.recoilMultiplier));
+		tooltip.add(new String2("Kickback:", this.MULTIPLIES + this.kickbackMultiplier));
+		tooltip.add(new String2("", EnumChatFormatting.DARK_RED + "(high temperatures will hurt user)"));
 	}
 	
 	@Override

@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.ComponentEvents;
 
 public abstract class ComponentMagazineStandard extends ComponentMagazine
@@ -31,6 +33,30 @@ public abstract class ComponentMagazineStandard extends ComponentMagazine
 	public int projectileCount(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
 		return this.projectileCount;
+	}
+	
+	@Override
+	public String projectileName()
+	{
+		try
+		{
+			World world = M.proxy.world(0);
+			EntityPlayer player = M.proxy.player();
+			if(world == null)
+			{
+				world = player.worldObj;
+			}
+			String s = this.projectile(-1, new ItemStack(M.gun), world, player).getName();
+			if(StatCollector.translateToLocal("entity.generic.name").equals(s))
+			{
+				throw new Throwable("No name for entity");
+			}
+			return s;
+		}
+		catch(Throwable e)
+		{
+			return StatCollector.translateToLocal(this.ammoItem().getUnlocalizedName() + ".name");
+		}
 	}
 	
 	@Override
