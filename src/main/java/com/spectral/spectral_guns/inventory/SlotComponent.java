@@ -52,7 +52,7 @@ public class SlotComponent extends Slot
 				{
 					for(int slot : type.slots)
 					{
-						if(slot == this.slotNumber)
+						if(slot + this.inventory().getSizeInventory() - this.inventory().getComponentSlots() == this.slotNumber)
 						{
 							type1 = type;
 							break loop;
