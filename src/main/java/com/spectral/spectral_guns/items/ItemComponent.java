@@ -123,53 +123,54 @@ public class ItemComponent extends Item
 		
 		EnumChatFormatting incapatible = EnumChatFormatting.DARK_RED;
 		EnumChatFormatting required = EnumChatFormatting.DARK_BLUE;
-			if(this.c.getIncapatible().size() > 0)
+		if(this.c.getIncapatible().size() > 0)
+		{
+			tooltip.add(incapatible + "Incapatible Components:");
+			for(Component component : this.c.getIncapatible())
 			{
-				tooltip.add(incapatible + "Incapatible Components:");
-				for(Component component : this.c.getIncapatible())
-				{
-					tooltip.add(incapatible + " - " + new ItemStack(component.item).getDisplayName());
-				}
+				tooltip.add(incapatible + " - " + new ItemStack(component.item).getDisplayName());
 			}
-			if(this.c.getRequired().size() > 0)
+		}
+		if(this.c.getRequired().size() > 0)
+		{
+			tooltip.add(required + "Required Components: ");
+			for(Component component : this.c.getRequired())
 			{
-				for(Component component : this.c.getRequired())
-				{
-					tooltip.add(required + " - " + new ItemStack(component.item).getDisplayName());
-				}
+				tooltip.add(required + " - " + new ItemStack(component.item).getDisplayName());
 			}
-			if(this.c.getIncapatibleTypes().size() > 0)
+		}
+		if(this.c.getIncapatibleTypes().size() > 0)
+		{
+			tooltip.add(incapatible + "Incapatible Types:");
+			for(Type type : this.c.getIncapatibleTypes())
 			{
-				tooltip.add(incapatible + "Incapatible Types:");
-				for(Type type : this.c.getIncapatibleTypes())
-				{
-					tooltip.add(incapatible + " - " + Stuff.Strings.capitalize(type.name().toLowerCase()));
-				}
+				tooltip.add(incapatible + " - " + Stuff.Strings.capitalize(type.name().toLowerCase()));
 			}
-			if(requiredTypes.size() > 0)
+		}
+		if(requiredTypes.size() > 0)
+		{
+			tooltip.add(required + "Required Types:");
+			for(Type type : requiredTypes)
 			{
-				tooltip.add(required + "Required Types:");
-				for(Type type : requiredTypes)
-				{
-					tooltip.add(required + " - " + Stuff.Strings.capitalize(type.name().toLowerCase()));
-				}
+				tooltip.add(required + " - " + Stuff.Strings.capitalize(type.name().toLowerCase()));
 			}
-			if(this.c.getIncapatibleMats().size() > 0)
+		}
+		if(this.c.getIncapatibleMats().size() > 0)
+		{
+			tooltip.add(incapatible + "Incapatible Materials:");
+			for(ComponentMaterial material : this.c.getIncapatibleMats())
 			{
-				tooltip.add(incapatible + "Incapatible Materials:");
-				for(ComponentMaterial material : this.c.getIncapatibleMats())
-				{
-					tooltip.add(incapatible + " - " + material.getDisplayName(this.c.type, this.c));
-				}
+				tooltip.add(incapatible + " - " + material.getDisplayName(this.c.type, this.c));
 			}
-			if(this.c.getRequiredMats().size() > 0)
+		}
+		if(this.c.getRequiredMats().size() > 0)
+		{
+			tooltip.add(required + "Required Materials:");
+			for(ComponentMaterial material : this.c.getRequiredMats())
 			{
-				tooltip.add(required + "Required Materials:");
-				for(ComponentMaterial material : this.c.getRequiredMats())
-				{
-					tooltip.add(required + " - " + material.getDisplayName(this.c.type, this.c));
-				}
+				tooltip.add(required + " - " + material.getDisplayName(this.c.type, this.c));
 			}
+		}
 	}
 	
 	@Override
