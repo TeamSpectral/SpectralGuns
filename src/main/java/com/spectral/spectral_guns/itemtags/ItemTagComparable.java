@@ -25,6 +25,13 @@ public abstract class ItemTagComparable<W, T extends NBTBase> extends ItemTagBas
 	public void add(ItemStack stack, W amount)
 	{
 		NBTTagCompound compound = this.getCompound(stack, true);
+		this.wobbleCheck(stack);
+		this.add(compound, amount);
+	}
+	
+	public void add(ItemStack stackForWobble, NBTTagCompound compound, W amount)
+	{
+		this.wobbleCheck(stackForWobble);
 		this.add(compound, amount);
 	}
 	

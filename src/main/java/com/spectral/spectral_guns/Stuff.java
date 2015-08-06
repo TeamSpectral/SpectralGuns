@@ -604,12 +604,39 @@ public class Stuff
 		}
 		
 		@SideOnly(Side.CLIENT)
-		public static void setItemToRender(ItemStack stack)
+		public static void setItemToRender(ItemStack stack) throws IllegalArgumentException, IllegalAccessException
 		{
 			Minecraft mc = Minecraft.getMinecraft();
 			ItemRenderer ir = mc.getItemRenderer();
-			Field[] fs = ItemRenderer.class.getFields();
-			return;
+			Field[] fs = ItemRenderer.class.getDeclaredFields();
+			Field f = null;
+			if(true)
+			{
+				int i = 3;
+				String s = fs[i].getGenericType().getTypeName();
+				if(s.equals(ItemStack.class.getName()))
+				{
+					f = fs[i];
+				}
+			}
+			for(int i = 0; i < fs.length; ++i)
+			{
+				String s = fs[i].getGenericType().getTypeName();
+				if(s.equals(ItemStack.class.getName()))
+				{
+					f = fs[i];
+				}
+			}
+			if(f != null)
+			{
+				f.setAccessible(true);
+				f.set(ir, stack);
+				if(f.get(ir).equals(stack))
+				{
+					return; //just for debug
+				}
+			}
+			throw new IllegalArgumentException();
 		}
 	}
 	

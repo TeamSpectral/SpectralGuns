@@ -15,7 +15,7 @@ public abstract class ItemTagBase<W, T extends NBTBase>
 	public ItemTagBase(String key, W defaultValue, boolean noWobble)
 	{
 		this.key = key;
-		this.noWobble = false;
+		this.noWobble = noWobble;
 		if(defaultValue != null)
 		{
 			this.defaultValue = this.rawToNBTTag(defaultValue);
@@ -60,9 +60,15 @@ public abstract class ItemTagBase<W, T extends NBTBase>
 	
 	public void set(ItemStack stack, W value)
 	{
+		this.wobbleCheck(stack);
 		NBTTagCompound compound = this.getCompound(stack, true);
 		this.set(compound, value);
 	}
+	
+	public void set(ItemStack stackForWobble, NBTTagCompound compound, W value)
+	{
+		this.wobbleCheck(stackForWobble);
+		this.set(compound, value);
 	}
 	
 	public void set(NBTTagCompound compound, W value)
@@ -75,6 +81,30 @@ public abstract class ItemTagBase<W, T extends NBTBase>
 		else
 		{
 			this.remove(compound);
+		}
+	}
+	
+	public void wobbleCheck(ItemStack stack)
+	{
+		if(this.noWobble)
+		{
+			noWobble(stack);
+		}
+	}
+	
+	/**
+	 * must be run every time before a value is set to prevent wobble
+	 */
+	public static void noWobble(ItemStack stack)
+	{
+		try
+		{
+			Stuff.Reflection.setItemToRender(stack);
+		}
+		catch(Throwable e)
+		{
+			System.out.println("Anti-wobble procedure failed miserably! This is why reflection sucks so much!!! FFFFFUUUUUUUU!!!!!!!!! (i blame notch)");
+			e.printStackTrace();
 		}
 	}
 	
@@ -158,4 +188,3 @@ public abstract class ItemTagBase<W, T extends NBTBase>
 		return compound;
 	}
 }
-
