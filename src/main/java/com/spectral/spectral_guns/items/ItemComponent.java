@@ -18,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.components.Component.ComponentMaterial;
+import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
 import com.spectral.spectral_guns.components.Component.ComponentTraits;
 import com.spectral.spectral_guns.components.Component.String2;
 import com.spectral.spectral_guns.itemtags.ItemTagDouble;
@@ -81,11 +83,18 @@ public class ItemComponent extends Item
 			mat = EnumChatFormatting.GOLD;
 			break;
 		}
-		tooltip.add(EnumChatFormatting.DARK_GRAY + "Type: " + EnumChatFormatting.WHITE + Stuff.Strings.capitalize(this.c.type.name().toLowerCase()) + EnumChatFormatting.DARK_GRAY);
-		tooltip.add(EnumChatFormatting.DARK_GRAY + "Material: " + mat + this.c.material.getDisplayName(this.c.type, this.c) + EnumChatFormatting.RESET);
+		tooltip.add(EnumChatFormatting.DARK_GRAY + "Type: " + EnumChatFormatting.WHITE + Stuff.Strings.capitalize(this.c.type.name().toLowerCase()));
+		tooltip.add(EnumChatFormatting.DARK_GRAY + "Material: " + mat + this.c.material.getDisplayName(this.c.type, this.c));
 		tooltip.add(EnumChatFormatting.DARK_GRAY + "Durability: " + EnumChatFormatting.WHITE + (this.getMaxDamage() - this.getDamage(stack)) + "/" + this.getMaxDamage());
 		tooltip.add(EnumChatFormatting.DARK_GRAY + "Withstands Temperatures: " + EnumChatFormatting.WHITE + -this.c.material.heatThresholdMin + " to " + this.c.material.heatThresholdMax);
 		tooltip.add(EnumChatFormatting.DARK_GRAY + "Temperature Conductiveness: " + EnumChatFormatting.WHITE + this.c.material.heatLoss);
+		
+		ArrayList<Type> requiredTypes = this.c.getRequiredTypes();
+		if(requiredTypes.size() > 0 && this.c.getTypeConnectedTo() != null)
+		{
+			tooltip.add(EnumChatFormatting.DARK_GRAY + "Connects To: " + EnumChatFormatting.WHITE + Stuff.Strings.capitalize(this.c.getTypeConnectedTo().name().toLowerCase()));
+			requiredTypes.remove(0);
+		}
 		
 		ArrayList<String2> tooltip2 = new ArrayList();
 		this.c.getTooltip(tooltip2, player, player.worldObj);
@@ -101,7 +110,7 @@ public class ItemComponent extends Item
 					continue loop;
 				}
 			}
-			tooltip.add(EnumChatFormatting.DARK_GRAY + s.s1 + EnumChatFormatting.RESET + (StringUtils.isBlank(s.s1) ? "" : " ") + EnumChatFormatting.WHITE + s.s2 + EnumChatFormatting.RESET);
+			tooltip.add(EnumChatFormatting.DARK_GRAY + s.s1 + EnumChatFormatting.RESET + (StringUtils.isBlank(s.s1) ? "" : " ") + EnumChatFormatting.WHITE + s.s2);
 		}
 		
 		for(ComponentTraits trait : this.c.materialTraits())
@@ -111,6 +120,9 @@ public class ItemComponent extends Item
 			tooltip.add(trait.color + "(" + s + ")" + EnumChatFormatting.RESET);
 			//tooltip.add("  " + EnumChatFormatting.DARK_GRAY + EnumChatFormatting.ITALIC + trait.description + EnumChatFormatting.RESET);
 		}
+		
+		EnumChatFormatting incapatible = EnumChatFormatting.DARK_RED;
+		EnumChatFormatting required = EnumChatFormatting.DARK_BLUE;
 			if(this.c.getIncapatible().size() > 0)
 			{
 				tooltip.add(incapatible + "Incapatible Components:");
