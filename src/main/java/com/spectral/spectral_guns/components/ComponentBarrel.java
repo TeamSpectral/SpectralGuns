@@ -23,10 +23,9 @@ public abstract class ComponentBarrel extends ComponentGeneric implements ICompo
 	
 	public ComponentBarrel(String id, String name, ComponentMaterial material, float spread, float velocity, float maxDurability)
 	{
-		super(new String2("barrel_" + id, ""), new String2("barrel." + name, ""), 0.5, 10 * 4 * 4 / 3, maxDurability, Type.BARREL, material);
+		super(new String2("barrel_" + id, ""), new String2("barrel." + name, ""), Type.MAGAZINE, 0.5, 10 * 4 * 4 / 3, maxDurability, Type.BARREL, material);
 		this.spread = spread;
 		this.velocity = velocity;
-		this.requiredTypes = new Type[]{Type.MAGAZINE};
 	}
 	
 	@Override

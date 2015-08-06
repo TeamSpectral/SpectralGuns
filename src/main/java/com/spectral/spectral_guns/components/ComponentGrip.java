@@ -22,11 +22,10 @@ public class ComponentGrip extends ComponentGeneric
 	
 	public ComponentGrip(ComponentMaterial material, float instabilityMultiplier, float recoilMultiplier, float kickbackMultiplier)
 	{
-		super(new String2("grip", ""), new String2("grip", ""), 0.34, 3 * 9 * 1, 4.2F, Type.GRIP, material);
+		super(new String2("grip", ""), new String2("grip", ""), Type.TRIGGER, 0.34, 3 * 9 * 1, 4.2F, Type.GRIP, material);
 		this.instabilityMultiplier = instabilityMultiplier;
 		this.recoilMultiplier = recoilMultiplier;
 		this.kickbackMultiplier = kickbackMultiplier;
-		this.requiredTypes = new Type[]{Type.TRIGGER};
 	}
 	
 	@Override

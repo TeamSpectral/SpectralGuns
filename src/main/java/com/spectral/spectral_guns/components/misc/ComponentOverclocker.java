@@ -19,8 +19,7 @@ public class ComponentOverclocker extends ComponentAddon implements IComponentHe
 {
 	public ComponentOverclocker()
 	{
-		super("overclocker", "overclocker", 0.2, 2 * 3 * 2, 1.2F, ComponentMaterial.GOLD, 5);
-		this.requiredTypes = new Type[]{Type.MAGAZINE};
+		super("overclocker", "overclocker", Type.MAGAZINE, 0.2, 2 * 3 * 2, 1.2F, ComponentMaterial.GOLD, 5);
 	}
 	
 	public float fireRate1 = 0.7F;

@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
@@ -17,23 +18,25 @@ import com.spectral.spectral_guns.items.ItemGun;
 public abstract class ComponentGeneric extends Component
 {
 	final protected String name;
-	protected Component[] required;
-	protected Component[] incapatible;
-	protected Type[] requiredTypes;
-	protected Type[] incapatibleTypes;
-	protected ComponentMaterial[] requiredMats;
-	protected ComponentMaterial[] incapatibleMats;
+	private Component[] required;
+	private Component[] incapatible;
+	private final Type connected;
+	private Type[] requiredTypes;
+	private Type[] incapatibleTypes;
+	private ComponentMaterial[] requiredMats;
+	private ComponentMaterial[] incapatibleMats;
 	final protected double heatLoss;
 	final protected float heatThreshold;
 	final protected float maxDurability;
 	
-	public ComponentGeneric(String2 id, String2 name, double heatLoss, float heatThreshold, float maxDurability, Type type, ComponentMaterial material)
+	public ComponentGeneric(String2 id, String2 name, Type connected, double heatLoss, float heatThreshold, float maxDurability, Type type, ComponentMaterial material)
 	{
 		super(id, type, material);
 		this.name = name.s1 + (type != Type.MISC ? "." + material.getUnlocalizedName(type, this) : "") + name.s2;
 		this.heatLoss = heatLoss;
 		this.heatThreshold = heatThreshold;
 		this.maxDurability = maxDurability;
+		this.connected = connected;
 	}
 	
 	@Override
@@ -42,10 +45,30 @@ public abstract class ComponentGeneric extends Component
 		return this.name;
 	}
 	
+	public void addRequiredComponents(ArrayList<Component> cs)
+	{
+		Stuff.ArraysAndSuch.mixArrays(this.required, Stuff.ArraysAndSuch.arrayListToArray2(cs, new Component[cs.size()]));
+	}
+	
+	public void addRequiredComponent(Component c)
+	{
+		Stuff.ArraysAndSuch.addToArray(this.required, c);
+	}
+	
 	@Override
 	public ArrayList<Component> getRequired()
 	{
 		return ArraysAndSuch.arrayToArrayList(this.required);
+	}
+	
+	public void addIncapatibleComponents(Component[] cs)
+	{
+		Stuff.ArraysAndSuch.mixArrays(this.incapatible, cs);
+	}
+	
+	public void addIncapatibleComponent(Component c)
+	{
+		Stuff.ArraysAndSuch.addToArray(this.incapatible, c);
 	}
 	
 	@Override
@@ -54,10 +77,40 @@ public abstract class ComponentGeneric extends Component
 		return ArraysAndSuch.arrayToArrayList(this.incapatible);
 	}
 	
+	public void addRequiredTypes(Type[] ts)
+	{
+		Stuff.ArraysAndSuch.mixArrays(this.requiredTypes, ts);
+	}
+	
+	public void addRequiredType(Type t)
+	{
+		Stuff.ArraysAndSuch.addToArray(this.requiredTypes, t);
+	}
+	
+	@Override
+	public Type getTypeConnectedTo()
+	{
+		return this.connected;
+	}
+	
 	@Override
 	public ArrayList<Type> getRequiredTypes()
 	{
+		if(this.connected != null)
+		{
+			return ArraysAndSuch.arrayToArrayList(Stuff.ArraysAndSuch.mixArrays(new Type[]{this.connected}, this.requiredTypes));
+		}
 		return ArraysAndSuch.arrayToArrayList(this.requiredTypes);
+	}
+	
+	public void addIncapatibleTypes(Type[] ts)
+	{
+		Stuff.ArraysAndSuch.mixArrays(this.incapatibleTypes, ts);
+	}
+	
+	public void addIncapatibleType(Type t)
+	{
+		Stuff.ArraysAndSuch.addToArray(this.incapatibleTypes, t);
 	}
 	
 	@Override
@@ -66,10 +119,30 @@ public abstract class ComponentGeneric extends Component
 		return ArraysAndSuch.arrayToArrayList(this.incapatibleTypes);
 	}
 	
+	public void addRequiredMats(Type[] ms)
+	{
+		Stuff.ArraysAndSuch.mixArrays(this.requiredMats, ms);
+	}
+	
+	public void addRequiredMat(Type m)
+	{
+		Stuff.ArraysAndSuch.addToArray(this.requiredMats, m);
+	}
+	
 	@Override
 	public ArrayList<ComponentMaterial> getRequiredMats()
 	{
 		return ArraysAndSuch.arrayToArrayList(this.requiredMats);
+	}
+	
+	public void addIncapatibleMats(Type[] ms)
+	{
+		Stuff.ArraysAndSuch.mixArrays(this.incapatibleMats, ms);
+	}
+	
+	public void addIncapatibleMat(Type m)
+	{
+		Stuff.ArraysAndSuch.addToArray(this.incapatibleMats, m);
 	}
 	
 	@Override

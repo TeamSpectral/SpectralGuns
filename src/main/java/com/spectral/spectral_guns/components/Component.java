@@ -279,6 +279,8 @@ public abstract class Component
 	
 	public abstract ArrayList<Component> getIncapatible();
 	
+	public abstract Type getTypeConnectedTo();
+	
 	public abstract ArrayList<Type> getRequiredTypes();
 	
 	public abstract ArrayList<Type> getIncapatibleTypes();

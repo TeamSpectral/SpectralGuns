@@ -17,7 +17,6 @@ import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.audio.MovingSoundPublic;
-import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
@@ -45,7 +44,7 @@ public class ComponentMagazineLaser extends ComponentMagazine
 		this.color = color;
 		this.battery = battery;
 		this.kickback = kickback;
-		this.required = new Component[]{M.barrel_thin_diamond};
+		this.addRequiredComponent(M.barrel_thin_diamond);
 	}
 	
 	@Override

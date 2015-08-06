@@ -25,10 +25,9 @@ public class ComponentTriggerMechanism extends ComponentGeneric implements IComp
 	
 	protected ComponentTriggerMechanism(String2 id, String2 name, ComponentMaterial material, float delay, double heating)
 	{
-		super(new String2("trigger", "").add(id), new String2("trigger", "").add(name), 0.4, 3 * 5 * 5 / 2, 3.2F, Type.TRIGGER, material);
+		super(new String2("trigger", "").add(id), new String2("trigger", "").add(name), Type.MAGAZINE, 0.4, 3 * 5 * 5 / 2, 3.2F, Type.TRIGGER, material);
 		this.delay = delay;
 		this.heating = heating;
-		this.requiredTypes = new Type[]{Type.MAGAZINE};
 	}
 	
 	public float magazineHeat = 0.25F;
