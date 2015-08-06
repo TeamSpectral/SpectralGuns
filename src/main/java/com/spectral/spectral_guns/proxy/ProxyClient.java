@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
+import com.spectral.spectral_guns.VersionChecker;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
@@ -43,6 +44,7 @@ public class ProxyClient extends ProxyCommon
 		MinecraftForge.EVENT_BUS.register(new HandlerClient());
 		FMLCommonHandler.instance().bus().register(new HandlerClientFML());
 		HandlerClientFML.init();
+		VersionChecker.addUpdate();
 	}
 	
 	@Override
