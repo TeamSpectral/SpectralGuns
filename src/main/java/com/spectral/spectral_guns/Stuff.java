@@ -610,13 +610,13 @@ public class Stuff
 			ItemRenderer ir = mc.getItemRenderer();
 			Field[] fs = ItemRenderer.class.getDeclaredFields();
 			Field f = null;
+			int a = 3;
 			if(true)
 			{
-				int i = 3;
-				String s = fs[i].getGenericType().getTypeName();
+				String s = fs[a].getGenericType().getTypeName();
 				if(s.equals(ItemStack.class.getName()))
 				{
-					f = fs[i];
+					f = fs[a];
 				}
 			}
 			for(int i = 0; i < fs.length; ++i)
@@ -631,10 +631,7 @@ public class Stuff
 			{
 				f.setAccessible(true);
 				f.set(ir, stack);
-				if(f.get(ir).equals(stack))
-				{
-					return; //just for debug
-				}
+				return;
 			}
 			throw new IllegalArgumentException();
 		}
