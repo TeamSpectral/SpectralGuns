@@ -88,16 +88,16 @@ public class ComponentMagazineShuriken extends ComponentMagazineStandard
 		switch(this.material)
 		{
 		case WOOD:
-			magazine = M.barrel_normal_wood.item;
+			barrel = M.barrel_normal_wood.item;
 			break;
 		case IRON:
-			magazine = M.barrel_normal_iron.item;
+			barrel = M.barrel_normal_iron.item;
 			break;
 		case GOLD:
-			magazine = M.barrel_normal_gold.item;
+			barrel = M.barrel_normal_gold.item;
 			break;
 		case DIAMOND:
-			magazine = M.barrel_normal_diamond.item;
+			barrel = M.barrel_normal_diamond.item;
 			break;
 		}
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this.item), new Object[]{"bMb", "BSP", "bJb", 'b', bar, 'M', magazine, 'B', barrel, 'S', Items.stick, 'P', Item.getItemFromBlock(Blocks.piston), 'J', Item.getItemFromBlock(Blocks.jukebox)}));
