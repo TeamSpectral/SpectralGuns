@@ -74,13 +74,17 @@ public class TileEntityGunWorkbench extends TileEntity implements IInteractionOb
 	
 	public float getErrorFade()
 	{
+		if(this.errorFade > 20)
+		{
+			return 1;
+		}
 		return this.errorFade / 20F;
 	}
 	
 	public void errorMessage(String errorMessage)
 	{
 		this.errorMessage = errorMessage;
-		this.errorFade = 20;
+		this.errorFade = 40;
 	}
 	
 	/**
