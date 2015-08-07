@@ -284,7 +284,7 @@ public abstract class ComponentGeneric extends Component
 			if(player.ticksExisted % 10 == 1)
 			{
 				int damage = 1;
-				if(this.hasMaterialTrait(ComponentTraits.BURNS))
+				if(this.hasMaterialTrait(ComponentTraits.BURNS) && this.heat(slot, stack) > 0)
 				{
 					damage += burnDamage;
 					if(world.rand.nextFloat() <= (float)burnIgniteChance1 / (float)burnIgniteChance2)
