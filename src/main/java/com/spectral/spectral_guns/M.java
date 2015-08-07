@@ -249,7 +249,7 @@ public class M
 		}
 		
 		@Override
-		public void recipe()
+		public void registerRecipe()
 		{
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 64), new Object[]{"sss", "sGs", "gCg", 's', Items.snowball, 'g', "gearWood", 'C', M.container, 'G', Items.gunpowder}));
 		}
@@ -263,7 +263,7 @@ public class M
 		}
 		
 		@Override
-		public void recipe()
+		public void registerRecipe()
 		{
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 64), new Object[]{"SSS", "SGS", "gCg", 'S', Blocks.snow, 'g', "gearIron", 'C', M.container, 'G', Items.gunpowder}));
 		}
@@ -277,7 +277,7 @@ public class M
 		}
 		
 		@Override
-		public void recipe()
+		public void registerRecipe()
 		{
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 64), new Object[]{"GIG", "FLF", "gBg", 'G', "gearIron", 'I', "blockIron", 'F', Items.fire_charge, 'L', Items.lava_bucket, 'g', Items.gunpowder, 'B', M.barrel_normal_iron}));
 		}
@@ -291,7 +291,7 @@ public class M
 		}
 		
 		@Override
-		public void recipe()
+		public void registerRecipe()
 		{
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 1), new Object[]{"FFF", "FFF", "iCi", 'F', "food", 'i', "ingotIron", 'C', M.container}));
 		}

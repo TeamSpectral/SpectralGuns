@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
 
-public abstract class ItemAmmo extends Item
+public abstract class ItemAmmo extends Item implements IItemWithRecipe
 {
 	public final int multiplier;
 	
@@ -24,7 +24,8 @@ public abstract class ItemAmmo extends Item
 	
 	public abstract Item ammo();
 	
-	public abstract void recipe();
+	@Override
+	public abstract void registerRecipe();
 	
 	public static boolean itemHasItemAmmo(Item item)
 	{

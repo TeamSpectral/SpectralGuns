@@ -431,15 +431,6 @@ public class ComponentEvents
 		return false;
 	}
 	
-	public static void registerRecipes()
-	{
-		ArrayList<Component> components = ComponentRegister.getAll();
-		for(int i = 0; i < components.size(); ++i)
-		{
-			components.get(i).registerRecipe();
-		}
-	}
-	
 	public static int amount(ItemStack gun, ItemStack ammo)
 	{
 		int amount = 1;

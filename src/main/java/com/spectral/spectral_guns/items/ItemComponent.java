@@ -25,7 +25,7 @@ import com.spectral.spectral_guns.components.Component.String2;
 import com.spectral.spectral_guns.itemtags.ItemTagDouble;
 import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 
-public class ItemComponent extends Item
+public class ItemComponent extends Item implements IItemWithRecipe
 {
 	public final Component c;
 	private final static CreativeTabs theTab = M.tabCore;
@@ -203,5 +203,11 @@ public class ItemComponent extends Item
 			return true;
 		}
 		return super.getIsRepairable(toRepair, repair);
+	}
+	
+	@Override
+	public void registerRecipe()
+	{
+		this.c.registerRecipe();
 	}
 }

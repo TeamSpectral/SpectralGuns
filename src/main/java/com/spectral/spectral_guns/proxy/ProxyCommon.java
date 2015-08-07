@@ -33,7 +33,6 @@ import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
 import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.blocks.BlockOre2;
-import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
 import com.spectral.spectral_guns.entity.projectile.EntityLargeFireball2;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
@@ -43,6 +42,7 @@ import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
 import com.spectral.spectral_guns.event.HandlerCommon;
 import com.spectral.spectral_guns.event.HandlerCommonFML;
 import com.spectral.spectral_guns.gui.GuiHandler;
+import com.spectral.spectral_guns.items.IItemWithRecipe;
 import com.spectral.spectral_guns.packet.PacketItemName;
 import com.spectral.spectral_guns.packet.PacketKey;
 import com.spectral.spectral_guns.packet.PacketPlayerData;
@@ -104,7 +104,19 @@ public abstract class ProxyCommon
 			RecipeSorter.register(References.MODID + ":" + "gun_recipe", RecipeGun.class, Category.SHAPELESS, "after:minecraft:shaped");
 			GameRegistry.addRecipe(new RecipeGun());
 		}
-		ComponentEvents.registerRecipes();
+		Iterator<Id> ids = M.idsToBeRegistered.iterator();
+		while(ids.hasNext())
+		{
+			Id id = ids.next();
+			if(id != null)
+			{
+				Object item = M.getItem(id);
+				if(item instanceof IItemWithRecipe)
+				{
+					((IItemWithRecipe)item).registerRecipe();
+				}
+			}
+		}
 		this.registerNugget(M.iron_nugget, Items.iron_ingot);
 		this.registerNugget(M.ruby, Item.getItemFromBlock(M.ruby_block));
 		this.registerGear(M.gear_wood, "plankWood");
@@ -161,7 +173,7 @@ public abstract class ProxyCommon
 		}
 	}
 	
-	private void registerNugget(Item nugget, Item bar)
+	public void registerNugget(Item nugget, Item bar)
 	{
 		if(M.visible(nugget) && M.visible(bar))
 		{
@@ -170,7 +182,7 @@ public abstract class ProxyCommon
 		}
 	}
 	
-	private void registerGear(Item gear, String bar)
+	public void registerGear(Item gear, String bar)
 	{
 		if(M.visible(gear))
 		{
