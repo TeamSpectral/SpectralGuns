@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import com.spectral.spectral_guns.Stuff;
@@ -96,7 +97,7 @@ public abstract class ComponentGeneric extends Component
 	@Override
 	public ArrayList<Type> getRequiredTypes()
 	{
-		if(this.connected != null)
+		if(this.connected != null && this.requiredTypes != null)
 		{
 			return ArraysAndSuch.arrayToArrayList(Stuff.ArraysAndSuch.mixArrays(new Type[]{this.connected}, this.requiredTypes));
 		}
