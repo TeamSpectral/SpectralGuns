@@ -344,10 +344,10 @@ public class M
 	public static final ComponentMagazineLaser magazine_laser_gold_green = registerComponent(new ComponentMagazineLaser(ComponentMaterial.GOLD, LaserColor.GREEN, 8, 4, 0.01F));
 	public static final ComponentMagazineLaser magazine_laser_diamond_green = registerComponent(new ComponentMagazineLaser(ComponentMaterial.DIAMOND, LaserColor.GREEN, 16, 8, 0.1F));
 	
-	public static final ComponentMagazineShuriken magazine_shuriken_wood = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.WOOD, 4, 0.01F, 0.01F * 5.6F, 1.4F, 3F, 1, 1));
-	public static final ComponentMagazineShuriken magazine_shuriken_iron = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.IRON, 8, 0.08F, 0.08F * 5.6F, 1.4F, 6F, 1, 2));
-	public static final ComponentMagazineShuriken magazine_shuriken_gold = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.GOLD, 16, 0.16F, 0.16F * 5.6F, 1.4F, 12F, 1, 3));
-	public static final ComponentMagazineShuriken magazine_shuriken_diamond = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.DIAMOND, 32, 0.32F, 0.32F * 5.6F, 1.4F, 24, 1, 4));
+	public static final ComponentMagazineShuriken magazine_shuriken_wood = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.WOOD, 4, 0.01F, 0.01F * 5.6F, 1.9F, 1F, 1, 1));
+	public static final ComponentMagazineShuriken magazine_shuriken_iron = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.IRON, 8, 0.08F, 0.08F * 5.6F, 1.9F, 2F, 1, 2));
+	public static final ComponentMagazineShuriken magazine_shuriken_gold = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.GOLD, 16, 0.16F, 0.16F * 5.6F, 1.9F, 4F, 1, 3));
+	public static final ComponentMagazineShuriken magazine_shuriken_diamond = registerComponent(new ComponentMagazineShuriken(ComponentMaterial.DIAMOND, 32, 0.32F, 0.32F * 5.6F, 1.9F, 6, 1, 4));
 	
 	public static final ComponentTriggerMechanism trigger_wood = registerComponent(new ComponentTriggerMechanism(ComponentMaterial.WOOD, 14F, 5));
 	public static final ComponentTriggerMechanism trigger_wood_redstone = registerComponent(new ComponentTriggerMechanismBoosted(trigger_wood));

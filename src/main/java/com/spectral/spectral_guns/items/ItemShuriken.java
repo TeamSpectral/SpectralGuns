@@ -40,7 +40,7 @@ public class ItemShuriken extends Item
 		{
 			inaccuracy = 0.3;
 		}
-		EntityShuriken shuriken = new EntityShuriken(worldIn, player, f / 2 + 1F + Randomization.r((float)inaccuracy / 2));
+		EntityShuriken shuriken = new EntityShuriken(worldIn, player, f / 2.4F + 0.7F + Randomization.r((float)inaccuracy / 2));
 		shuriken.motionX += Randomization.r(inaccuracy);
 		shuriken.motionY += Randomization.r(inaccuracy);
 		shuriken.motionZ += Randomization.r(inaccuracy);
