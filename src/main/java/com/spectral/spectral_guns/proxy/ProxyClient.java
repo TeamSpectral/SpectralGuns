@@ -25,7 +25,7 @@ import com.spectral.spectral_guns.VersionChecker;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
-import com.spectral.spectral_guns.entity.projectile.EntitySmallFireball2;
+import com.spectral.spectral_guns.entity.projectile.EntityFireball2;
 import com.spectral.spectral_guns.event.HandlerClient;
 import com.spectral.spectral_guns.event.HandlerClientFML;
 import com.spectral.spectral_guns.render.entity.RenderFood;
@@ -84,7 +84,7 @@ public class ProxyClient extends ProxyCommon
 	
 	private void entityRender(RenderManager rm, RenderItem ri)
 	{
-		RenderingRegistry.registerEntityRenderingHandler(EntitySmallFireball2.class, new RenderFireball(rm, 0.3F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireball2.class, new RenderFireball(rm, 0.3F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFood.class, new RenderFood(rm, ri));
 		RenderingRegistry.registerEntityRenderingHandler(EntityShuriken.class, new RenderShuriken(rm, ri));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLaser.class, new RenderNull(rm));

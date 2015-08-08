@@ -10,13 +10,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
-import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
@@ -32,9 +29,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.Randomization;
 
-public class EntityShuriken extends EntityArrow implements IProjectile, IEntityAdditionalSpawnData
+public class EntityShuriken extends EntityArrow implements IProjectile, IEntityAdditionalSpawnData, IEntityGunProjectile
 {
 	private int xTile = -1;
 	private int yTile = -1;
@@ -50,6 +48,7 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 	public float spin = 0;
 	public float spinVelocity;
 	public float rotationRoll = 90;
+	private double mass = 1;
 	
 	public EntityShuriken(World worldIn)
 	{
@@ -379,20 +378,24 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 		}
 	}
 	
+	private double f2 = 0;
+	private double f3 = 0;
+	private double f4 = 0;
+	
 	protected float[] onImpact(MovingObjectPosition pos, IBlockState iblockstate)
 	{
-		float f2 = 0;
-		float f3 = 0;
-		float f4 = 0;
+		this.f2 = 0;
+		this.f3 = 0;
+		this.f4 = 0;
 		
 		if(pos.entityHit != null)
 		{
-			f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-			int k = MathHelper.ceiling_double_int(f2 * this.damage);
+			this.f2 = this.getSpeed();
+			double k = this.f2 * this.getMass() + this.damage * (this.f2 > 0.1 ? (this.f2 - 0.1) / 2 + 0.1 : 0.1);
 			
 			if(this.getIsCritical())
 			{
-				k += this.rand.nextInt(k / 2 + 2);
+				k += this.rand.nextDouble() * (k / 2 + 1);
 			}
 			
 			DamageSource damagesource;
@@ -410,42 +413,31 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 			{
 				((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;
 			}
-			if(pos.entityHit.attackEntityFrom(damagesource, (float)k / 2))
+			GunProjectileDamageHandler.putDamage(pos.entityHit, damagesource, k / 2, new GunProjectileDamageHandler.ConsumerDamageDealt()
 			{
-				if(pos.entityHit instanceof EntityLivingBase)
+				@Override
+				public void action(Entity entityHit, DamageSource ds, double amount)
 				{
-					EntityLivingBase entitylivingbase = (EntityLivingBase)pos.entityHit;
-					
-					f4 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-					
-					float knockback = -0.5F;
-					
-					if(f4 > 0.0F)
+					if(entityHit instanceof EntityLivingBase)
 					{
-						pos.entityHit.addVelocity(this.motionX * knockback * 0.6000000238418579D / f4, 0.1D, this.motionZ * knockback * 0.6000000238418579D / f4);
+						EntityLivingBase entitylivingbase = (EntityLivingBase)entityHit;
+						
+						EntityShuriken.this.f4 = MathHelper.sqrt_double(EntityShuriken.this.motionX * EntityShuriken.this.motionX + EntityShuriken.this.motionZ * EntityShuriken.this.motionZ);
+						
+						float knockback = -0.5F;
+						
+						if(EntityShuriken.this.f4 > 0.0F)
+						{
+							entityHit.addVelocity(EntityShuriken.this.motionX * knockback * 0.6000000238418579D / EntityShuriken.this.f4, 0.1D, EntityShuriken.this.motionZ * knockback * 0.6000000238418579D / EntityShuriken.this.f4);
+						}
 					}
 					
-					if(this.shootingEntity != null && pos.entityHit != this.shootingEntity && pos.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP)
-					{
-						((EntityPlayerMP)this.shootingEntity).playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(6, 0.0F));
-					}
+					EntityShuriken.this.playSound("random.bowhit", 1.1F, 2.2F / (EntityShuriken.this.rand.nextFloat() * 0.2F + 0.9F));
 				}
-				
-				this.playSound("random.bowhit", 1.1F, 2.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
-				
-				if(!(pos.entityHit instanceof EntityEnderman))
-				{
-					this.setDead();
-				}
-			}
-			else
+			});
+			if(!this.worldObj.isRemote)
 			{
-				this.motionX *= 0.10000000149011612D;
-				this.motionY *= 0.10000000149011612D;
-				this.motionZ *= 0.10000000149011612D;
-				// this.rotationYaw += 180.0F;
-				// this.prevRotationYaw += 180.0F;
-				this.ticksInAir = 0;
+				this.setDead();
 			}
 		}
 		else
@@ -460,10 +452,10 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 			this.motionX = (float)(pos.hitVec.xCoord - this.posX);
 			this.motionY = (float)(pos.hitVec.yCoord - this.posY);
 			this.motionZ = (float)(pos.hitVec.zCoord - this.posZ);
-			f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-			this.posX -= this.motionX / f3 * 0.05000000074505806D;
-			this.posY -= this.motionY / f3 * 0.05000000074505806D;
-			this.posZ -= this.motionZ / f3 * 0.05000000074505806D;
+			this.f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+			this.posX -= this.motionX / this.f3 * 0.05000000074505806D;
+			this.posY -= this.motionY / this.f3 * 0.05000000074505806D;
+			this.posZ -= this.motionZ / this.f3 * 0.05000000074505806D;
 			this.playSound("random.bowhit", 0.2F, 2.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 			this.inGround = true;
 			this.arrowShake = 7;
@@ -474,7 +466,7 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 				this.inTile.onEntityCollidedWithBlock(this.worldObj, blockpos1, iblockstate, this);
 			}
 		}
-		return new float[]{f2, f3, f4};
+		return new float[]{(float)this.f2, (float)this.f3, (float)this.f4};
 	}
 	
 	@Override
@@ -621,5 +613,43 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 		{
 			this.readFromNBT(compound);
 		}
+	}
+	
+	@Override
+	public void setMass(double mass)
+	{
+		this.setSize(this.width / (float)this.mass, this.height / (float)this.mass);
+		this.mass = mass;
+		this.setSize(this.width * (float)this.mass, this.height * (float)this.mass);
+	}
+	
+	@Override
+	public void setSpeed(double velocity)
+	{
+		Stuff.Coordinates3D.velocity(this, Stuff.Coordinates3D.stabilize(Stuff.Coordinates3D.velocity(this), velocity));
+	}
+	
+	@Override
+	public void setForce(double force)
+	{
+		this.setSpeed(force / this.getMass());
+	}
+	
+	@Override
+	public double getMass()
+	{
+		return this.mass;
+	}
+	
+	@Override
+	public double getSpeed()
+	{
+		return Stuff.Coordinates3D.distance(Stuff.Coordinates3D.velocity(this));
+	}
+	
+	@Override
+	public double getForce()
+	{
+		return this.getSpeed() * this.getMass();
 	}
 }

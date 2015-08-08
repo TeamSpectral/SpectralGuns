@@ -15,7 +15,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.entity.projectile.EntitySmallFireball2;
+import com.spectral.spectral_guns.entity.projectile.EntityFireball2;
 import com.spectral.spectral_guns.items.ItemGun;
 
 public final class ComponentMagazineSmallFireball extends ComponentMagazineStandard
@@ -28,7 +28,7 @@ public final class ComponentMagazineSmallFireball extends ComponentMagazineStand
 	@Override
 	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		return new EntitySmallFireball2(world, player, 0, 0, 0)
+		return new EntityFireball2(world, player, 0, 0, 0)
 		{
 			@Override
 			public boolean isInRangeToRenderDist(double distance)

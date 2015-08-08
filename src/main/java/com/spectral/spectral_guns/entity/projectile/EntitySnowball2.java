@@ -1,6 +1,7 @@
 package com.spectral.spectral_guns.entity.projectile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,17 +12,16 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-import com.spectral.spectral_guns.Stuff.Coordinates3D;
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 
-public class EntitySnowball2 extends EntitySnowball implements IEntityAdditionalSpawnData
+public class EntitySnowball2 extends EntitySnowball implements IEntityAdditionalSpawnData, IEntityGunProjectile
 {
-	public int damage = 2;
+	private double mass = 1;
 	
 	public EntitySnowball2(World world)
 	{
@@ -41,7 +41,7 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 	@Override
 	protected void onImpact(MovingObjectPosition pos)
 	{
-		float damage = 0.5F;
+		double damage = this.getMass();
 		
 		if(pos.entityHit != null)
 		{
@@ -51,8 +51,7 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 			}
 		}
 		
-		double m = Coordinates3D.distance(new Vec3(this.motionX, this.motionY, this.motionZ)) * 2;
-		damage *= m - 0.3;
+		damage *= this.getSpeed();
 		
 		if(pos.entityHit != null)
 		{
@@ -68,8 +67,6 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 			}
 		}
 		
-		damage *= this.damage / 2;
-		
 		if(damage < 0)
 		{
 			damage = 0;
@@ -84,28 +81,30 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 		
 		if(pos.entityHit != null)
 		{
-			if(pos.entityHit instanceof EntityLivingBase)
+			GunProjectileDamageHandler.putDamage(pos.entityHit, DamageSource.causeThrownDamage(this, this.getThrower()), damage, new GunProjectileDamageHandler.ConsumerDamageDealt()
 			{
-				((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;
-			}
-			pos.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), damage);
-			if(pos.entityHit instanceof EntityLivingBase)
-			{
-				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.digSlowdown.id, (int)(this.rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)this.rand.nextFloat(), false, false));
-				((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, (int)(this.rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)this.rand.nextFloat(), false, false));
-			}
-			pos.entityHit.extinguish();
-			float f = 0.01F;
-			pos.entityHit.addVelocity(this.motionX * f, this.motionY * f, this.motionZ * f);
-			
-			if(pos.entityHit instanceof EntityPlayer)
-			{
-				ExtendedPlayer propsP = ExtendedPlayer.get((EntityPlayer)pos.entityHit);
-				for(int i2 = 0; i2 < (int)Math.ceil(this.damage); ++i2)
+				@Override
+				public void action(Entity entityHit, DamageSource ds, double amount)
 				{
-					propsP.snowball();
+					if(entityHit instanceof EntityLivingBase)
+					{
+						((EntityLivingBase)entityHit).addPotionEffect(new PotionEffect(Potion.digSlowdown.id, (int)(EntitySnowball2.this.rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)EntitySnowball2.this.rand.nextFloat(), false, false));
+						((EntityLivingBase)entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, (int)(EntitySnowball2.this.rand.nextFloat() * (2 / 3 * 20) + 20 / 3), (int)EntitySnowball2.this.rand.nextFloat(), false, false));
+					}
+					entityHit.extinguish();
+					float f = 0.01F;
+					entityHit.addVelocity(EntitySnowball2.this.motionX * f, EntitySnowball2.this.motionY * f, EntitySnowball2.this.motionZ * f);
+					
+					if(entityHit instanceof EntityPlayer)
+					{
+						ExtendedPlayer propsP = ExtendedPlayer.get((EntityPlayer)entityHit);
+						for(int i2 = 0; i2 < (int)Math.ceil(amount); ++i2)
+						{
+							propsP.snowball();
+						}
+					}
 				}
-			}
+			});
 		}
 		
 		int h = (int)Math.ceil(16 * damage);
@@ -154,5 +153,43 @@ public class EntitySnowball2 extends EntitySnowball implements IEntityAdditional
 		{
 			this.readEntityFromNBT(compound);
 		}
+	}
+	
+	@Override
+	public void setMass(double mass)
+	{
+		this.setSize(this.width / (float)this.mass, this.height / (float)this.mass);
+		this.mass = mass;
+		this.setSize(this.width * (float)this.mass, this.height * (float)this.mass);
+	}
+	
+	@Override
+	public void setSpeed(double velocity)
+	{
+		Stuff.Coordinates3D.velocity(this, Stuff.Coordinates3D.stabilize(Stuff.Coordinates3D.velocity(this), velocity));
+	}
+	
+	@Override
+	public void setForce(double force)
+	{
+		this.setSpeed(force / this.getMass());
+	}
+	
+	@Override
+	public double getMass()
+	{
+		return this.mass;
+	}
+	
+	@Override
+	public double getSpeed()
+	{
+		return Stuff.Coordinates3D.distance(Stuff.Coordinates3D.velocity(this));
+	}
+	
+	@Override
+	public double getForce()
+	{
+		return this.getSpeed() * this.getMass();
 	}
 }

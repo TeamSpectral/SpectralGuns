@@ -1,6 +1,7 @@
 package com.spectral.spectral_guns.entity.projectile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntitySmallFireball;
@@ -16,24 +17,28 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 
-public class EntitySmallFireball2 extends EntitySmallFireball implements IEntityAdditionalSpawnData
+public class EntityFireball2 extends EntitySmallFireball implements IEntityAdditionalSpawnData, IEntityGunProjectile
 {
 	public boolean hasBounced = false;
+	private double mass = 2;
+	public double damage = 3;
+	public int burn = 5;
 	
-	public EntitySmallFireball2(World world)
+	public EntityFireball2(World world)
 	{
 		super(world);
 		this.setSize(this.width * 2, this.height * 2);
 	}
 	
-	public EntitySmallFireball2(World world, EntityLivingBase shooter, double accelX, double accelY, double accelZ)
+	public EntityFireball2(World world, EntityLivingBase shooter, double accelX, double accelY, double accelZ)
 	{
 		super(world, shooter, accelX, accelY, accelZ);
 	}
 	
-	public EntitySmallFireball2(World world, double x, double y, double z, double accelX, double accelY, double accelZ)
+	public EntityFireball2(World world, double x, double y, double z, double accelX, double accelY, double accelZ)
 	{
 		super(world, x, y, z, accelX, accelY, accelZ);
 	}
@@ -81,32 +86,37 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 			
 			if(pos.entityHit != null)
 			{
-				float damage = 5;
+				double damage = this.getMass() * this.getSpeed();
 				if(this.hasBounced)
 				{
 					damage /= 2;
 				}
-				if(pos.entityHit instanceof EntityLivingBase)
+				damage += this.damage;
+				GunProjectileDamageHandler.putDamage(pos.entityHit, DamageSource.causeFireballDamage(this, this.shootingEntity), damage * 2 / 5, new GunProjectileDamageHandler.ConsumerDamageDealt()
 				{
-					((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;
-				}
-				flag = pos.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), damage * 2 / 5);
-				if(pos.entityHit instanceof EntityLivingBase)
-				{
-					((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;
-				}
-				flag = pos.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), damage * 3 / 5) || flag;
-				
-				if(flag)
-				{
-					this.func_174815_a(this.shootingEntity, pos.entityHit);
 					
-					if(!pos.entityHit.isImmuneToFire())
+					@Override
+					public void action(Entity entityHit, DamageSource ds, double amount)
 					{
-						pos.entityHit.setFire(5);
+						if(entityHit instanceof EntityLivingBase)
+						{
+							((EntityLivingBase)entityHit).hurtResistantTime = 0;
+						}
+						if(entityHit.attackEntityFrom(DamageSource.causeThrownDamage(EntityFireball2.this, EntityFireball2.this.shootingEntity), (float)(amount / (2 / 5)) * 3 / 5))
+						{
+							EntityFireball2.this.func_174815_a(EntityFireball2.this.shootingEntity, entityHit);
+							
+							if(!entityHit.isImmuneToFire())
+							{
+								entityHit.setFire(EntityFireball2.this.burn);
+							}
+						}
 					}
+				});
+				if(!this.worldObj.isRemote)
+				{
+					this.setDead();
 				}
-				this.setDead();
 			}
 			else
 			{
@@ -216,5 +226,43 @@ public class EntitySmallFireball2 extends EntitySmallFireball implements IEntity
 		{
 			this.readEntityFromNBT(compound);
 		}
+	}
+	
+	@Override
+	public void setMass(double mass)
+	{
+		this.setSize(this.width / (float)this.mass, this.height / (float)this.mass);
+		this.mass = mass;
+		this.setSize(this.width * (float)this.mass, this.height * (float)this.mass);
+	}
+	
+	@Override
+	public void setSpeed(double velocity)
+	{
+		Stuff.Coordinates3D.velocity(this, Stuff.Coordinates3D.stabilize(Stuff.Coordinates3D.velocity(this), velocity));
+	}
+	
+	@Override
+	public void setForce(double force)
+	{
+		this.setSpeed(force / this.getMass());
+	}
+	
+	@Override
+	public double getMass()
+	{
+		return this.mass;
+	}
+	
+	@Override
+	public double getSpeed()
+	{
+		return Stuff.Coordinates3D.distance(Stuff.Coordinates3D.velocity(this));
+	}
+	
+	@Override
+	public double getForce()
+	{
+		return this.getSpeed() * this.getMass();
 	}
 }

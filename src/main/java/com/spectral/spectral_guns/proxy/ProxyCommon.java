@@ -33,11 +33,10 @@ import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
 import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.blocks.BlockOre2;
+import com.spectral.spectral_guns.entity.projectile.EntityFireball2;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
-import com.spectral.spectral_guns.entity.projectile.EntityLargeFireball2;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
-import com.spectral.spectral_guns.entity.projectile.EntitySmallFireball2;
 import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
 import com.spectral.spectral_guns.event.HandlerCommon;
 import com.spectral.spectral_guns.event.HandlerCommonFML;
@@ -237,8 +236,7 @@ public abstract class ProxyCommon
 		M.registerEntityNoEgg(EntityShuriken.class, "shuriken", 1);
 		M.registerEntityNoEgg(EntityLaser.class, "laser", 2);
 		M.registerEntityNoEgg(EntitySnowball2.class, "snowball2", 3);
-		M.registerEntityNoEgg(EntitySmallFireball2.class, "fireballSmall2", 4);
-		M.registerEntityNoEgg(EntityLargeFireball2.class, "fireballLarge2", 5);
+		M.registerEntityNoEgg(EntityFireball2.class, "fireballSmall2", 4);
 	}
 	
 	private void registerItems()

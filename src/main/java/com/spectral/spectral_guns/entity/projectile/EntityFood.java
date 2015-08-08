@@ -1,6 +1,7 @@
 package com.spectral.spectral_guns.entity.projectile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,13 +21,15 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.MathWithMultiple;
 import com.spectral.spectral_guns.Stuff.Randomization;
 
-public class EntityFood extends EntityThrowable implements IEntityAdditionalSpawnData
+public class EntityFood extends EntityThrowable implements IEntityAdditionalSpawnData, IEntityGunProjectile
 {
 	public ItemStack stack = null;
+	private double massMod = 1;
 	
 	public EntityFood(World worldIn)
 	{
@@ -80,7 +83,7 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 		
 		if(pos.entityHit != null && pos.entityHit.canBeCollidedWith() && pos.entityHit != this.getThrower())
 		{
-			double d = Coordinates3D.distance(Coordinates3D.velocity(this)) * (MathWithMultiple.distance(this.height, this.width) * (0.2 + this.rand.nextDouble() * 0.3)) * 3;
+			double d = this.getSpeed() * this.getMass() * (0.4 + this.rand.nextDouble() * 0.6);
 			if(this.getThrower() != null)
 			{
 				EntityLivingBase thr = this.getThrower();
@@ -92,30 +95,25 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 				d /= dist;
 			}
 			
-			if(d < 1)
+			GunProjectileDamageHandler.putDamage(pos.entityHit, DamageSource.causeThrownDamage(this, this.getThrower()), this.rand.nextFloat() * this.rand.nextFloat() * d, new GunProjectileDamageHandler.ConsumerDamageDealt()
 			{
-				d = this.rand.nextFloat() <= d ? 1 : d;
-			}
-			
-			if(pos.entityHit instanceof EntityLivingBase)
+				@Override
+				public void action(Entity entityHit, DamageSource ds, double amount)
+				{
+					if(entityHit instanceof EntityLivingBase)
+					{
+						((EntityLivingBase)entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, EntityFood.this.rand.nextInt(10), EntityFood.this.rand.nextInt(3), false, false));
+						((EntityLivingBase)entityHit).addPotionEffect(new PotionEffect(Potion.saturation.id, EntityFood.this.rand.nextInt(2 * 20), 0, false, false));
+					}
+					if(entityHit instanceof EntityPlayer)
+					{
+						EntityFood.this.getItemStack().getItem().onItemUseFinish(EntityFood.this.getItemStack(), entityHit.worldObj, (EntityPlayer)entityHit);
+					}
+				}
+			});
+			if(!this.worldObj.isRemote)
 			{
-				((EntityLivingBase)pos.entityHit).hurtResistantTime = 0;
-			}
-			if(pos.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), this.rand.nextFloat() * this.rand.nextFloat() * (float)d))
-			{
-				if(pos.entityHit instanceof EntityLivingBase)
-				{
-					((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, this.rand.nextInt(10), this.rand.nextInt(3), false, false));
-					((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.saturation.id, this.rand.nextInt(2 * 20), 0, false, false));
-				}
-				if(pos.entityHit instanceof EntityPlayer)
-				{
-					stack.getItem().onItemUseFinish(stack, this.worldObj, (EntityPlayer)pos.entityHit);
-				}
-				if(!this.worldObj.isRemote)
-				{
-					this.setDead();
-				}
+				this.setDead();
 			}
 		}
 		if(pos.entityHit == null)
@@ -239,5 +237,50 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 		{
 			this.readEntityFromNBT(compound);
 		}
+	}
+	
+	@Override
+	public void setMass(double mass)
+	{
+		this.setSize(this.width / (float)this.massMod, this.height / (float)this.massMod);
+		ItemStack stack = this.getItemStack();
+		this.massMod = mass / this.getHealAmount() / Math.max(0.0001, MathWithMultiple.distance(this.height, this.width));
+		this.setSize(this.width * (float)this.massMod, this.height * (float)this.massMod);
+	}
+	
+	@Override
+	public void setSpeed(double velocity)
+	{
+		Stuff.Coordinates3D.velocity(this, Stuff.Coordinates3D.stabilize(Stuff.Coordinates3D.velocity(this), velocity));
+	}
+	
+	@Override
+	public void setForce(double force)
+	{
+		this.setSpeed(force / this.getMass());
+	}
+	
+	@Override
+	public double getMass()
+	{
+		ItemStack stack = this.getItemStack();
+		return this.massMod * this.getHealAmount() * Math.max(0.0001, MathWithMultiple.distance(this.height, this.width));
+	}
+	
+	@Override
+	public double getSpeed()
+	{
+		return Stuff.Coordinates3D.distance(Stuff.Coordinates3D.velocity(this));
+	}
+	
+	@Override
+	public double getForce()
+	{
+		return this.getSpeed() * this.getMass();
+	}
+	
+	public int getHealAmount()
+	{
+		return Math.max(1, ((ItemFood)this.stack.getItem()).getHealAmount(this.stack));
 	}
 }
