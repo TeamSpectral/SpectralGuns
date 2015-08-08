@@ -14,6 +14,7 @@ import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.ArraysAndSuch;
 import com.spectral.spectral_guns.audio.AudioHandler;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.items.ItemComponent;
 import com.spectral.spectral_guns.items.ItemGun;
 
 public abstract class ComponentGeneric extends Component
@@ -279,12 +280,35 @@ public abstract class ComponentGeneric extends Component
 	@Override
 	public void update(int slot, ItemStack stack, World world, EntityPlayer player, int invSlot, boolean isSelected)
 	{
+		if(this.hasMaterialTrait(ComponentTraits.BURNS))
+		{
+			if(this.heat(slot, stack) > this.heatThreshold(slot, stack))
+			{
+				if(this.heat(slot, stack) > this.heatThreshold(slot, stack) * 1.5)
+				{
+					ItemComponent.ON_FIRE.add(stack, 1);
+				}
+				else if(ItemComponent.ON_FIRE.get(stack) < ItemComponent.ON_FIRE.max)
+				{
+					ItemComponent.ON_FIRE.add(stack, -1);
+				}
+			}
+			else
+			{
+				ItemComponent.ON_FIRE.add(stack, -1);
+			}
+		}
 		if(this.heat(slot, stack) > this.heatThreshold(slot, stack) || this.heat(slot, stack) < -this.heatThreshold(slot, stack))
 		{
+			if(ItemComponent.ON_FIRE.get(stack) >= ItemComponent.ON_FIRE.max && this.hasMaterialTrait(ComponentTraits.BURNS) && this.heat(slot, stack) > this.heatThreshold(slot, stack) * 1.5 && Stuff.rand.nextFloat() <= 1 / 3)
+			{
+				double d = 0.1;
+				world.spawnParticle(EnumParticleTypes.FLAME, player.posX + Stuff.Randomization.r(d), player.posY + player.getYOffset() + player.getEyeHeight() * 0.9 + Stuff.Randomization.r(d), player.posZ + Stuff.Randomization.r(d), player.motionX / 4, player.motionY / 4 + 0.1F, player.motionZ / 4, new int[]{});
+			}
 			if(player.ticksExisted % 10 == 1)
 			{
 				int damage = 1;
-				if(this.hasMaterialTrait(ComponentTraits.BURNS) && this.heat(slot, stack) > 0)
+				if(ItemComponent.ON_FIRE.get(stack) >= ItemComponent.ON_FIRE.max && this.hasMaterialTrait(ComponentTraits.BURNS) && this.heat(slot, stack) > this.heatThreshold(slot, stack) * 1.5)
 				{
 					damage += burnDamage;
 					if(world.rand.nextFloat() <= (float)burnIgniteChance1 / (float)burnIgniteChance2)
@@ -311,8 +335,9 @@ public abstract class ComponentGeneric extends Component
 				}
 			}
 		}
-		float h = 0.00001F;
+		float h = 2F;
 		float baseTemp = player.isInsideOfMaterial(Material.water) ? -20 : 0;
+		float mult = 0.9F;
 		if(this.heat(slot, stack) > this.heatThreshold(slot, stack) / 5 + baseTemp)
 		{
 			if(!player.isInLava() && !player.isBurning())
@@ -323,6 +348,10 @@ public abstract class ComponentGeneric extends Component
 			{
 				this.setHeat(slot, baseTemp, stack);
 			}
+			if(this.heat(slot, stack) > 0)
+			{
+				this.setHeat(slot, this.heat(slot, stack) * mult, stack);
+			}
 		}
 		else if(this.heat(slot, stack) < -this.heatThreshold(slot, stack) / 5 + baseTemp)
 		{
@@ -330,6 +359,10 @@ public abstract class ComponentGeneric extends Component
 			if(this.heat(slot, stack) > baseTemp)
 			{
 				this.setHeat(slot, baseTemp, stack);
+			}
+			if(this.heat(slot, stack) < 0)
+			{
+				this.setHeat(slot, this.heat(slot, stack) * mult, stack);
 			}
 		}
 		if(player.isInsideOfMaterial(Material.water) || world.isRaining() && world.canLightningStrike(player.getPosition()))

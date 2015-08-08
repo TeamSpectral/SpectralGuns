@@ -31,6 +31,7 @@ public class ItemComponent extends Item implements IItemWithRecipe
 	private final static CreativeTabs theTab = M.tabCore;
 	
 	public static final ItemTagDouble HEAT = new ItemTagDouble("Heat", 0D, -Double.MAX_VALUE, Double.MAX_VALUE, true);
+	public static final ItemTagInteger ON_FIRE = new ItemTagInteger("Heat", 0, 0, 80, true);
 	public static final ItemTagInteger ITEMDAMAGE = new ItemTagInteger("Damage", 0, 0, Integer.MAX_VALUE, true);
 	
 	/**
