@@ -256,10 +256,12 @@ public class ItemGun extends Item
 	{
 		Stuff.ItemStacks.compound(stack);
 		ExtendedPlayer props = ExtendedPlayer.get(player);
-		if(this.canShoot(stack, player) && !props.isRightClickHeldDownLast)
-		{
-			this.setDelay(stack, player);
-		}
+		/*
+		 * if(this.canShoot(stack, player) && !props.isRightClickHeldDownLast)
+		 * {
+		 * this.setDelay(stack, player);
+		 * }
+		 */
 		return stack;
 	}
 	
@@ -310,7 +312,12 @@ public class ItemGun extends Item
 		{
 			ExtendedPlayer props = ExtendedPlayer.get((EntityPlayer)entity);
 			ComponentEvents.updateComponents(stack, (EntityPlayer)entity, slot, isSelected);
-			if(this.canShoot(stack, (EntityPlayer)entity) && isSelected && props.isRightClickHeldDownLast && props.isRightClickHeldDown)
+			if(this.canShoot(stack, (EntityPlayer)entity) && isSelected && props.isRightClickHeldDown /*
+																									 * &&
+																									 * props
+																									 * .
+																									 * isRightClickHeldDownLast
+																									 */)
 			{
 				this.setDelay(stack, (EntityPlayer)entity);
 			}
@@ -320,6 +327,11 @@ public class ItemGun extends Item
 			FIRE_RATE_TIMER.add(stack, -1);
 		}
 		
+		if(DELAY_TIMER.get(stack) > 0)
+		{
+			DELAY_TIMER.add(stack, -1);
+		}
+		
 		if(entity instanceof EntityPlayer)
 		{
 			if(DELAY_TIMER.get(stack) == 0 && FIRE_RATE_TIMER.get(stack) <= 0)
@@ -327,14 +339,9 @@ public class ItemGun extends Item
 				this.fire(stack, world, (EntityPlayer)entity);
 			}
 		}
-		if(isSelected && !(entity instanceof EntityPlayer) || this.canShoot(stack, (EntityPlayer)entity))
+		if(!isSelected || !(entity instanceof EntityPlayer))
 		{
 			this.resetDelay(stack);
-		}
-		
-		if(DELAY_TIMER.get(stack) > 0)
-		{
-			DELAY_TIMER.add(stack, -1);
 		}
 		
 		if(stack.stackSize == 0 && entity instanceof EntityPlayer)
