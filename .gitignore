@@ -15,6 +15,7 @@ eclipse
 gradle
 !src
 !stuff
+!versionChecker
 
 !build.gradle
 !README.txt

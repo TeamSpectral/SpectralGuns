@@ -1,0 +1,14 @@
+{
+	"versionList": [
+		{
+			"mcVersion":"Minecraft 1.8",
+			"modVersion":"1.3",
+			"changeLog": [
+                "See: https://github.com/TeamSpectral/SpectralGuns/blob/dev/CHANGELOG.txt"
+			],
+			"updateURL":"https://github.com/TeamSpectral/SpectralGuns/blob/dev/build/libs/spectralguns-1.3.jar",
+			"isDirectLink":"true",
+			"newFileName":""
+		}
+	]
+}
