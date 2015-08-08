@@ -28,26 +28,20 @@ public class ComponentTriggerMechanismAuto extends ComponentTriggerMechanism
 		return true;
 	}
 	
-	public float recoil = 1.1F;
+	public float recoilMod = 1.1F;
 	
 	@Override
 	public float recoil(int slot, float recoil, ItemStack stack, World world, EntityPlayer player)
 	{
-		return super.recoil(slot, recoil, stack, world, player) * this.recoil;
+		return super.recoil(slot, recoil, stack, world, player) * this.recoilMod;
 	}
 	
-	@Override
-	public float delay(int slot, float delay, ItemStack stack, World world, EntityPlayer player)
-	{
-		return super.delay(slot, delay, stack, world, player) * this.delay;
-	}
-	
-	public float fireRate = 0.25F;
+	public float fireRateMod = 0.25F;
 	
 	@Override
 	public float fireRate(int slot, float rate, ItemStack stack, World world, EntityPlayer player)
 	{
-		return super.fireRate(slot, rate, stack, world, player) * this.fireRate;
+		return super.fireRate(slot, rate, stack, world, player) * this.fireRateMod;
 	}
 	
 	@Override
