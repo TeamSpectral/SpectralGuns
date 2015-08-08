@@ -49,17 +49,9 @@ public class HandlerCommon extends HandlerBase
 		{
 			ExtendedPlayer propsP = ExtendedPlayer.get((EntityPlayer)event.entity);
 			Entity e = event.source.getEntity();
-			if(e instanceof EntitySnowball)
+			if(e instanceof EntitySnowball && !(e instanceof EntitySnowball2))
 			{
-				int i = 1;
-				if(e instanceof EntitySnowball2)
-				{
-					i = (int)Math.floor(((EntitySnowball2)e).damage);
-				}
-				for(int i2 = 0; i2 < i; ++i2)
-				{
-					propsP.snowball();
-				}
+				propsP.snowball();
 			}
 		}
 	}
