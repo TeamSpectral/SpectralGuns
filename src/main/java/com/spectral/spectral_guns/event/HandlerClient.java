@@ -30,7 +30,7 @@ import com.spectral.spectral_guns.items.ItemAmmo;
 import com.spectral.spectral_guns.items.ItemGun;
 
 @SideOnly(Side.CLIENT)
-public class HandlerClient extends HandlerCommon
+public class HandlerClient extends HandlerBase
 {
 	// minecraftforge events for client only here!
 	

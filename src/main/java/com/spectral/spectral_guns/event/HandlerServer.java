@@ -6,11 +6,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.SERVER)
-public class HandlerServer extends HandlerCommon
+public class HandlerServer extends HandlerBase
 {
 	// minecraftforge events for server only here!
 	
-	@Override
 	@SubscribeEvent
 	public void livingUpdateEvent(LivingUpdateEvent event)
 	{
