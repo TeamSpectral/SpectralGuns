@@ -18,7 +18,7 @@ public class References
 		
 		public static final String WRONG_SLOT(String singular, String plural, boolean slotPlural)
 		{
-			return "The " + singular + " slot" + (slotPlural ? "s" : "") + " is only for " + plural + "!";
+			return "The " + singular + " slot" + (slotPlural ? "s" : "") + " " + (slotPlural ? "are" : "is") + " only for " + plural + "!";
 		}
 	}
 }
