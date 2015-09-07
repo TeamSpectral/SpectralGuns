@@ -30,7 +30,7 @@ public class GunProjectileDamageHandler
 		{
 			damages.put(entity, new GunProjectileDamageHandler(ds));
 		}
-		if(damages.get(entity).damageSource.equals(ds))
+		if(damages.get(entity).damageSource.getDamageType().equals(ds.getDamageType()))
 		{
 			damages.get(entity).damage += amount;
 			return true;

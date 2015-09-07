@@ -9,13 +9,11 @@ import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
-import com.spectral.spectral_guns.entity.projectile.GunProjectileDamageHandler;
 import com.spectral.spectral_guns.items.ItemGun;
 
 public class HandlerCommon extends HandlerBase
@@ -34,12 +32,6 @@ public class HandlerCommon extends HandlerBase
 		{
 			event.entity.registerExtendedProperties(ExtendedPlayer.PROP, new ExtendedPlayer((EntityPlayer)event.entity));
 		}
-	}
-	
-	@SubscribeEvent
-	public void onWorldTick(TickEvent.WorldTickEvent event)
-	{
-		GunProjectileDamageHandler.applyDamages();
 	}
 	
 	@SubscribeEvent

@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -14,6 +15,7 @@ import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
+import com.spectral.spectral_guns.entity.projectile.GunProjectileDamageHandler;
 import com.spectral.spectral_guns.packet.PacketPlayerData;
 
 public class HandlerCommonFML extends HandlerBase
@@ -65,5 +67,11 @@ public class HandlerCommonFML extends HandlerBase
 				Config.config.save();
 			}
 		}
+	}
+	
+	@SubscribeEvent
+	public void onWorldTick(TickEvent.WorldTickEvent event)
+	{
+		GunProjectileDamageHandler.applyDamages();
 	}
 }
