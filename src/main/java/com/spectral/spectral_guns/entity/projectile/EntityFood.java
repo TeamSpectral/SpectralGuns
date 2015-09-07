@@ -23,13 +23,12 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
-import com.spectral.spectral_guns.Stuff.MathWithMultiple;
 import com.spectral.spectral_guns.Stuff.Randomization;
 
 public class EntityFood extends EntityThrowable implements IEntityAdditionalSpawnData, IEntityGunProjectile
 {
 	public ItemStack stack = null;
-	private double massMod = 1;
+	private double massMod = 3;
 	
 	public EntityFood(World worldIn)
 	{
@@ -83,7 +82,7 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 		
 		if(pos.entityHit != null && pos.entityHit.canBeCollidedWith() && pos.entityHit != this.getThrower())
 		{
-			double d = this.getSpeed() * this.getMass() * (0.4 + this.rand.nextDouble() * 0.6);
+			double d = this.getSpeed() * this.getMass() * (0.8 + this.rand.nextDouble() * 1.2);
 			if(this.getThrower() != null)
 			{
 				EntityLivingBase thr = this.getThrower();
@@ -244,7 +243,7 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 	{
 		this.setSize(this.width / (float)this.massMod, this.height / (float)this.massMod);
 		ItemStack stack = this.getItemStack();
-		this.massMod = mass / this.getHealAmount() / Math.max(0.0001, MathWithMultiple.distance(this.height, this.width));
+		this.massMod = mass / this.getHealAmount();
 		this.setSize(this.width * (float)this.massMod, this.height * (float)this.massMod);
 	}
 	
@@ -264,7 +263,7 @@ public class EntityFood extends EntityThrowable implements IEntityAdditionalSpaw
 	public double getMass()
 	{
 		ItemStack stack = this.getItemStack();
-		return this.massMod * this.getHealAmount() * Math.max(0.0001, MathWithMultiple.distance(this.height, this.width));
+		return this.massMod * this.getHealAmount();
 	}
 	
 	@Override
