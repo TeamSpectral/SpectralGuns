@@ -45,9 +45,12 @@ public class GunProjectileDamageHandler
 			GunProjectileDamageHandler dh = damages.get(entity);
 			if(entity.attackEntityFrom(dh.damageSource, (float)dh.damage))
 			{
-				for(ConsumerDamageDealt action : dh.actions)
+				if(dh.actions != null)
 				{
-					action.action(entity, dh.damageSource, dh.damage);
+					for(ConsumerDamageDealt action : dh.actions)
+					{
+						action.action(entity, dh.damageSource, dh.damage);
+					}
 				}
 			}
 		}
