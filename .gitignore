@@ -16,6 +16,8 @@ gradle
 !src
 !stuff
 !versionChecker
+*.classpath
+*.project
 
 !build.gradle
 !README.txt
