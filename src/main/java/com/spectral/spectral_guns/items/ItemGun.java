@@ -11,16 +11,19 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -32,6 +35,7 @@ import com.spectral.spectral_guns.Stuff.Randomization;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
+import com.spectral.spectral_guns.components.Component.ComponentTraits;
 import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
 import com.spectral.spectral_guns.components.magazine.IComponentProjectileCount;
@@ -41,6 +45,7 @@ import com.spectral.spectral_guns.itemtags.ItemTagCompound;
 import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 import com.spectral.spectral_guns.itemtags.ItemTagList;
 import com.spectral.spectral_guns.itemtags.ItemTagString;
+import com.spectral.spectral_guns.stats.Legendary;
 
 public class ItemGun extends Item
 {
@@ -80,6 +85,14 @@ public class ItemGun extends Item
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced)
 	{
+		if(tooltip.size() >= 1)
+		{
+			String s1 = (String)tooltip.get(0);
+			s1 = s1.replaceFirst("" + EnumChatFormatting.ITALIC, "");
+			s1 = s1.replaceFirst("" + EnumChatFormatting.RESET, "");
+			String s2 = this.getDisplayNamePrefix(stack);
+			tooltip.set(0, s2 + s1);
+		}
 		if(!ComponentEvents.isGunValid(stack))
 		{
 			tooltip.add(ChatFormatting.RED + "ERROR!" + ChatFormatting.RESET);
@@ -265,6 +278,103 @@ public class ItemGun extends Item
 		return stack;
 	}
 	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean hasEffect(ItemStack stack)
+	{
+		Legendary legendary = Legendary.getLegendaryForGun(stack);
+		if(legendary != null)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public EnumRarity getRarity(ItemStack stack)
+	{
+		Legendary legendary = Legendary.getLegendaryForGun(stack);
+		if(legendary != null)
+		{
+			EnumRarity rarity = null;
+			EntityPlayer player = null;
+			if(M.proxy.side() == Side.CLIENT)
+			{
+				try
+				{
+					player = Minecraft.getMinecraft().thePlayer;
+				}
+				catch(Throwable e)
+				{
+					
+				}
+			}
+			try
+			{
+				rarity = legendary.getRarity(stack, player);
+			}
+			catch(Throwable e)
+			{
+				
+			}
+			if(rarity != null && rarity != EnumRarity.COMMON)
+			{
+				return rarity;
+			}
+		}
+		return super.getRarity(stack);
+	}
+	
+	public static boolean flag1 = true;
+	
+	@Override
+	public String getItemStackDisplayName(ItemStack stack)
+	{
+		String s = super.getItemStackDisplayName(stack);
+		s = this.getDisplayNamePrefix(stack) + s;
+		return s;
+	}
+	
+	public String getDisplayNamePrefix(ItemStack stack)
+	{
+		String s = "";
+		if(flag1)
+		{
+			flag1 = false;
+			Legendary legendary = Legendary.getLegendaryForGun(stack);
+			flag1 = true;
+			if(legendary != null)
+			{
+				String s2 = "";
+				EntityPlayer player = null;
+				if(M.proxy.side() == Side.CLIENT)
+				{
+					try
+					{
+						player = Minecraft.getMinecraft().thePlayer;
+					}
+					catch(Throwable e)
+					{
+						
+					}
+				}
+				try
+				{
+					s2 = legendary.getPrefix(stack, player);
+				}
+				catch(Throwable e)
+				{
+					
+				}
+				if(s2 != null && !StringUtils.isBlank(s2))
+				{
+					s = s2 + s;
+				}
+			}
+		}
+		return s;
+	}
+	
 	public void resetDelay(ItemStack stack)
 	{
 		NBTTagCompound compound = stack.getTagCompound();
@@ -308,16 +418,16 @@ public class ItemGun extends Item
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected)
 	{
 		super.onUpdate(stack, world, entity, slot, isSelected);
+		Legendary legendary = Legendary.getLegendaryForGun(stack);
+		if(legendary != null)
+		{
+			legendary.onUpdate(stack, world, entity, slot, isSelected);
+		}
 		if(entity instanceof EntityPlayer)
 		{
 			ExtendedPlayer props = ExtendedPlayer.get((EntityPlayer)entity);
 			ComponentEvents.updateComponents(stack, (EntityPlayer)entity, slot, isSelected);
-			if(this.canShoot(stack, (EntityPlayer)entity) && isSelected && props.isRightClickHeldDown /*
-																									 * &&
-																									 * props
-																									 * .
-																									 * isRightClickHeldDownLast
-																									 */)
+			if(this.canShoot(stack, (EntityPlayer)entity) && isSelected && props.isRightClickHeldDown)
 			{
 				this.setDelay(stack, (EntityPlayer)entity);
 			}
@@ -498,6 +608,43 @@ public class ItemGun extends Item
 			}
 		}
 		COMPONENTS.set(stack, list);
+	}
+	
+	public static boolean hasComponentTrait(ItemStack stack, ComponentTraits trait)
+	{
+		return getComponentTraits(stack).contains(trait);
+	}
+	
+	public static ArrayList<ComponentTraits> getComponentTraits(ItemStack stack)
+	{
+		ArrayList<ComponentTraits> a1 = new ArrayList();
+		HashMap<Integer, Component> components = getComponents(stack);
+		for(Integer key : components.keySet())
+		{
+			if(key != null)
+			{
+				Component c = components.get(key);
+				if(c != null)
+				{
+					for(ComponentTraits trait : c.materialTraits())
+					{
+						if(!a1.contains(trait))
+						{
+							a1.add(trait);
+						}
+					}
+				}
+			}
+		}
+		ArrayList<ComponentTraits> a2 = new ArrayList();
+		for(ComponentTraits trait : ComponentTraits.values())
+		{
+			if(a1.contains(trait))
+			{
+				a2.add(trait);
+			}
+		}
+		return a2;
 	}
 	
 	public static HashMap<Integer, Component> getComponents(ItemStack stack)

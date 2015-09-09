@@ -6,6 +6,7 @@ import java.util.HashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,8 @@ import com.spectral.spectral_guns.components.ComponentEvents;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
 import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.itemtags.ItemTagList;
+import com.spectral.spectral_guns.stats.Legendaries;
+import com.spectral.spectral_guns.stats.Legendary;
 
 public final class ComponentMagazineFood extends ComponentMagazineStandard
 {
@@ -81,7 +84,14 @@ public final class ComponentMagazineFood extends ComponentMagazineStandard
 	{
 		if(this.firedStack == null)
 		{
-			this.firedStack = this.getLastItem(slot, stack);
+			if(Legendary.getLegendaryForGun(stack) == Legendaries.baconslinger)
+			{
+				this.firedStack = new ItemStack(Items.cooked_porkchop);
+			}
+			else
+			{
+				this.firedStack = this.getLastItem(slot, stack);
+			}
 			this.firedStackTick = world.getTotalWorldTime();
 		}
 		return new EntityFood(world, player, this.firedStack)
