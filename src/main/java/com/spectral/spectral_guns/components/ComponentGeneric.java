@@ -335,34 +335,40 @@ public abstract class ComponentGeneric extends Component
 				}
 			}
 		}
-		float h = 2F;
+		float h = 0.01F;
 		float baseTemp = player.isInsideOfMaterial(Material.water) ? -20 : 0;
-		float mult = 0.9F;
-		if(this.heat(slot, stack) > this.heatThreshold(slot, stack) / 5 + baseTemp)
+		float mult = 0.995F;
+		if(this.heat(slot, stack) > baseTemp)
 		{
-			if(!player.isInLava() && !player.isBurning())
+			if(this.heat(slot, stack) > this.heatThreshold(slot, stack) / 20 + baseTemp)
 			{
-				this.addHeat(slot, -h, stack);
+				if(!player.isInLava() && !player.isBurning())
+				{
+					this.addHeat(slot, -h, stack);
+				}
+				if(this.heat(slot, stack) < baseTemp)
+				{
+					this.setHeat(slot, baseTemp, stack);
+				}
+			}
+			if(this.heat(slot, stack) > baseTemp)
+			{
+				this.setHeat(slot, (this.heat(slot, stack) - baseTemp) * mult + baseTemp, stack);
+			}
+		}
+		else if(this.heat(slot, stack) < baseTemp)
+		{
+			if(this.heat(slot, stack) < -this.heatThreshold(slot, stack) / 20 + baseTemp)
+			{
+				this.addHeat(slot, h, stack);
+				if(this.heat(slot, stack) > baseTemp)
+				{
+					this.setHeat(slot, baseTemp, stack);
+				}
 			}
 			if(this.heat(slot, stack) < baseTemp)
 			{
-				this.setHeat(slot, baseTemp, stack);
-			}
-			if(this.heat(slot, stack) > 0)
-			{
-				this.setHeat(slot, this.heat(slot, stack) * mult, stack);
-			}
-		}
-		else if(this.heat(slot, stack) < -this.heatThreshold(slot, stack) / 5 + baseTemp)
-		{
-			this.addHeat(slot, h, stack);
-			if(this.heat(slot, stack) > baseTemp)
-			{
-				this.setHeat(slot, baseTemp, stack);
-			}
-			if(this.heat(slot, stack) < 0)
-			{
-				this.setHeat(slot, this.heat(slot, stack) * mult, stack);
+				this.setHeat(slot, (this.heat(slot, stack) - baseTemp) * mult + baseTemp, stack);
 			}
 		}
 		if(player.isInsideOfMaterial(Material.water) || world.isRaining() && world.canLightningStrike(player.getPosition()))

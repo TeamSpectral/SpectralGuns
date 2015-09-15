@@ -25,6 +25,8 @@ import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.itemtags.ItemTagBoolean;
 import com.spectral.spectral_guns.itemtags.ItemTagFloat;
 import com.spectral.spectral_guns.itemtags.ItemTagInteger;
+import com.spectral.spectral_guns.stats.Legendaries;
+import com.spectral.spectral_guns.stats.Legendary;
 
 public class ComponentMagazineLaser extends ComponentMagazine
 {
@@ -89,7 +91,8 @@ public class ComponentMagazineLaser extends ComponentMagazine
 			float incline = 1.13F / ItemGun.delay(gun, player);
 			CHARGE.wobbleCheck(gun);
 			CHARGE.add(compound, incline);
-			ComponentEvents.heatUp(gun, player, Math.max(1, CHARGE.get(compound, true)) / 20);
+			double d = Math.max(1, CHARGE.get(compound, true)) / 20;
+			ComponentEvents.heatUp(gun, player, d);
 		}
 		else
 		{
@@ -99,6 +102,12 @@ public class ComponentMagazineLaser extends ComponentMagazine
 		if(CHARGE.get(compound, true) > 0)
 		{
 			EntityLaser e = new EntityLaser(world, player, CHARGE.get(compound, true), this.color, 0);
+			
+			if(Legendary.getLegendaryForGun(gun) == Legendaries.sigurds_funky_lasergun)
+			{
+				int i = (int)Math.floor((float)player.ticksExisted / Legendaries.sigurds_funky_lasergun_timing % LaserColor.values().length);
+				e.color = LaserColor.values()[i];
+			}
 			
 			if(CHARGE.get(compound, true) > 0.2)
 			{
@@ -124,6 +133,11 @@ public class ComponentMagazineLaser extends ComponentMagazine
 			player.motionX = mot.xCoord;
 			player.motionY = mot.yCoord;
 			player.motionZ = mot.zCoord;
+			if(FIRING.get(compound, true))
+			{
+				double d = Math.max(1, CHARGE.get(compound, true)) / 20;
+				ComponentEvents.onFireLegendary(e, gun, player, d);
+			}
 		}
 		if(world.isRemote)
 		{

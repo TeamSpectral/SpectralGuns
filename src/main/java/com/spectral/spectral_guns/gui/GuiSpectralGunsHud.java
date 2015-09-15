@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,6 +37,8 @@ import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.event.HandlerClientFML;
 import com.spectral.spectral_guns.items.ItemGun;
+import com.spectral.spectral_guns.stats.Legendaries;
+import com.spectral.spectral_guns.stats.Legendary;
 
 @SideOnly(Side.CLIENT)
 public class GuiSpectralGunsHud extends Gui
@@ -101,13 +104,20 @@ public class GuiSpectralGunsHud extends Gui
 					ArrayList<ComponentMagazineFood> foodMagazines = ItemGun.getComponentsOf(stack, ComponentMagazineFood.class);
 					if(foodMagazines.size() > 0)
 					{
-						ArrayList<ItemStack> stacks = foodMagazines.get(0).getItems(1, stack);
-						if(stacks.size() > 0)
+						if(Legendary.getLegendaryForGun(stack) == Legendaries.baconslinger)
 						{
-							ItemStack stack2 = stacks.get(stacks.size() - 1);
-							if(stack2 != null)
+							item = Items.cooked_porkchop;
+						}
+						else
+						{
+							ArrayList<ItemStack> stacks = foodMagazines.get(0).getItems(1, stack);
+							if(stacks.size() > 0)
 							{
-								item = stack2.getItem();
+								ItemStack stack2 = stacks.get(stacks.size() - 1);
+								if(stack2 != null)
+								{
+									item = stack2.getItem();
+								}
 							}
 						}
 					}

@@ -50,6 +50,25 @@ public class GuiContainerGunWorkbench extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		this.drawGuiTitles();
+		this.drawTextBox();
+	}
+	
+	protected void drawTextBox()
+	{
+		int k = this.guiLeft;
+		int l = this.guiTop;
+		GlStateManager.translate(-k, -l, 0.0F);
+		GlStateManager.pushMatrix();
+		GlStateManager.disableLighting();
+		GlStateManager.disableBlend();
+		this.nameField.drawTextBox();
+		GlStateManager.popMatrix();
+		GlStateManager.translate(k, l, 0.0F);
+	}
+	
+	protected void drawGuiTitles()
+	{
 		GlStateManager.pushMatrix();
 		this.fontRendererObj.drawString(this.tileEntity.hasCustomName() ? this.tileEntity.getName() : I18n.format(this.tileEntity.getName() + ".tinkering", new Object[0]), 8, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format(this.tileEntity.getName() + ".gunName", new Object[0]), 8, this.ySize - 123, 4210752);
@@ -154,11 +173,6 @@ public class GuiContainerGunWorkbench extends GuiContainer
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		GlStateManager.pushMatrix();
-		GlStateManager.disableLighting();
-		GlStateManager.disableBlend();
-		this.nameField.drawTextBox();
-		GlStateManager.popMatrix();
 	}
 	
 	public void sendContainerAndContentsToPlayer(Container containerToSend, List itemsList)

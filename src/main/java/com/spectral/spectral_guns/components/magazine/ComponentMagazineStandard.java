@@ -80,7 +80,9 @@ public abstract class ComponentMagazineStandard extends ComponentMagazine
 		{
 			e.add(this.projectile(slot, stack, world, player));
 		}
-		ComponentEvents.heatUp(stack, player, 0.5);
+		double d = 0.5;
+		ComponentEvents.heatUp(stack, player, d);
+		ComponentEvents.onFireLegendary(e.get(0), stack, player, d);
 		return e;
 	}
 	

@@ -25,6 +25,7 @@ import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
 import com.spectral.spectral_guns.entity.extended.ExtendedPlayer;
 import com.spectral.spectral_guns.items.ItemAmmo;
 import com.spectral.spectral_guns.items.ItemGun;
+import com.spectral.spectral_guns.stats.Legendary;
 
 public class ComponentEvents
 {
@@ -234,6 +235,10 @@ public class ComponentEvents
 				component.fireSound(slot, projectiles.get(0), stack, player.worldObj, player);
 			}
 		}
+		if(projectiles != null && projectiles.size() >= 1)
+		{
+			onFireLegendary(projectiles.get(0), stack, player, 1);
+		}
 		
 		float oldRotPitch = player.rotationPitch;
 		float oldRotYaw = player.rotationYaw;
@@ -429,6 +434,15 @@ public class ComponentEvents
 			}
 		}
 		return false;
+	}
+	
+	public static void onFireLegendary(Entity e, ItemStack stack, EntityPlayer player, double modifier)
+	{
+		Legendary legendary = Legendary.getLegendaryForGun(stack);
+		if(legendary != null)
+		{
+			legendary.onFire(e, stack, player.worldObj, player, modifier);
+		}
 	}
 	
 	public static int amount(ItemStack gun, ItemStack ammo)

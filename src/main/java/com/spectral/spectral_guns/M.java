@@ -56,6 +56,7 @@ import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.items.ItemShuriken;
 import com.spectral.spectral_guns.items.ItemWrench;
 import com.spectral.spectral_guns.proxy.ProxyCommon;
+import com.spectral.spectral_guns.stats.Legendaries;
 import com.spectral.spectral_guns.tabs.TabGeneric;
 import com.spectral.spectral_guns.worldgen.WorldGenGem;
 
@@ -420,7 +421,7 @@ public class M
 	
 	public M()
 	{
-		
+		new Legendaries();
 	}
 	
 	@SidedProxy(clientSide = References.CLIENT_PROXY_CLASS, serverSide = References.SERVER_PROXY_CLASS)
