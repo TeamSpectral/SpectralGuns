@@ -25,31 +25,6 @@ public class ItemWrench extends Item
 		this.setMaxStackSize(1);
 	}
 	
-	@Override
-	public CreativeTabs[] getCreativeTabs()
-	{
-		if(M.creativeTabs.containsKey(this) && M.creativeTabs.get(this) != null)
-		{
-			return M.creativeTabs.get(this);
-		}
-		else
-		{
-			return super.getCreativeTabs();
-		}
-	}
-	
-	public ItemWrench setCreativeTabs(CreativeTabs[] tabs)
-	{
-		M.creativeTabs.put(this, tabs);
-		return this;
-	}
-	
-	@Override
-	public String getUnlocalizedName(ItemStack stack)
-	{
-		return this.getUnlocalizedName();
-	}
-	
 	/**
 	 * Return whether this item is repairable in an anvil.
 	 * 
