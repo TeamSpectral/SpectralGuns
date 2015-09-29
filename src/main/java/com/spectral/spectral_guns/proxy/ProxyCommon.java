@@ -253,7 +253,14 @@ public abstract class ProxyCommon
 				Object item = M.getItem(id);
 				if(item != null && item instanceof Block)
 				{
-					GameRegistry.registerBlock((Block)item, id.id);
+					if(id.blockItem == null)
+					{
+						GameRegistry.registerBlock((Block)item, id.id);
+					}
+					else
+					{
+						GameRegistry.registerBlock((Block)item, id.blockItem, id.id);
+					}
 				}
 				if(item != null && item instanceof Item)
 				{

@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenHills;
 import net.minecraftforge.fml.common.IWorldGenerator;
@@ -51,6 +52,7 @@ import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerM
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismAuto;
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismBoosted;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
+import com.spectral.spectral_guns.items.IItemIdFrom;
 import com.spectral.spectral_guns.items.ItemAmmo;
 import com.spectral.spectral_guns.items.ItemComponent;
 import com.spectral.spectral_guns.items.ItemFood2;
@@ -156,6 +158,7 @@ public class M
 		public final String mod;
 		public final String[] oreDictNames;
 		public final boolean replacedIfAlreadyAnOreDict;
+		public Class<? extends ItemBlock> blockItem;
 		
 		public boolean shouldBeReplaced()
 		{
@@ -163,6 +166,10 @@ public class M
 		};
 		
 		public boolean visible;
+		public final boolean dungeonLoot;
+		public final int dungeonLootMin;
+		public final int dungeonLootMax;
+		public final int dungeonLootChance;
 		
 		public Id(String id, String mod, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames)
 		{
@@ -170,6 +177,29 @@ public class M
 			this.mod = mod;
 			this.replacedIfAlreadyAnOreDict = replacedIfAlreadyAnOreDict;
 			this.oreDictNames = oreDictNames;
+			
+			this.dungeonLoot = false;
+			this.dungeonLootMin = 0;
+			this.dungeonLootMax = 0;
+			this.dungeonLootChance = 0;
+		}
+		
+		private Id(String id, String mod, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames, int dungeonLootMin, int dungeonLootMax, int dungeonLootChance)
+		{
+			this.id = id;
+			this.mod = mod;
+			this.replacedIfAlreadyAnOreDict = replacedIfAlreadyAnOreDict;
+			this.oreDictNames = oreDictNames;
+			
+			dungeonLootMin = dungeonLootMin >= 1 ? dungeonLootMin : 1;
+			dungeonLootMax = dungeonLootMax <= 64 ? dungeonLootMax : 64;
+			dungeonLootMin = dungeonLootMin <= dungeonLootMax ? dungeonLootMin : dungeonLootMax;
+			dungeonLootMax = dungeonLootMax >= dungeonLootMin ? dungeonLootMax : dungeonLootMin;
+			
+			this.dungeonLoot = true;
+			this.dungeonLootMin = dungeonLootMin;
+			this.dungeonLootMax = dungeonLootMax;
+			this.dungeonLootChance = dungeonLootChance;
 		}
 		
 		public Id(String id, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames)
@@ -185,7 +215,7 @@ public class M
 		return component;
 	}
 	
-	public static <T extends Item & IDAble> T registerItem(T item, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames)
+	public static <T extends Item & IItemIdFrom> T registerItem(T item, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames)
 	{
 		return registerItem(item.getId(), References.MODID, item, replacedIfAlreadyAnOreDict, oreDictNames);
 	}
@@ -197,9 +227,28 @@ public class M
 	
 	public static <T extends Item> T registerItem(String id, String modid, T item, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames)
 	{
+		return registerItem(id, modid, item, replacedIfAlreadyAnOreDict, oreDictNames, 0, 0, 0);
+	}
+	
+	public static <T extends Item & IItemIdFrom> T registerItem(T item, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames, int min, int max, int chance)
+	{
+		return registerItem(item.getId(), References.MODID, item, replacedIfAlreadyAnOreDict, oreDictNames, min, max, chance);
+	}
+	
+	public static <T extends Item> T registerItem(String id, T item, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames, int min, int max, int chance)
+	{
+		return registerItem(id, References.MODID, item, replacedIfAlreadyAnOreDict, oreDictNames, min, max, chance);
+	}
+	
+	public static <T extends Item> T registerItem(String id, String modid, T item, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames, int min, int max, int chance)
+	{
 		if(!ids.containsKey(item) && !ids.containsValue(id))
 		{
 			Id ID = new Id(id, modid, replacedIfAlreadyAnOreDict, oreDictNames);
+			if(chance > 0)
+			{
+				ID = new Id(id, modid, replacedIfAlreadyAnOreDict, oreDictNames, min, max, chance);
+			}
 			ids.put(item, ID);
 			idsToBeRegistered.add(ID);
 		}
@@ -208,14 +257,38 @@ public class M
 	
 	public static <T extends Block> T registerBlock(String id, T block, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames)
 	{
-		return registerBlock(id, References.MODID, block, replacedIfAlreadyAnOreDict, oreDictNames);
+		return registerBlock(id, block, (Class<? extends ItemBlock>)null, replacedIfAlreadyAnOreDict, oreDictNames);
 	}
 	
 	public static <T extends Block> T registerBlock(String id, String modid, T block, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames)
 	{
+		return registerBlock(id, modid, block, (Class<? extends ItemBlock>)null, replacedIfAlreadyAnOreDict, oreDictNames);
+	}
+	
+	public static <T extends Block> T registerBlock(String id, T block, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames, Class<? extends ItemBlock> blockItem)
+	{
+		return registerBlock(id, block, blockItem, replacedIfAlreadyAnOreDict, oreDictNames);
+	}
+	
+	public static <T extends Block> T registerBlock(String id, String modid, T block, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames, Class<? extends ItemBlock> blockItem)
+	{
+		return registerBlock(id, modid, block, blockItem, replacedIfAlreadyAnOreDict, oreDictNames);
+	}
+	
+	public static <T extends Block> T registerBlock(String id, T block, Class<? extends ItemBlock> blockItem, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames)
+	{
+		return registerBlock(id, References.MODID, block, blockItem, replacedIfAlreadyAnOreDict, oreDictNames);
+	}
+	
+	public static <T extends Block> T registerBlock(String id, String modid, T block, Class<? extends ItemBlock> blockItem, boolean replacedIfAlreadyAnOreDict, String[] oreDictNames)
+	{
 		if(!ids.containsKey(block))
 		{
 			Id ID = new Id(id, modid, replacedIfAlreadyAnOreDict, oreDictNames);
+			if(blockItem != null)
+			{
+				ID.blockItem = blockItem;
+			}
 			ids.put(block, ID);
 			idsToBeRegistered.add(ID);
 		}
