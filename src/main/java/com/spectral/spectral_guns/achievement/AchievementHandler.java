@@ -14,6 +14,9 @@ public final class AchievementHandler
 {
 	public static final class Achievements
 	{
+		//x -> the the left, y -> down
+		public static final Achievement buildAssemblyStation = registerAchievement(new Achievement("achievement.buildAssemblyStation", "buildAssemblyStation", 1, -2, M.wrench, null), AchievementPages.mod);
+		public static final Achievement buildGun = registerAchievement(new Achievement("achievement.buildGun", "buildGun", 1, 0, M.gun, Achievements.buildAssemblyStation), AchievementPages.mod);
 		
 		public Achievements()
 		{
@@ -85,4 +88,3 @@ public final class AchievementHandler
 		return achieves2.get(def);
 	}
 }
-

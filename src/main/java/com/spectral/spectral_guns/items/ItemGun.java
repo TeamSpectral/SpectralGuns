@@ -32,6 +32,7 @@ import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
+import com.spectral.spectral_guns.achievement.AchievementHandler.Achievements;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
@@ -276,6 +277,12 @@ public class ItemGun extends Item
 		 * }
 		 */
 		return stack;
+	}
+	
+	@Override
+	public void onCreated(ItemStack stack, World world, EntityPlayer player)
+	{
+		player.triggerAchievement(Achievements.buildGun);
 	}
 	
 	@Override

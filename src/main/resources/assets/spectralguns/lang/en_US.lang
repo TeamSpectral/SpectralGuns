@@ -116,3 +116,10 @@ item.component.scope.diamond.laser.green.name=Green Diamond Laser Scope (T4)
 item.component.addon.overclocker.name=Overclocker
 
 entity.spectralguns.laser.name=Laser
+
+
+achievement.buildAssemblyStation=Parts, assemble!
+achievement.buildAssemblyStation.desc=Craft the assembly station! This is what you'll use for making your guns.
+
+achievement.buildGun=SAY 'ELLO TO MAH LI'L FRIEND!!!
+achievement.buildGun.desc=Create your very first firearm! You need a magazine, a trigger mechanism, a barrel and a grip. Easy, right?

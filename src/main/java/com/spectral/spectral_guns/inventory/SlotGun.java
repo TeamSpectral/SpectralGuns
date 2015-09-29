@@ -131,6 +131,7 @@ public class SlotGun extends Slot
 		super.onPickupFromSlot(player, stack);
 		this.inventory().clearComponentStacks(false, 1);
 		this.damageWrench();
+		stack.onCrafting(player.worldObj, player, 1);
 		//this.container.setGunName("");
 	}
 	

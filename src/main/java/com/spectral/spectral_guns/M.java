@@ -54,6 +54,7 @@ import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerM
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
 import com.spectral.spectral_guns.items.IItemIdFrom;
 import com.spectral.spectral_guns.items.ItemAmmo;
+import com.spectral.spectral_guns.items.ItemBlockGunWorkbench;
 import com.spectral.spectral_guns.items.ItemComponent;
 import com.spectral.spectral_guns.items.ItemFood2;
 import com.spectral.spectral_guns.items.ItemGun;
@@ -492,7 +493,7 @@ public class M
 	public static final BlockCompressed ruby_block = registerBlock("ruby_block", (BlockCompressed)new BlockCompressed(MapColor.redColor).setHardness(3.0F).setResistance(5.0F).setStepSound(Block.soundTypePiston).setUnlocalizedName("blockRuby").setCreativeTab(CreativeTabs.tabBlock), true, new String[]{"blockRuby"});
 	
 	// tile entity blocks
-	public static final BlockGunWorkbench gun_assembly_station = registerBlock("gun_assembly_station", (BlockGunWorkbench)new BlockGunWorkbench().setHardness(4.0F).setResistance(6.0F).setStepSound(Block.soundTypeMetal).setUnlocalizedName("gunAssemblyStation").setCreativeTab(M.tabCore), false, new String[]{});
+	public static final BlockGunWorkbench gun_assembly_station = registerBlock("gun_assembly_station", (BlockGunWorkbench)new BlockGunWorkbench().setHardness(4.0F).setResistance(6.0F).setStepSound(Block.soundTypeMetal).setUnlocalizedName("gunAssemblyStation").setCreativeTab(M.tabCore), false, new String[]{}, ItemBlockGunWorkbench.class);
 	
 	public M()
 	{
