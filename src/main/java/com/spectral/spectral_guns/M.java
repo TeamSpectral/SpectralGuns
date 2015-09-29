@@ -30,6 +30,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.Stuff.HashMapStuff;
+import com.spectral.spectral_guns.achievement.AchievementHandler.Achievements;
+import com.spectral.spectral_guns.achievement.AchievementPageHandler.AchievementPages;
 import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
 import com.spectral.spectral_guns.blocks.BlockOre2;
 import com.spectral.spectral_guns.components.Component;
@@ -421,6 +423,8 @@ public class M
 	
 	public M()
 	{
+		new AchievementPages();
+		new Achievements();
 		new Legendaries();
 	}
 	

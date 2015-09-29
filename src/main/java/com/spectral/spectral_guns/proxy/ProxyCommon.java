@@ -32,6 +32,8 @@ import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
 import com.spectral.spectral_guns.References;
+import com.spectral.spectral_guns.achievement.AchievementHandler;
+import com.spectral.spectral_guns.achievement.AchievementPageHandler;
 import com.spectral.spectral_guns.blocks.BlockOre2;
 import com.spectral.spectral_guns.entity.projectile.EntityFireball2;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
@@ -63,6 +65,7 @@ public abstract class ProxyCommon
 		this.packets();
 		this.entities();
 		this.worldGen();
+		this.achievements();
 		M.idsToBeRegistered.clear();
 	}
 	
@@ -315,6 +318,12 @@ public abstract class ProxyCommon
 	private void tileEntities()
 	{
 		GameRegistry.registerTileEntity(TileEntityGunWorkbench.class, TileEntityGunWorkbench.getID());
+	}
+	
+	private void achievements()
+	{
+		AchievementHandler.registerAchievements();
+		AchievementPageHandler.registerAchievementPages();
 	}
 	
 	private void registerConfig(File file)
