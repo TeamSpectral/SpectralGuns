@@ -41,7 +41,7 @@ public abstract class Legendary
 	{
 		if(legendaries.containsKey(name))
 		{
-			throw new IllegalArgumentException("Legendary name already taken! So sad... :,(");
+			throw new IllegalArgumentException("Legendary name " + '"' + name + '"' + " already taken! So sad... :,(");
 		}
 		legendaries.put(name, this);
 		this.name = name;
