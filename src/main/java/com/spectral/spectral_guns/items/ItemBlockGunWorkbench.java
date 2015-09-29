@@ -1,6 +1,6 @@
 package com.spectral.spectral_guns.items;
 
-import com.spectral.spectral_guns.achievement.AchievementHandler.Achievements;
+import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

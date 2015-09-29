@@ -32,7 +32,6 @@ import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
-import com.spectral.spectral_guns.achievement.AchievementHandler.Achievements;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentRegister;
 import com.spectral.spectral_guns.components.Component.ComponentRegister.Type;
@@ -47,6 +46,7 @@ import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 import com.spectral.spectral_guns.itemtags.ItemTagList;
 import com.spectral.spectral_guns.itemtags.ItemTagString;
 import com.spectral.spectral_guns.stats.Legendary;
+import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
 
 public class ItemGun extends Item
 {

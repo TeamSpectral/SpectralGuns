@@ -31,8 +31,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.spectral.spectral_guns.Stuff.HashMapStuff;
-import com.spectral.spectral_guns.achievement.AchievementHandler.Achievements;
-import com.spectral.spectral_guns.achievement.AchievementPageHandler.AchievementPages;
 import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
 import com.spectral.spectral_guns.blocks.BlockOre2;
 import com.spectral.spectral_guns.components.Component;
@@ -62,6 +60,8 @@ import com.spectral.spectral_guns.items.ItemShuriken;
 import com.spectral.spectral_guns.items.ItemWrench;
 import com.spectral.spectral_guns.proxy.ProxyCommon;
 import com.spectral.spectral_guns.stats.Legendaries;
+import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
+import com.spectral.spectral_guns.stats.AchievementPageHandler.AchievementPages;
 import com.spectral.spectral_guns.tabs.TabGeneric;
 import com.spectral.spectral_guns.worldgen.WorldGenGem;
 

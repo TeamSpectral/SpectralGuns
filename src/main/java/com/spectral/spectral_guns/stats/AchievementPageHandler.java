@@ -1,4 +1,4 @@
-package com.spectral.spectral_guns.achievement;
+package com.spectral.spectral_guns.stats;
 
 import java.util.ArrayList;
 

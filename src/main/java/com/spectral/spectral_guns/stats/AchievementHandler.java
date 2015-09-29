@@ -1,4 +1,4 @@
-package com.spectral.spectral_guns.achievement;
+package com.spectral.spectral_guns.stats;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,8 +7,8 @@ import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
 
 import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.achievement.AchievementPageHandler.AchievementPageDefinition;
-import com.spectral.spectral_guns.achievement.AchievementPageHandler.AchievementPages;
+import com.spectral.spectral_guns.stats.AchievementPageHandler.AchievementPageDefinition;
+import com.spectral.spectral_guns.stats.AchievementPageHandler.AchievementPages;
 
 public final class AchievementHandler
 {

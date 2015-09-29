@@ -32,8 +32,6 @@ import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
 import com.spectral.spectral_guns.References;
-import com.spectral.spectral_guns.achievement.AchievementHandler;
-import com.spectral.spectral_guns.achievement.AchievementPageHandler;
 import com.spectral.spectral_guns.blocks.BlockOre2;
 import com.spectral.spectral_guns.entity.projectile.EntityFireball2;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
@@ -48,6 +46,8 @@ import com.spectral.spectral_guns.packet.PacketItemName;
 import com.spectral.spectral_guns.packet.PacketKey;
 import com.spectral.spectral_guns.packet.PacketPlayerData;
 import com.spectral.spectral_guns.recipe.RecipeGun;
+import com.spectral.spectral_guns.stats.AchievementHandler;
+import com.spectral.spectral_guns.stats.AchievementPageHandler;
 import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 
 public abstract class ProxyCommon
