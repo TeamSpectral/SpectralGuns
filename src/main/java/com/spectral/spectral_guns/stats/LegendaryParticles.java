@@ -63,7 +63,7 @@ public abstract class LegendaryParticles extends LegendaryBase
 	@Override
 	public final void onUpdate(ItemStack stack, World world, Entity player, int invSlot, boolean isSelected)
 	{
-		if(this.onUpdate2(stack, world, player, invSlot, isSelected))
+		if(this.onUpdate2(stack, world, player, invSlot, isSelected) && isSelected)
 		{
 			double modifier2 = this.timesUpdate;
 			int i = (int)Math.floor(modifier2);
