@@ -40,9 +40,13 @@ public class SlotComponent extends Slot
 		ItemStack stackWrench = this.inventory().getStackInSlot(1);
 		if(stackWrench != null && stackWrench.getItem() instanceof ItemWrench && stackWrench.getItemDamage() < stackWrench.getMaxDamage())
 		{
-			if(stack == null || stack.getItem() instanceof ItemComponent)
+			if(stack == null)
 			{
-				if(stack == null || ((ItemComponent)stack.getItem()).c.type == this.type)
+				return true;
+			}
+			if(stack.getItem() instanceof ItemComponent)
+			{
+				if(((ItemComponent)stack.getItem()).c.type == this.type)
 				{
 					return true;
 				}
