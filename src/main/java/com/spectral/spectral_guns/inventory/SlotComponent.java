@@ -68,7 +68,7 @@ public class SlotComponent extends Slot
 					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("barrel", "barrels", false));
 					break;
 				case GRIP:
-					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("grips", "grip", false));
+					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("grip", "grips", false));
 					break;
 				case MAGAZINE:
 					this.inventory().errorMessage(ReferencesGunErrors.WRONG_SLOT("magazine", "magazines", false));
