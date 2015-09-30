@@ -17,6 +17,7 @@ public final class AchievementHandler
 		//x -> the the left, y -> down
 		public static final Achievement buildAssemblyStation = registerAchievement(new Achievement("achievement.buildAssemblyStation", "buildAssemblyStation", 1, -2, M.wrench, null), AchievementPages.mod);
 		public static final Achievement buildGun = registerAchievement(new Achievement("achievement.buildGun", "buildGun", 1, 0, M.gun, Achievements.buildAssemblyStation), AchievementPages.mod);
+		public static final ArrayList<AchievementLegendaryGunName> legendaries = new ArrayList();
 		
 		public Achievements()
 		{

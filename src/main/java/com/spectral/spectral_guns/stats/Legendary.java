@@ -12,11 +12,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.spectral.spectral_guns.Stuff;
+import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
+import com.spectral.spectral_guns.stats.AchievementPageHandler.AchievementPages;
 
 public abstract class Legendary
 {
 	public static final HashMap<String, Legendary> legendaries = new HashMap();
+	private static int nextNumber = 0;
 	private final String name;
+	public final int number;
 	
 	public static Legendary getLegendaryForGun(ItemStack gun)
 	{
@@ -37,6 +41,40 @@ public abstract class Legendary
 		return getLegendaryForGun(gun) != null;
 	}
 	
+	public static Legendary getLegendaryFromNum(int number)
+	{
+		for(String s : legendaries.keySet())
+		{
+			Legendary l = legendaries.get(s);
+			if(l != null)
+			{
+				if(l.number == number)
+				{
+					return l;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static final void addAchievements()
+	{
+		int lenght = (int)Math.ceil(Math.sqrt(nextNumber));
+		int maxY = AchievementPages.mod.maxY;
+		for(int i = 0; i < nextNumber; ++i)
+		{
+			Legendary l = getLegendaryFromNum(i);
+			if(l != null)
+			{
+				int y = (int)Math.floor((float)i / (float)lenght);
+				int x = i - y * lenght;
+				AchievementLegendaryGunName ach = new AchievementLegendaryGunName(l, x - Math.round((float)lenght / 2) + 2, y + maxY + 2);
+				Achievements.legendaries.add(ach);
+				AchievementHandler.registerAchievement(ach, AchievementPages.mod);
+			}
+		}
+	}
+	
 	public Legendary(String name)
 	{
 		if(legendaries.containsKey(name))
@@ -45,6 +83,8 @@ public abstract class Legendary
 		}
 		legendaries.put(name, this);
 		this.name = name;
+		this.number = nextNumber;
+		++nextNumber;
 	}
 	
 	public final String getRequiredName()
@@ -61,7 +101,9 @@ public abstract class Legendary
 	
 	public abstract int getXpReward(EntityPlayer player);
 	
-	public abstract String getAchievementTexture();
+	public abstract ItemStack getAchievementIcon();
+	
+	public abstract String getAchievementDescription();
 	
 	public String getTexture()
 	{
@@ -83,4 +125,15 @@ public abstract class Legendary
 	
 	@SideOnly(Side.CLIENT)
 	public abstract void onUpdate(ItemStack stack, World world, Entity player, int invSlot, boolean isSelected);
+	
+	public void triggerAchievement(ItemStack stack, World world, EntityPlayer player)
+	{
+		for(AchievementLegendaryGunName ach : Achievements.legendaries)
+		{
+			if(ach.legendary == this)
+			{
+				player.triggerAchievement(ach);
+			}
+		}
+	}
 }

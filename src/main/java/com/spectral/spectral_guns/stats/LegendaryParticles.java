@@ -15,9 +15,9 @@ public abstract class LegendaryParticles extends LegendaryBase
 	public final double timesUpdate;
 	public final double radiusOffset;
 	
-	public LegendaryParticles(String name, EnumChatFormatting color, int xpReward, String achievementTex, double timesFire, double timesUpdate, double radiusOffset)
+	public LegendaryParticles(String name, EnumChatFormatting color, int xpReward, ItemStack achievementIcon, double timesFire, double timesUpdate, double radiusOffset, String desc)
 	{
-		super(name, color, xpReward, achievementTex);
+		super(name, color, xpReward, achievementIcon, desc);
 		this.timesFire = timesFire;
 		this.timesUpdate = timesUpdate;
 		this.radiusOffset = radiusOffset;

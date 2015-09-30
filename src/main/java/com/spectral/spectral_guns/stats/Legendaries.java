@@ -4,11 +4,13 @@ import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
+import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.components.Component.ComponentTraits;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
 import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
@@ -19,8 +21,8 @@ public final class Legendaries
 {
 	public static final int sigurds_funky_lasergun_timing = 10;
 	
-	public static final LegendaryBase spectral_taco = new LegendaryBase("Spectral Taco", EnumChatFormatting.GOLD, 30, null);
-	public static final LegendaryBase sigurds_funky_lasergun = new LegendaryBase("Sigurd's Funky Lasergun", EnumChatFormatting.LIGHT_PURPLE, 10, null)
+	public static final LegendaryBase spectral_taco = new LegendaryBase("Spectral Taco", EnumChatFormatting.GOLD, 30, null, "2spooky4u");
+	public static final LegendaryBase sigurds_funky_lasergun = new LegendaryBase("Sigurd's Funky Lasergun", EnumChatFormatting.LIGHT_PURPLE, 10, new ItemStack(M.prism), "RAINBOWZZZ!!! :DDD")
 	{
 		@Override
 		public EnumChatFormatting getColor(ItemStack stack, EntityPlayer player)
@@ -35,7 +37,7 @@ public final class Legendaries
 			return super.isValid(stack) && ItemGun.getComponentsOf(stack, ComponentMagazineLaser.class).size() > 0;
 		}
 	};
-	public static final LegendaryBase baconslinger = new LegendaryBase("Baconslinger", EnumChatFormatting.RED, 10, null)
+	public static final LegendaryBase baconslinger = new LegendaryBase("Baconslinger", EnumChatFormatting.RED, 10, new ItemStack(Items.cooked_porkchop), "High-velocity, heavenly ham. Yummy!")
 	{
 		@Override
 		public boolean isValid(ItemStack stack)
@@ -44,7 +46,7 @@ public final class Legendaries
 		}
 	};
 	/** kai i made your gun extra shiny. (oh gosh what have i done D:>) **/
-	public static final LegendaryBase beardies_shiny_gun = new LegendaryParticles("Beardie's Shiny Gun", EnumChatFormatting.YELLOW, 10, null, 5, 0.1, 1)
+	public static final LegendaryBase beardies_shiny_gun = new LegendaryParticles("Beardie's Shiny Gun", EnumChatFormatting.YELLOW, 10, new ItemStack(Items.blaze_powder), 5, 0.1, 1, "Ooooooh, shiny! (May cause herptileizm or children in your head)")
 	{
 		@Override
 		public boolean isValid(ItemStack stack)
@@ -74,10 +76,10 @@ public final class Legendaries
 	 * KH, please specify more stuff for your gun cuzzzzz i have no idea what to
 	 * even arhurehhrghrhuhrhwhyyyyyyyyyyyyyy...
 	 **/
-	public static final LegendaryBase kh = new LegendaryBase("KH", EnumChatFormatting.AQUA, 10, null);
+	public static final LegendaryBase kh = new LegendaryBase("KH", EnumChatFormatting.AQUA, 10, null, "KH has yet to tell me what this gun is supposed to do... :/");
 	
 	public Legendaries()
 	{
-		
+		Legendary.addAchievements();
 	}
 }

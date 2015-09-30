@@ -45,8 +45,8 @@ import com.spectral.spectral_guns.itemtags.ItemTagCompound;
 import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 import com.spectral.spectral_guns.itemtags.ItemTagList;
 import com.spectral.spectral_guns.itemtags.ItemTagString;
-import com.spectral.spectral_guns.stats.Legendary;
 import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
+import com.spectral.spectral_guns.stats.Legendary;
 
 public class ItemGun extends Item
 {
@@ -283,6 +283,11 @@ public class ItemGun extends Item
 	public void onCreated(ItemStack stack, World world, EntityPlayer player)
 	{
 		player.triggerAchievement(Achievements.buildGun);
+		Legendary legendary = Legendary.getLegendaryForGun(stack);
+		if(legendary != null)
+		{
+			legendary.triggerAchievement(stack, world, player);
+		}
 	}
 	
 	@Override
@@ -429,6 +434,10 @@ public class ItemGun extends Item
 		if(legendary != null)
 		{
 			legendary.onUpdate(stack, world, entity, slot, isSelected);
+			if(entity instanceof EntityPlayer)
+			{
+				legendary.triggerAchievement(stack, world, (EntityPlayer)entity);
+			}
 		}
 		if(entity instanceof EntityPlayer)
 		{

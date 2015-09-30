@@ -10,14 +10,16 @@ public class LegendaryBase extends Legendary
 {
 	protected final EnumChatFormatting color;
 	protected final int xpReward;
-	protected final String achievementTex;
+	protected final ItemStack achievementIcon;
+	protected final String desc;
 	
-	public LegendaryBase(String name, EnumChatFormatting color, int xpReward, String achievementTex)
+	public LegendaryBase(String name, EnumChatFormatting color, int xpReward, ItemStack achievementIcon, String desc)
 	{
 		super(name);
 		this.color = color;
 		this.xpReward = xpReward;
-		this.achievementTex = achievementTex;
+		this.achievementIcon = achievementIcon;
+		this.desc = desc;
 	}
 	
 	@Override
@@ -33,9 +35,15 @@ public class LegendaryBase extends Legendary
 	}
 	
 	@Override
-	public String getAchievementTexture()
+	public ItemStack getAchievementIcon()
 	{
-		return null;
+		return this.achievementIcon;
+	}
+	
+	@Override
+	public String getAchievementDescription()
+	{
+		return this.desc;
 	}
 	
 	@Override
