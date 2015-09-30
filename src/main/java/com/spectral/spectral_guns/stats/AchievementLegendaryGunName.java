@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -39,10 +38,11 @@ public class AchievementLegendaryGunName extends Achievement
 			{
 				s += ": " + this.legendary.getRequiredName();
 			}
+			s = this.legendary.getPrefix(new ItemStack(M.gun).setStackDisplayName(this.legendary.getRequiredName()), Minecraft.getMinecraft().thePlayer) + s;
 		}
 		IChatComponent c = new ChatComponentTranslation(s);
 		c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ACHIEVEMENT, new ChatComponentText(this.statId)));
-		c.getChatStyle().setColor(this.getSpecial() ? EnumChatFormatting.DARK_PURPLE : EnumChatFormatting.GREEN);
+		
 		return c;
 	}
 }

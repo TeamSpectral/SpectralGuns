@@ -43,6 +43,7 @@ public final class AchievementHandler
 			if(!achieves2.get(page).contains(achievement))
 			{
 				achieves2.get(page).add(achievement);
+				registerStat(achievement);
 				page.updateBoundries(achievement);
 				return achievement;
 			}
@@ -87,5 +88,15 @@ public final class AchievementHandler
 			return new ArrayList();
 		}
 		return achieves2.get(def);
+	}
+	
+	private static final void registerStat(Achievement ach)
+	{
+		int i = AchievementList.achievementList.size();
+		ach.registerStat();
+		if(i < AchievementList.achievementList.size())
+		{
+			AchievementList.achievementList.remove(AchievementList.achievementList.size() - 1);
+		}
 	}
 }
