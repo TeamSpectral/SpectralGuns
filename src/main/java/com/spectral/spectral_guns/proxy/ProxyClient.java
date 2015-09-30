@@ -1,15 +1,20 @@
 package com.spectral.spectral_guns.proxy;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.entity.RenderFireball;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -22,12 +27,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.M.Id;
 import com.spectral.spectral_guns.VersionChecker;
+import com.spectral.spectral_guns.entity.projectile.EntityFireball2;
 import com.spectral.spectral_guns.entity.projectile.EntityFood;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser;
 import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
-import com.spectral.spectral_guns.entity.projectile.EntityFireball2;
 import com.spectral.spectral_guns.event.HandlerClient;
 import com.spectral.spectral_guns.event.HandlerClientFML;
+import com.spectral.spectral_guns.items.IItemDynamicModel;
 import com.spectral.spectral_guns.render.entity.RenderFood;
 import com.spectral.spectral_guns.render.entity.RenderNull;
 import com.spectral.spectral_guns.render.entity.RenderShuriken;
@@ -101,13 +107,64 @@ public class ProxyClient extends ProxyCommon
 				Object item = M.getItem(id);
 				if(item != null && item instanceof Block)
 				{
-					ri.getItemModelMesher().register(Item.getItemFromBlock((Block)item), 0, new ModelResourceLocation(id.mod.toLowerCase() + ":" + id.id.toLowerCase(), "inventory"));
+					if(!(item instanceof IItemDynamicModel))
+					{
+						item = Item.getItemFromBlock((Block)item);
+						ri.getItemModelMesher().register((Item)item, 0, new ModelResourceLocation(id.mod.toLowerCase() + ":" + id.id.toLowerCase(), "inventory"));
+					}
+					else
+					{
+						item = Item.getItemFromBlock((Block)item);
+					}
 				}
 				else if(item != null && item instanceof Item)
 				{
-					ri.getItemModelMesher().register((Item)item, 0, new ModelResourceLocation(id.mod.toLowerCase() + ":" + id.id.toLowerCase(), "inventory"));
+					HashMap<Integer, ArrayList<String>> metas = M.getTypes((Item)item);
+					for(int meta = 0; meta <= ((Item)item).getMaxDamage(); ++meta)
+					{
+						if(metas.containsKey(meta))
+						{
+							ArrayList<String> variants = metas.get(meta);
+							ArrayList<ModelResourceLocation> mrls = new ArrayList();
+							for(int i = 0; i < variants.size(); ++i)
+							{
+								mrls.add(new ModelResourceLocation(variants.get(i), "inventory"));
+							}
+							String sid = id.mod + ":" + id.id;
+							if(!variants.contains(sid))
+							{
+								variants.add(sid);
+							}
+							ModelBakery.addVariantName((Item)item, variants.toArray(new String[variants.size()]));
+							
+							if(!(item instanceof IItemDynamicModel))
+							{
+								ri.getItemModelMesher().register((Item)item, meta, new ModelResourceLocation(sid, "inventory"));
+							}
+						}
+					}
+				}
+				if(item instanceof IItemDynamicModel)
+				{
+					ri.getItemModelMesher().register((Item)item, new ItemMeshDefinitionDynamic((IItemDynamicModel)item));
 				}
 			}
+		}
+	}
+	
+	private static class ItemMeshDefinitionDynamic implements ItemMeshDefinition
+	{
+		private final IItemDynamicModel item;
+		
+		private ItemMeshDefinitionDynamic(IItemDynamicModel item)
+		{
+			this.item = item;
+		}
+		
+		@Override
+		public ModelResourceLocation getModelLocation(ItemStack stack)
+		{
+			return this.item.getModelLocation(stack);
 		}
 	}
 }

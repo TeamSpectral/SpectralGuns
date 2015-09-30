@@ -21,7 +21,7 @@ public final class Legendaries
 {
 	public static final int sigurds_funky_lasergun_timing = 10;
 	
-	public static final LegendaryBase spectral_taco = new LegendaryBase("Spectral Taco", EnumChatFormatting.GOLD, 30, null, "2spooky4u");
+	public static final LegendaryBase spectral_taco = new LegendaryBase("Spectral Taco", EnumChatFormatting.GOLD, 30, new ItemStack(M.gun).setStackDisplayName("Spectral Taco"), "2spooky4u");
 	public static final LegendaryBase sigurds_funky_lasergun = new LegendaryBase("Sigurd's Funky Lasergun", EnumChatFormatting.LIGHT_PURPLE, 10, new ItemStack(M.prism), "RAINBOWZZZ!!! :DDD")
 	{
 		@Override

@@ -8,6 +8,7 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +30,7 @@ import org.lwjgl.input.Keyboard;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.References;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
@@ -46,9 +48,10 @@ import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 import com.spectral.spectral_guns.itemtags.ItemTagList;
 import com.spectral.spectral_guns.itemtags.ItemTagString;
 import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
+import com.spectral.spectral_guns.stats.Legendaries;
 import com.spectral.spectral_guns.stats.Legendary;
 
-public class ItemGun extends Item
+public class ItemGun extends Item implements IItemDynamicModel, IItemTextureVariants
 {
 	// nbt
 	public static final ItemTagList COMPONENTS = new ItemTagList("ComponentsList", false);
@@ -1127,4 +1130,19 @@ public class ItemGun extends Item
 		setComponents(stack, new HashMap());
 	}
 	
+	@Override
+	public ModelResourceLocation getModelLocation(ItemStack stack)
+	{
+		if(Legendary.getLegendaryForGun(stack) == Legendaries.spectral_taco)
+		{
+			return new ModelResourceLocation(this.getTextureVariants(stack.getMetadata())[1], "inventory");
+		}
+		return new ModelResourceLocation(this.getTextureVariants(stack.getMetadata())[0], "inventory");
+	}
+	
+	@Override
+	public String[] getTextureVariants(int meta)
+	{
+		return new String[]{References.MODID + ":" + M.getId(this).id, References.MODID + ":" + "spectral_taco"};
+	}
 }

@@ -51,6 +51,7 @@ import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerM
 import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismBoosted;
 import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
 import com.spectral.spectral_guns.items.IItemIdFrom;
+import com.spectral.spectral_guns.items.IItemTextureVariants;
 import com.spectral.spectral_guns.items.ItemAmmo;
 import com.spectral.spectral_guns.items.ItemBlockGunWorkbench;
 import com.spectral.spectral_guns.items.ItemComponent;
@@ -59,9 +60,9 @@ import com.spectral.spectral_guns.items.ItemGun;
 import com.spectral.spectral_guns.items.ItemShuriken;
 import com.spectral.spectral_guns.items.ItemWrench;
 import com.spectral.spectral_guns.proxy.ProxyCommon;
-import com.spectral.spectral_guns.stats.Legendaries;
 import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
 import com.spectral.spectral_guns.stats.AchievementPageHandler.AchievementPages;
+import com.spectral.spectral_guns.stats.Legendaries;
 import com.spectral.spectral_guns.tabs.TabGeneric;
 import com.spectral.spectral_guns.worldgen.WorldGenGem;
 
@@ -151,6 +152,36 @@ public class M
 	public static boolean visible(Object item)
 	{
 		return !ids.containsKey(item) || ids.get(item).visible;
+	}
+	
+	public static HashMap<Integer, ArrayList<String>> getTypes(Item item)
+	{
+		HashMap<Integer, ArrayList<String>> types = new HashMap();
+		for(int meta = 0; meta < item.getMaxDamage() || meta == 0; ++meta)
+		{
+			types.put(meta, new ArrayList());
+			if(item instanceof IItemTextureVariants)
+			{
+				String[] variants = ((IItemTextureVariants)item).getTextureVariants(meta);
+				for(int i = 0; i < variants.length; ++i)
+				{
+					types.get(meta).add(variants[i].toLowerCase());
+				}
+			}
+			if(types.get(meta).size() <= 0)
+			{
+				if(M.getId(item) != null)
+				{
+					Id id = M.getId(item);
+					types.get(meta).add(id.mod + ":" + id.id);
+				}
+				else
+				{
+					types.get(meta).add("" + Item.itemRegistry.getNameForObject(item));
+				}
+			}
+		}
+		return types;
 	}
 	
 	public static class Id
