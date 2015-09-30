@@ -31,7 +31,7 @@ public class AchievementLegendaryGunName extends Achievement
 	@Override
 	public IChatComponent getStatName()
 	{
-		String s = "Legendary #" + this.legendary.number;
+		String s = "Legendary #" + (this.legendary.number + 1);
 		if(M.proxy.side() == Side.CLIENT)
 		{
 			if(Minecraft.getMinecraft().thePlayer.getStatFileWriter().hasAchievementUnlocked(this))
