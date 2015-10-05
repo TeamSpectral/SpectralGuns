@@ -7,7 +7,7 @@ changed loads of stuff with the components. cleared stuff up. now uses material 
 +added snowy hud(not quite working)
 i probably changed a bunch of other stuff that i can't remember. note to self: do keep track of changes next time.
 
-*0.2.1 - sigurd4
+0.2.1 - sigurd4
 *fixed some bugs and crashes
 *minor adjustments
 
@@ -70,7 +70,7 @@ i probably changed a bunch of other stuff that i can't remember. note to self: d
 
 1.2.4 - sigurd4
 +added recipe for wrench
-*formatting in the gun tooltip so that some parts stand out better
+*formatting in the gun tooltip so that some components stand out better
 *fixed the degree symbols glitching out in the gun tooltip
 *reload help key changes with the set keybind instead of being 'R' regardless of what key is bound for reloading
 *shurikens can now trigger wooden buttons and are treated in code as a type of arrow
@@ -81,5 +81,110 @@ i probably changed a bunch of other stuff that i can't remember. note to self: d
 *guns now drop their ammunition when inserted into a gun table (previously it just disappeared)
 *fixed some server crashes and annoyances
 
-1.2.4 - sigurd4
+1.2.5 - sigurd4
 *fixed the gun assembly table. derp i'm so sowwy
+
+1.3 - sigurd4
+*update to minecraftforge 1.8-11.14.3.1450
+*redstone is now specified as redstone ammo in the tooltip, like all other ammo
+*changes to info file:
+    +added mod logo
+    *fixed formatting errors
+    +added url to pmc page
+    *mod name changed from "Spectral Guns" to "SpectralGuns"
++added dynamic durability for each component
+    •each component has its own separate durability
+    •each material has a different durability mod
+    •so does each component variant
+    •when one parts durability is depleted, the component will be destroyed and the gun drops all its remaining parts
+    •durability on each component is kept when gun is disassembled
+    •parts can be repaired in an anvil using the correct material
++added temperature system
+    •each component has its own temperature
+    •temperature spreads dynamically from component to component
+    •some temperature is lost over time
+    •different materials conduct heat differently
+    •each material has both a minimum and maximum threshold:
+        •too high temperatures will damage the gun
+        •too low temperatures will also damage the gun
+        •red outline around camera to indicate the gun taking temperature-damage
+    •very high temperatures on the handle will hurt the user, and possibly set them on fire if temperature is extremely high
++added list of components on the hud to the right
+    •displays temperature in a blue-grey-red spectrum
+*magazines give off heat when firing, some more than others
+*completely rewrote the system for storing components in nbt-data to hold more than one of the same component:
+    •pre 1.3 guns should be automatically converted to the new system
++added addon component type:
+    •you can have up to four of them (there are four slots)
+    •effects stack on top of each other
+    •generally not in different tiers
++added the overclocker:
+    •fits in the addon slots
+    •use up to four at the same time
+    •increases fire-rate
+        •fully automatic guns have slightly higher fire-rate
+    •increases projectile velocity
+    •increases recoil
+    •increases kickback
+    •increases instability
+    •produces lots of heat upon firing
++added informative error messages in the gun table
+*improved algorithm for shift clicking items into the gun table
++added completely new ammunition that give more than one shot, as well as different tiers of ammunition
+    •snowball containers of two different sizes
+    •food containers
+    •fireball bolt ammo
+*recoil is stored in the player's data, not separately in the gun itemstacks
+*gun projectiles ignore the temporary invulnerability on entities right after they take damage
+    •the damage of multiple projectiles hitting the same entity at the same time will now stack *THIS IS A HUGE DIFFERENCE!*
++added shaky camera effect when aiming
+    •higher if instability is higher
+    •higher the further in you're zooming
++added render of the current projectile in the hud
++added field for naming guns in the gun assembly table
+*player model aims, as if firing a bow, when holding the gun
++added lots more information in the gun tooltip and the tooltip of components
+    •on the gun tooltip: hold shift to show/hide all the components
++added ability to adjust how much you want to zoom when using a scope, by using the scroll wheel
+-completely removed material incompatibility
++added material traits, as a replacement for material incompatibilities:
+    •burning (wood):
+        •component takes more damage from overheating
+        •chance of setting on user on fire from overheating
+    •rusts (iron):
+        •slowly looses durability in water and rain
+    •shatters (diamond):
+        •when on low durability, chance of taking even more damage each time component is damaged
+    •shiny (gold and diamond):
+        •takes extra damage when firing with a food magazine
+*fireball guns will fire all the different projectiles in one equal direction
++added interaction with dynious' version checker mod (http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2091981)
+    •this may not work yet
+*changed a lot about how damage works (this will be tweaked later! don't worry!)
+    •damage depends on mass and velocity
++added some achievements
++spectral taco
+-WOBBLE
+
+and of course:
+
+*lots of balancing, nerfs and tweaks:
+    •tweaked gun model's rotation and such to look like it's being held like an actual gun
+    •made the fireball magazine's fire-rate 3x slower
+    •fireballs deal 2 fire damage and 6 standard projectile damage
+    •decreased recoil instability when using iron-sights or a scope
+    •only smooth camera when aiming with a scope, not with iron-sights
+    •the wider the barrel, the more projectiles for the snowball and food/puker magazines
+    •increased fireball velocity
+    •heavily decreased food velocity
+    •slightly decreased snowball velocity
+*lots of bug fixes:
+    •stacks of components in the gun table no longer magically disappear
+    •fixed ghost clientside firing
+    •prevented recoil from trying to launch camera rotation off screen
+    •projectiles render from further away now
+    •key input is not sent when you're in a gui
+    •fixed crash with particles from food projectiles
+    •made snowballs less laggy
+    •fixed extended player properties not working serverside
+    •fixed wrench durability being out of synch between server and client
