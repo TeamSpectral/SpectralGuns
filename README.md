@@ -1,5 +1,5 @@
 # SpectralGuns #
-*Adds customizable guns to Minecraft.*
+*A mod that adds modular guns in Minecraft.*
 
 -
 
@@ -11,10 +11,6 @@ Content creation by them, [SpectralKH](http://www.planetminecraft.com/member/spe
 -
 
 [Check out the mod on PlanetMinecraft](http://www.planetminecraft.com/mod/spectralguns)
-
--
-
-Hope you enjoy the mod!
 
 -
 
