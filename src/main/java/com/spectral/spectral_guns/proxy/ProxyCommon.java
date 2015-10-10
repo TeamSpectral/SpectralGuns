@@ -66,7 +66,6 @@ public abstract class ProxyCommon
 		this.entities();
 		this.worldGen();
 		this.achievements();
-		M.idsToBeRegistered.clear();
 	}
 	
 	public void init(FMLInitializationEvent event)
@@ -77,7 +76,7 @@ public abstract class ProxyCommon
 	
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		
+		M.idsToBeRegistered.clear();
 	}
 	
 	public abstract World world(int dimension);
