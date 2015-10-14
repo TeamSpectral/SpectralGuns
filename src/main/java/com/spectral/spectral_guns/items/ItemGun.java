@@ -31,6 +31,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
 import com.spectral.spectral_guns.References;
+import com.spectral.spectral_guns.References.ReferencesTemp;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.Stuff.Coordinates3D;
 import com.spectral.spectral_guns.Stuff.Randomization;
@@ -141,7 +142,7 @@ public class ItemGun extends Item implements IItemDynamicModel, IItemTextureVari
 					{
 						ItemStack componentStack = c.get(i).toItemStack(i, stack);
 						tooltip.add(" - " + I18n.format(componentStack.getUnlocalizedName() + ".name") + ":" + ChatFormatting.RESET);
-						tooltip.add("    D:" + (c.get(i).durabilityMax(i, stack) - c.get(i).durabilityDamage(i, stack)) + "/" + c.get(i).durabilityMax(i, stack) + ", T:" + (int)(c.get(i).heat(i, stack) * 100 / c.get(i).heatThreshold(i, stack)) + "%" + ChatFormatting.RESET);
+						tooltip.add("    D:" + (c.get(i).durabilityMax(i, stack) - c.get(i).durabilityDamage(i, stack)) + "/" + c.get(i).durabilityMax(i, stack) + ", T:" + (int)(c.get(i).heat(i, stack) + ReferencesTemp.NORMAL) + "/" + (int)(c.get(i).heatThreshold(i, stack) + ReferencesTemp.NORMAL) + new String(Character.toChars(0x00B0)) + "C" + ChatFormatting.RESET);
 					}
 				}
 			}

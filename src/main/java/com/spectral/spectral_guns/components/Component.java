@@ -28,7 +28,13 @@ public abstract class Component
 	{
 		public static enum Type
 		{
-			MISC(false, new int[]{6, 7, 8, 9}), BARREL(true, 0), MAGAZINE(true, 1), TRIGGER(true, 2), GRIP(true, 3), STOCK(false, 4), AIM(false, 5);
+			MISC(false, new int[]{6, 7, 8, 9}),
+			BARREL(true, 0),
+			MAGAZINE(true, 1),
+			TRIGGER(true, 2),
+			GRIP(true, 3),
+			STOCK(false, 4),
+			AIM(false, 5);
 			
 			final public boolean isRequired;
 			final public int[] slots;
@@ -189,7 +195,10 @@ public abstract class Component
 	
 	public enum ComponentTraits
 	{
-		BURNS(EnumChatFormatting.RED, "Overheating deals " + burnDamage + " more damage to durability and has a " + burnIgniteChance1 + "/" + burnIgniteChance2 + " chance ignite user for " + burnIgniteSeconds + " seconds."), RUSTS(EnumChatFormatting.GOLD, "Slowly takes damage in water and rain."), SHATTERS(EnumChatFormatting.GRAY, "Component has a " + shatterChance1 + "/" + shatterChance2 + " chance to take " + shatterDamageMultiplier + "x damage when on " + shatterThreshold1 + "/" + shatterThreshold2 + " durability or less."), SHINY(EnumChatFormatting.YELLOW, "Takes -" + shinyDamage + " durability when firing with a food magazine.");
+		BURNS(EnumChatFormatting.RED, "Overheating deals " + burnDamage + " more damage to durability and has a " + burnIgniteChance1 + "/" + burnIgniteChance2 + " chance ignite user for " + burnIgniteSeconds + " seconds."),
+		RUSTS(EnumChatFormatting.GOLD, "Slowly takes damage in water and rain."),
+		SHATTERS(EnumChatFormatting.GRAY, "Component has a " + shatterChance1 + "/" + shatterChance2 + " chance to take " + shatterDamageMultiplier + "x damage when on " + shatterThreshold1 + "/" + shatterThreshold2 + " durability or less."),
+		SHINY(EnumChatFormatting.YELLOW, "Takes -" + shinyDamage + " durability when firing with a food magazine.");
 		
 		public EnumChatFormatting color;
 		public String description;
@@ -203,7 +212,10 @@ public abstract class Component
 	
 	public enum ComponentMaterial
 	{
-		WOOD(140, 0.04, 3, 0.1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}, new ComponentTraits[]{ComponentTraits.BURNS}), IRON(267, 3.3, 0.5, 7, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}, new ComponentTraits[]{ComponentTraits.RUSTS}), GOLD(122, 3.9, 1, 0.5, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}, new ComponentTraits[]{ComponentTraits.SHINY}), DIAMOND(320, 0.2, 0.1, 1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM}, new ComponentTraits[]{ComponentTraits.SHINY, ComponentTraits.SHATTERS});
+		WOOD(140, 0.2, 3, 0.1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}, new ComponentTraits[]{ComponentTraits.BURNS}),
+		IRON(267, 3.3, 1.5, 5, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}, new ComponentTraits[]{ComponentTraits.RUSTS}),
+		GOLD(122, 3.9, 1.4, 1, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.TRIGGER, Type.GRIP, Type.STOCK, Type.AIM}, new ComponentTraits[]{ComponentTraits.SHINY}),
+		DIAMOND(320, 1.1, 1.1, 2, new Type[]{Type.MISC, Type.BARREL, Type.MAGAZINE, Type.AIM}, new ComponentTraits[]{ComponentTraits.SHINY, ComponentTraits.SHATTERS});
 		
 		public final Type[] types;
 		public final int durability;
@@ -407,10 +419,10 @@ public abstract class Component
 	{
 		double heat1 = this.heat(slot, stack);
 		double heat1Old = heat1;
-		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss;
+		double cond1 = this.heatConductiveness(slot, stack) * this.material.heatLoss / 4;
 		double heat2 = c.heat(slot, stack);
 		double heat2Old = heat2;
-		double cond2 = c.heatConductiveness(slot, stack) * c.material.heatLoss;
+		double cond2 = c.heatConductiveness(slot, stack) * c.material.heatLoss / 4;
 		
 		if(cond1 > 1)
 		{

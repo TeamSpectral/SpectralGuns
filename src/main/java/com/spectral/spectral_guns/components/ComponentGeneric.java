@@ -325,13 +325,11 @@ public abstract class ComponentGeneric extends Component
 		{
 			if(c != this)
 			{
-				for(Type type : this.getRequiredTypes())
+				Type type = this.getTypeConnectedTo();
+				if(type == c.type)
 				{
-					if(type == c.type)
-					{
-						this.heatMix(slot, stack, c);
-						continue loop;
-					}
+					this.heatMix(slot, stack, c);
+					continue loop;
 				}
 			}
 		}

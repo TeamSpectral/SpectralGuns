@@ -95,7 +95,7 @@ public class ComponentEvents
 			Component c = cs.get(i);
 			if(c != null)
 			{
-				double cond = c.heatConductiveness(i, stack) / 2;
+				double cond = c.heatConductiveness(i, stack) / 4;
 				double heat = c.heat(i, stack);
 				h += heat * cond / c.heatThreshold(slot, stack);
 				++a;

@@ -21,4 +21,10 @@ public class References
 			return "The " + singular + " slot" + (slotPlural ? "s" : "") + " " + (slotPlural ? "are" : "is") + " only for " + plural + "!";
 		}
 	}
+	
+	public static class ReferencesTemp
+	{
+		public static final int NORMAL = 20;
+		public static final double MOD = 80;
+	}
 }

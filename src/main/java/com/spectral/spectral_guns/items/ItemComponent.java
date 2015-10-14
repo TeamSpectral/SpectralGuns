@@ -16,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 
 import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.References.ReferencesTemp;
 import com.spectral.spectral_guns.Stuff;
 import com.spectral.spectral_guns.components.Component;
 import com.spectral.spectral_guns.components.Component.ComponentMaterial;
@@ -87,7 +88,7 @@ public class ItemComponent extends Item implements IItemWithRecipe
 		tooltip.add(EnumChatFormatting.DARK_GRAY + "Type: " + EnumChatFormatting.WHITE + Stuff.Strings.capitalize(this.c.type.name().toLowerCase()));
 		tooltip.add(EnumChatFormatting.DARK_GRAY + "Material: " + mat + this.c.material.getDisplayName(this.c.type, this.c));
 		tooltip.add(EnumChatFormatting.DARK_GRAY + "Durability: " + EnumChatFormatting.WHITE + (this.getMaxDamage() - this.getDamage(stack)) + "/" + this.getMaxDamage());
-		tooltip.add(EnumChatFormatting.DARK_GRAY + "Withstands Temperatures: " + EnumChatFormatting.WHITE + -this.c.material.heatThresholdMin + " to " + this.c.material.heatThresholdMax);
+		tooltip.add(EnumChatFormatting.DARK_GRAY + "Withstands Temperatures: " + EnumChatFormatting.WHITE + (-this.c.material.heatThresholdMin + ReferencesTemp.NORMAL) * ReferencesTemp.MOD + new String(Character.toChars(0x00B0)) + "C" + " to " + (this.c.material.heatThresholdMax + ReferencesTemp.NORMAL) * ReferencesTemp.MOD + new String(Character.toChars(0x00B0)) + "C");
 		tooltip.add(EnumChatFormatting.DARK_GRAY + "Temperature Conductiveness: " + EnumChatFormatting.WHITE + this.c.material.heatLoss);
 		
 		ArrayList<Type> requiredTypes = this.c.getRequiredTypes();
