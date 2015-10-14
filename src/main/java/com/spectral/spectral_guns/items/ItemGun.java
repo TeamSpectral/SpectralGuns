@@ -48,7 +48,6 @@ import com.spectral.spectral_guns.itemtags.ItemTagInteger;
 import com.spectral.spectral_guns.itemtags.ItemTagList;
 import com.spectral.spectral_guns.itemtags.ItemTagString;
 import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
-import com.spectral.spectral_guns.stats.Legendaries;
 import com.spectral.spectral_guns.stats.Legendary;
 
 public class ItemGun extends Item implements IItemDynamicModel, IItemTextureVariants
@@ -1133,9 +1132,10 @@ public class ItemGun extends Item implements IItemDynamicModel, IItemTextureVari
 	@Override
 	public ModelResourceLocation getModelLocation(ItemStack stack)
 	{
-		if(Legendary.getLegendaryForGun(stack) == Legendaries.spectral_taco)
+		Legendary l = Legendary.getLegendaryForGun(stack);
+		if(l != null && l.getTexture(stack) != null)
 		{
-			return new ModelResourceLocation(this.getTextureVariants(stack.getMetadata())[1], "inventory");
+			return new ModelResourceLocation(l.getTexture(stack), "inventory");
 		}
 		return new ModelResourceLocation(this.getTextureVariants(stack.getMetadata())[0], "inventory");
 	}
@@ -1143,6 +1143,15 @@ public class ItemGun extends Item implements IItemDynamicModel, IItemTextureVari
 	@Override
 	public String[] getTextureVariants(int meta)
 	{
-		return new String[]{References.MODID + ":" + M.getId(this).id, References.MODID + ":" + "spectral_taco"};
+		String[] tex = new String[]{References.MODID + ":" + M.getId(this).id};
+		for(Legendary l : Legendary.legendaries.values())
+		{
+			String[] variants = l.getTextureVariants();
+			if(variants != null)
+			{
+				tex = Stuff.ArraysAndSuch.mixArrays(String.class, tex, variants);
+			}
+		}
+		return tex;
 	}
 }

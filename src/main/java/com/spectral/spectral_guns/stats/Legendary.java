@@ -105,7 +105,19 @@ public abstract class Legendary
 	
 	public abstract String getAchievementDescription();
 	
-	public String getTexture()
+	public int getTextureIndex(ItemStack stack)
+	{
+		return 0;
+	}
+	
+	public String getTexture(ItemStack stack)
+	{
+		String[] tex = this.getTextureVariants();
+		int i = this.getTextureIndex(stack);
+		return tex != null && tex.length > 0 && i < tex.length && i >= 0 ? tex[i] : null;
+	}
+	
+	public String[] getTextureVariants()
 	{
 		return null;
 	}
