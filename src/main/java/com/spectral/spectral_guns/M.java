@@ -387,7 +387,7 @@ public class M
 		@Override
 		public void registerRecipe()
 		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 64), new Object[]{"GIG", "FLF", "gBg", 'G', "gearIron", 'I', "blockIron", 'F', Items.fire_charge, 'L', Items.lava_bucket, 'g', Items.gunpowder, 'B', M.barrel_normal_iron}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this, 64), new Object[]{"GIG", "FLF", "gBg", 'G', "gearIron", 'I', "blockIron", 'F', Items.fire_charge, 'L', Items.lava_bucket, 'g', Items.gunpowder, 'B', M.barrel_normal_iron.item}));
 		}
 	}.setUnlocalizedName("fireballBolt").setCreativeTab(M.tabCore), false, new String[]{});
 	public static final ItemAmmo mush_can = registerItem("ammo_mush_can", (ItemAmmo)new ItemAmmo(2)
