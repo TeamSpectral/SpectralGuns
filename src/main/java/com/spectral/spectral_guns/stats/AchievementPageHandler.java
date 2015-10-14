@@ -58,7 +58,7 @@ public final class AchievementPageHandler
 		for(AchievementPageDefinition def : defs)
 		{
 			ArrayList<Achievement> achieves = AchievementHandler.getAchievementsForPage(def);
-			AchievementPage.registerAchievementPage(new AchievementPage(def.id, Stuff.ArraysAndSuch.arrayListToArray2(achieves, new Achievement[achieves.size()])));
+			AchievementPage.registerAchievementPage(new AchievementPage(def.id, Stuff.ArraysAndSuch.arrayListToArray(Achievement.class, achieves)));
 		}
 		defs.clear();
 	}

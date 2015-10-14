@@ -49,12 +49,12 @@ public abstract class ComponentGeneric extends Component
 	
 	public void addRequiredComponents(ArrayList<Component> cs)
 	{
-		Stuff.ArraysAndSuch.mixArrays(this.required, Stuff.ArraysAndSuch.arrayListToArray2(cs, new Component[cs.size()]));
+		Stuff.ArraysAndSuch.mixArrays(Component.class, this.required, Stuff.ArraysAndSuch.arrayListToArray(Component.class, cs));
 	}
 	
 	public void addRequiredComponent(Component c)
 	{
-		Stuff.ArraysAndSuch.addToArray(this.required, c);
+		Stuff.ArraysAndSuch.addToArray(Component.class, this.required, c);
 	}
 	
 	@Override
@@ -65,12 +65,12 @@ public abstract class ComponentGeneric extends Component
 	
 	public void addIncapatibleComponents(Component[] cs)
 	{
-		Stuff.ArraysAndSuch.mixArrays(this.incapatible, cs);
+		Stuff.ArraysAndSuch.mixArrays(Component.class, this.incapatible, cs);
 	}
 	
 	public void addIncapatibleComponent(Component c)
 	{
-		Stuff.ArraysAndSuch.addToArray(this.incapatible, c);
+		Stuff.ArraysAndSuch.addToArray(Component.class, this.incapatible, c);
 	}
 	
 	@Override
@@ -81,12 +81,12 @@ public abstract class ComponentGeneric extends Component
 	
 	public void addRequiredTypes(Type[] ts)
 	{
-		Stuff.ArraysAndSuch.mixArrays(this.requiredTypes, ts);
+		Stuff.ArraysAndSuch.mixArrays(Type.class, this.requiredTypes, ts);
 	}
 	
 	public void addRequiredType(Type t)
 	{
-		Stuff.ArraysAndSuch.addToArray(this.requiredTypes, t);
+		Stuff.ArraysAndSuch.addToArray(Type.class, this.requiredTypes, t);
 	}
 	
 	@Override
@@ -100,19 +100,19 @@ public abstract class ComponentGeneric extends Component
 	{
 		if(this.connected != null && this.requiredTypes != null)
 		{
-			return ArraysAndSuch.arrayToArrayList(Stuff.ArraysAndSuch.mixArrays(new Type[]{this.connected}, this.requiredTypes));
+			return ArraysAndSuch.arrayToArrayList(Stuff.ArraysAndSuch.mixArrays(Type.class, new Type[]{this.connected}, this.requiredTypes));
 		}
 		return ArraysAndSuch.arrayToArrayList(this.requiredTypes);
 	}
 	
 	public void addIncapatibleTypes(Type[] ts)
 	{
-		Stuff.ArraysAndSuch.mixArrays(this.incapatibleTypes, ts);
+		Stuff.ArraysAndSuch.mixArrays(Type.class, this.incapatibleTypes, ts);
 	}
 	
 	public void addIncapatibleType(Type t)
 	{
-		Stuff.ArraysAndSuch.addToArray(this.incapatibleTypes, t);
+		Stuff.ArraysAndSuch.addToArray(Type.class, this.incapatibleTypes, t);
 	}
 	
 	@Override
@@ -121,14 +121,14 @@ public abstract class ComponentGeneric extends Component
 		return ArraysAndSuch.arrayToArrayList(this.incapatibleTypes);
 	}
 	
-	public void addRequiredMats(Type[] ms)
+	public void addRequiredMats(ComponentMaterial[] ms)
 	{
-		Stuff.ArraysAndSuch.mixArrays(this.requiredMats, ms);
+		Stuff.ArraysAndSuch.mixArrays(ComponentMaterial.class, this.requiredMats, ms);
 	}
 	
-	public void addRequiredMat(Type m)
+	public void addRequiredMat(ComponentMaterial m)
 	{
-		Stuff.ArraysAndSuch.addToArray(this.requiredMats, m);
+		Stuff.ArraysAndSuch.addToArray(ComponentMaterial.class, this.requiredMats, m);
 	}
 	
 	@Override
@@ -137,14 +137,14 @@ public abstract class ComponentGeneric extends Component
 		return ArraysAndSuch.arrayToArrayList(this.requiredMats);
 	}
 	
-	public void addIncapatibleMats(Type[] ms)
+	public void addIncapatibleMats(ComponentMaterial[] ms)
 	{
-		Stuff.ArraysAndSuch.mixArrays(this.incapatibleMats, ms);
+		Stuff.ArraysAndSuch.mixArrays(ComponentMaterial.class, this.incapatibleMats, ms);
 	}
 	
-	public void addIncapatibleMat(Type m)
+	public void addIncapatibleMat(ComponentMaterial m)
 	{
-		Stuff.ArraysAndSuch.addToArray(this.incapatibleMats, m);
+		Stuff.ArraysAndSuch.addToArray(ComponentMaterial.class, this.incapatibleMats, m);
 	}
 	
 	@Override

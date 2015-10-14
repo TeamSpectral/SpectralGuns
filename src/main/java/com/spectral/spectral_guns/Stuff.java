@@ -1,5 +1,6 @@
 package com.spectral.spectral_guns;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -318,13 +319,9 @@ public class Stuff
 			return false;
 		}
 		
-		public static Object[] arrayListToArray(ArrayList<Object> al)
+		public static <T> T[] arrayListToArray(Class<T> c, ArrayList<T> al)
 		{
-			return arrayListToArray2(al, new Object[al.size()]);
-		}
-		
-		public static <T> T[] arrayListToArray2(ArrayList<T> al, T[] a)
-		{
+			T[] a = (T[])Array.newInstance(c, al.size());
 			if(a != null ? al.size() == a.length : al.size() == 0)
 			{
 				for(int i = 0; i < al.size(); ++i)
@@ -345,20 +342,20 @@ public class Stuff
 			return al;
 		}
 		
-		public static <T> T[] mixArrays(T[] a1, T[] a2)
+		public static <T> T[] mixArrays(Class<T> c, T[] a1, T[] a2)
 		{
 			ArrayList<T> al = new ArrayList<T>();
 			al.addAll(arrayToArrayList(a1));
 			al.addAll(arrayToArrayList(a2));
-			return (T[])al.toArray();
+			return arrayListToArray(c, al);
 		}
 		
-		public static <T> T[] addToArray(T[] a, T o)
+		public static <T> T[] addToArray(Class<T> c, T[] a, T o)
 		{
 			ArrayList<T> al = new ArrayList<T>();
 			al.addAll(arrayToArrayList(a));
 			al.add(o);
-			return (T[])al.toArray();
+			return arrayListToArray(c, al);
 		}
 		
 		public static <T> boolean removeFromArrayList(ArrayList<T> a, T o)
