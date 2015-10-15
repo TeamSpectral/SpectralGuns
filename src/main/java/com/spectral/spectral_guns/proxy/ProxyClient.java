@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -94,6 +95,7 @@ public class ProxyClient extends ProxyCommon
 		RenderingRegistry.registerEntityRenderingHandler(EntityFood.class, new RenderFood(rm, ri));
 		RenderingRegistry.registerEntityRenderingHandler(EntityShuriken.class, new RenderShuriken(rm, ri));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLaser.class, new RenderNull(rm));
+		//MinecraftForgeClient.registerItemRenderer(M.gun, new RenderSpectralGun());
 	}
 	
 	private void registerItemModels(RenderItem ri)

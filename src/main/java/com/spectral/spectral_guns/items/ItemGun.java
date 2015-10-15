@@ -429,6 +429,11 @@ public class ItemGun extends Item implements IItemDynamicModel, IItemTextureVari
 		return true;
 	}
 	
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
+    {
+        return false;
+    }
+    
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected)
 	{
@@ -442,6 +447,7 @@ public class ItemGun extends Item implements IItemDynamicModel, IItemTextureVari
 				legendary.triggerAchievement(stack, world, (EntityPlayer)entity);
 			}
 		}
+
 		if(entity instanceof EntityPlayer)
 		{
 			ExtendedPlayer props = ExtendedPlayer.get((EntityPlayer)entity);

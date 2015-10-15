@@ -60,14 +60,14 @@ public abstract class ItemTagBase<W, T extends NBTBase>
 	
 	public void set(ItemStack stack, W value)
 	{
-		this.wobbleCheck(stack);
+		//this.wobbleCheck(stack);
 		NBTTagCompound compound = this.getCompound(stack, true);
 		this.set(compound, value);
 	}
 	
 	public void set(ItemStack stackForWobble, NBTTagCompound compound, W value)
 	{
-		this.wobbleCheck(stackForWobble);
+		//this.wobbleCheck(stackForWobble);
 		this.set(compound, value);
 	}
 	
@@ -86,10 +86,10 @@ public abstract class ItemTagBase<W, T extends NBTBase>
 	
 	public void wobbleCheck(ItemStack stack)
 	{
-		if(this.noWobble)
+		/**if(this.noWobble)
 		{
 			noWobble(stack);
-		}
+		}**/
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public abstract class ItemTagBase<W, T extends NBTBase>
 	 */
 	public static void noWobble(ItemStack stack)
 	{
-		try
+		/**try
 		{
 			Stuff.Reflection.setItemToRender(stack);
 		}
@@ -105,7 +105,7 @@ public abstract class ItemTagBase<W, T extends NBTBase>
 		{
 			System.out.println("Anti-wobble procedure failed miserably! This is why reflection sucks so much!!! FFFFFUUUUUUUU!!!!!!!!! (i blame notch)");
 			e.printStackTrace();
-		}
+		}**/
 	}
 	
 	public boolean has(ItemStack stack)

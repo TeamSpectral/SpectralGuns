@@ -603,7 +603,7 @@ public class Stuff
 		@SideOnly(Side.CLIENT)
 		public static void setItemToRender(ItemStack stack) throws IllegalArgumentException, IllegalAccessException
 		{
-			Minecraft mc = Minecraft.getMinecraft();
+		/**	Minecraft mc = Minecraft.getMinecraft();
 			ItemRenderer ir = mc.getItemRenderer();
 			Field[] fs = ItemRenderer.class.getDeclaredFields();
 			Field f = null;
@@ -630,7 +630,7 @@ public class Stuff
 				f.set(ir, stack);
 				return;
 			}
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException();**/
 		}
 	}
 	
