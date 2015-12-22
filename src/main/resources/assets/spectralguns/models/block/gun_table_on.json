@@ -1,6 +1,0 @@
-{
-    "parent": "spectralguns:block/gun_table",
-    "textures": {
-        "front": "spectralguns:blocks/gun_table_front_on"
-    }
-}
