@@ -49,6 +49,7 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 	public float spinVelocity;
 	public float rotationRoll = 90;
 	private double mass = 1;
+	public boolean canBePickedUp = true;
 	
 	public EntityShuriken(World worldIn)
 	{
@@ -98,12 +99,12 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 		this.rotationPitch = shooter.rotationPitch;
 	}
 	
-	public EntityShuriken(World worldIn, EntityLivingBase shooter, float velocity)
+	public EntityShuriken(World worldIn, EntityLivingBase shooter, float velocity, boolean pickedUp)
 	{
 		super(worldIn);
 		this.renderDistanceWeight = 10.0D;
 		this.shootingEntity = shooter;
-		
+		this.canBePickedUp = pickedUp;
 		this.spin = Randomization.r(180);
 		this.rotationRoll = 90 - shooter.rotationPitch;
 		this.spinVelocity = 23;
@@ -514,7 +515,7 @@ public class EntityShuriken extends EntityArrow implements IProjectile, IEntityA
 	@Override
 	public void onCollideWithPlayer(EntityPlayer entityIn)
 	{
-		if(!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0)
+		if(!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0 && canBePickedUp)
 		{
 			if(entityIn.inventory.addItemStackToInventory(new ItemStack(M.shuriken, 1)))
 			{

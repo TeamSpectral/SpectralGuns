@@ -9,10 +9,13 @@ build/resources
 build/sources
 build/taskLogs
 build/tmp
+
 !build/libs
 !build/libs/*
 eclipse
+out
 gradle
+.gradle
 !src
 !stuff
 !versionChecker
@@ -24,6 +27,9 @@ gradle
 !CHANGELOG.txt
 !.gitignore
 
+SpectralGuns.iml
+SpectralGuns.ipr
+SpectralGuns.iws
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

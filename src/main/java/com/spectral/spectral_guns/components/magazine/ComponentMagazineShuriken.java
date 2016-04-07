@@ -23,7 +23,7 @@ public class ComponentMagazineShuriken extends ComponentMagazineStandard
 	@Override
 	protected Entity projectile(int slot, ItemStack stack, World world, EntityPlayer player)
 	{
-		EntityShuriken e = new EntityShuriken(world, player, 2)
+		EntityShuriken e = new EntityShuriken(world, player, 2, !player.capabilities.isCreativeMode)
 		{
 			@Override
 			public boolean isInRangeToRenderDist(double distance)

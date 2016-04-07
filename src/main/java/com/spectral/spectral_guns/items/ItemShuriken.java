@@ -40,7 +40,7 @@ public class ItemShuriken extends Item
 		{
 			inaccuracy = 0.3;
 		}
-		EntityShuriken shuriken = new EntityShuriken(worldIn, player, f / 2.4F + 0.7F + Randomization.r((float)inaccuracy / 2));
+		EntityShuriken shuriken = new EntityShuriken(worldIn, player, f / 2.4F + 0.7F + Randomization.r((float)inaccuracy / 2), !player.capabilities.isCreativeMode);
 		shuriken.motionX += Randomization.r(inaccuracy);
 		shuriken.motionY += Randomization.r(inaccuracy);
 		shuriken.motionZ += Randomization.r(inaccuracy);
@@ -51,8 +51,8 @@ public class ItemShuriken extends Item
 		}
 		
 		worldIn.playSoundAtEntity(player, "random.bow", 0.2F, 1.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-		
-		--stack.stackSize;
+
+		if(!player.capabilities.isCreativeMode) --stack.stackSize;
 		
 		if(!worldIn.isRemote)
 		{

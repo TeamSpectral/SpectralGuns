@@ -1,32 +1,5 @@
 package com.spectral.spectral_guns.items;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.input.Keyboard;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.spectral.spectral_guns.Config;
 import com.spectral.spectral_guns.M;
@@ -50,6 +23,27 @@ import com.spectral.spectral_guns.itemtags.ItemTagList;
 import com.spectral.spectral_guns.itemtags.ItemTagString;
 import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
 import com.spectral.spectral_guns.stats.Legendary;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.input.Keyboard;
+
+import java.util.*;
 
 public class ItemGun extends Item implements IItemDynamicModel, IItemTextureVariants
 {
@@ -428,12 +422,12 @@ public class ItemGun extends Item implements IItemDynamicModel, IItemTextureVari
 		}
 		return true;
 	}
-	
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
     {
         return false;
     }
-    
+
+
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected)
 	{
