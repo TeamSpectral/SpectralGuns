@@ -1,9 +1,28 @@
 package com.spectral.spectral_guns;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
+import com.spectral.spectral_guns.Stuff.HashMapStuff;
+import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
+import com.spectral.spectral_guns.blocks.BlockOre2;
+import com.spectral.spectral_guns.components.Component;
+import com.spectral.spectral_guns.components.Component.ComponentMaterial;
+import com.spectral.spectral_guns.components.Component.ComponentRegister;
+import com.spectral.spectral_guns.components.ComponentBarrel;
+import com.spectral.spectral_guns.components.ComponentGrip;
+import com.spectral.spectral_guns.components.aim.ComponentScope;
+import com.spectral.spectral_guns.components.aim.ComponentScopeLaser;
+import com.spectral.spectral_guns.components.magazine.*;
+import com.spectral.spectral_guns.components.misc.ComponentOverclocker;
+import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanism;
+import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismAuto;
+import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismBoosted;
+import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
+import com.spectral.spectral_guns.items.*;
+import com.spectral.spectral_guns.proxy.ProxyCommon;
+import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
+import com.spectral.spectral_guns.stats.AchievementPageHandler.AchievementPages;
+import com.spectral.spectral_guns.stats.Legendaries;
+import com.spectral.spectral_guns.tabs.TabGeneric;
+import com.spectral.spectral_guns.worldgen.WorldGenGem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.material.MapColor;
@@ -30,41 +49,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-import com.spectral.spectral_guns.Stuff.HashMapStuff;
-import com.spectral.spectral_guns.blocks.BlockGunWorkbench;
-import com.spectral.spectral_guns.blocks.BlockOre2;
-import com.spectral.spectral_guns.components.Component;
-import com.spectral.spectral_guns.components.Component.ComponentMaterial;
-import com.spectral.spectral_guns.components.Component.ComponentRegister;
-import com.spectral.spectral_guns.components.ComponentBarrel;
-import com.spectral.spectral_guns.components.ComponentGrip;
-import com.spectral.spectral_guns.components.aim.ComponentScope;
-import com.spectral.spectral_guns.components.aim.ComponentScopeLaser;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineFood;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineLaser;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineShuriken;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineSmallFireball;
-import com.spectral.spectral_guns.components.magazine.ComponentMagazineSnowball;
-import com.spectral.spectral_guns.components.misc.ComponentOverclocker;
-import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanism;
-import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismAuto;
-import com.spectral.spectral_guns.components.trigger_mechanism.ComponentTriggerMechanismBoosted;
-import com.spectral.spectral_guns.entity.projectile.EntityLaser.LaserColor;
-import com.spectral.spectral_guns.items.IItemIdFrom;
-import com.spectral.spectral_guns.items.IItemTextureVariants;
-import com.spectral.spectral_guns.items.ItemAmmo;
-import com.spectral.spectral_guns.items.ItemBlockGunWorkbench;
-import com.spectral.spectral_guns.items.ItemComponent;
-import com.spectral.spectral_guns.items.ItemFood2;
-import com.spectral.spectral_guns.items.ItemGun;
-import com.spectral.spectral_guns.items.ItemShuriken;
-import com.spectral.spectral_guns.items.ItemWrench;
-import com.spectral.spectral_guns.proxy.ProxyCommon;
-import com.spectral.spectral_guns.stats.AchievementHandler.Achievements;
-import com.spectral.spectral_guns.stats.AchievementPageHandler.AchievementPages;
-import com.spectral.spectral_guns.stats.Legendaries;
-import com.spectral.spectral_guns.tabs.TabGeneric;
-import com.spectral.spectral_guns.worldgen.WorldGenGem;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 @Mod(modid = References.MODID, name = References.NAME, version = References.VERSION, guiFactory = References.GUI_FACTORY_CLASS)
 public class M

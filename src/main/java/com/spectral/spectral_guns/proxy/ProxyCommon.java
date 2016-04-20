@@ -1,9 +1,24 @@
 package com.spectral.spectral_guns.proxy;
 
-import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-
+import com.spectral.spectral_guns.Config;
+import com.spectral.spectral_guns.M;
+import com.spectral.spectral_guns.M.Id;
+import com.spectral.spectral_guns.References;
+import com.spectral.spectral_guns.blocks.BlockOre2;
+import com.spectral.spectral_guns.core.Mods;
+import com.spectral.spectral_guns.core.SpectralCore;
+import com.spectral.spectral_guns.entity.projectile.*;
+import com.spectral.spectral_guns.event.HandlerCommon;
+import com.spectral.spectral_guns.event.HandlerCommonFML;
+import com.spectral.spectral_guns.gui.GuiHandler;
+import com.spectral.spectral_guns.items.IItemWithRecipe;
+import com.spectral.spectral_guns.packet.PacketItemName;
+import com.spectral.spectral_guns.packet.PacketKey;
+import com.spectral.spectral_guns.packet.PacketPlayerData;
+import com.spectral.spectral_guns.recipe.RecipeGun;
+import com.spectral.spectral_guns.stats.AchievementHandler;
+import com.spectral.spectral_guns.stats.AchievementPageHandler;
+import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -28,27 +43,9 @@ import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-import com.spectral.spectral_guns.Config;
-import com.spectral.spectral_guns.M;
-import com.spectral.spectral_guns.M.Id;
-import com.spectral.spectral_guns.References;
-import com.spectral.spectral_guns.blocks.BlockOre2;
-import com.spectral.spectral_guns.entity.projectile.EntityFireball2;
-import com.spectral.spectral_guns.entity.projectile.EntityFood;
-import com.spectral.spectral_guns.entity.projectile.EntityLaser;
-import com.spectral.spectral_guns.entity.projectile.EntityShuriken;
-import com.spectral.spectral_guns.entity.projectile.EntitySnowball2;
-import com.spectral.spectral_guns.event.HandlerCommon;
-import com.spectral.spectral_guns.event.HandlerCommonFML;
-import com.spectral.spectral_guns.gui.GuiHandler;
-import com.spectral.spectral_guns.items.IItemWithRecipe;
-import com.spectral.spectral_guns.packet.PacketItemName;
-import com.spectral.spectral_guns.packet.PacketKey;
-import com.spectral.spectral_guns.packet.PacketPlayerData;
-import com.spectral.spectral_guns.recipe.RecipeGun;
-import com.spectral.spectral_guns.stats.AchievementHandler;
-import com.spectral.spectral_guns.stats.AchievementPageHandler;
-import com.spectral.spectral_guns.tileentity.TileEntityGunWorkbench;
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
 public abstract class ProxyCommon
 {
@@ -72,11 +69,14 @@ public abstract class ProxyCommon
 	{
 		this.recipes();
 		this.tileEntities();
-	}
+        Mods.registerMod(M.instance, "spectralguns");
+        SpectralCore.instance.init(event);
+    }
 	
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		M.idsToBeRegistered.clear();
+        SpectralCore.instance.postInit(event);
 	}
 	
 	public abstract World world(int dimension);
