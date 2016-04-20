@@ -188,3 +188,6 @@ and of course:
     •made snowballs less laggy
     •fixed extended player properties not working serverside
     •fixed wrench durability being out of synch between server and client
+
+1.3 - eladkay
+    added complete version check integration
